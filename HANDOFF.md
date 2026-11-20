@@ -1,6 +1,6 @@
 # HANDOFF.md: Part 1 → Part 2
 
-Part 1 is done: commit **`b35c7aa`** on branch `claude/pensive-newton-q7dfkn`. Create your branch from that branch (that commit or later).
+Part 1 is done: start from the latest commit (foundation was **`b35c7aa`**; the first-visit UX rework came after it) on branch `claude/pensive-newton-q7dfkn`. Create your branch from that branch (that commit or later).
 Read `context/SHARED.md` and `context/PART-2.md` first. This file covers **how to use what Part 1 built**.
 
 ---
@@ -81,6 +81,7 @@ const { lang } = Astro.props;
 | `OnThisPage` | `<OnThisPage items={[{id, label}]} />` | Jump-link chips; use on long pages |
 | `Disclaimer` | `<Disclaimer variant="projection" />` | **Required next to every projection** ("Example, not a promise.") |
 | `ExternalLink` | `<ExternalLink href org="CFPB">Consumer guides</ExternalLink>` | Same tab, ↗ icon, `rel="noopener noreferrer"`, screen-reader "(opens CFPB website)" |
+| `HowItWorks` | `<HowItWorks steps={tv<string[]>(lang, 'learn.how')} />` | **Required at the top of every tool.** 3 verb-first steps, ≤ 6 words each |
 | `Icon` | `<Icon name="check" size={20} />` | Names: home sprout book practice route lifebuoy external check pause hourglass info close flag chevron-left chevron-right minus plus reset lock arrow-down steps gate hand |
 | `ComingSoon` | stub only | Delete once all four Part 2 views are real |
 
@@ -150,9 +151,10 @@ Motion: use `var(--dur)` and `var(--ease)`. `prefers-reduced-motion` is already 
 
 - **Astro 7.4.13** (latest stable at build time), not Astro 4.
 - **Background** changed from cream `#F7F5F0` to sage-tinted `#F3F6F2`. Tokens in `src/styles/tokens.css` are the source of truth.
-- **Mobile nav**: bottom tab bar with 5 items (Grow, Learn, Practice, Your path, Help); Home is the wordmark. The tab labels are 13px; that's the one exception to the 16px minimum, because they're paired with icons.
+- **Nav**: plain task names (`common.nav.*`). At ≥ 1280px there's a top bar with 6 links (the logo is Home). Below that, a bottom tab bar with 6 icons and short labels (`common.navShort.*`). The 13px tab labels are the one exception to the 16px minimum, because they're paired with icons.
+- **Home** opens with "What would you like to do today?" and 4 task cards. The readiness check moved to **`/next-step`** and asks one question at a time.
 - **Roadmap demo**: "Not ready yet" puts *You are here* on step 3 (cushion) with steps 7–8 *Paused*; "Ready" puts it on step 6 with steps 7–8 *Open*.
-- **Readiness order**: bills not covered → Stop; debt over 15% → Stop; under $1,000 → Wait; else Go. Result links: Stop → `/help`, Wait → `/grow`, Go → `/learn`. **Your `/help` and `/learn` pages are linked from here.**
+- **Readiness order**: bills not covered → Stop; debt over 15% → Stop; under $1,000 → Wait; else Go. Result buttons: Stop → `/help`, Wait → `/grow`, Go → `/learn`. **Your `/help` and `/learn` pages are linked from here and from the Home task cards.**
 - **Generations**: +25 years of growth per generation, no new money, shown at 6% by default with a 4/6/8 toggle; bars are linear.
 - **Offline**: the service worker precaches every built file automatically; no action needed.
 - **Theme**: follows the device's light/dark setting. There's no manual toggle, because that would need storage.

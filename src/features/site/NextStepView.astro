@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../../components/BaseLayout.astro';
+import Section from '../../components/Section.astro';
+import HowItWorks from '../../components/HowItWorks.astro';
+import Icon from '../../components/Icon.astro';
+import ReadinessCheck from '../readiness/ReadinessCheck.astro';
+import Roadmap from '../roadmap/Roadmap.astro';
+import { t, tv, type Lang } from '../../i18n/utils';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+<BaseLayout title={t(lang, 'next.meta.title')} description={t(lang, 'next.meta.description')} lang={lang}>
+  <Section id="check" level={1} title={t(lang, 'next.title')} badge="education" intro={t(lang, 'next.intro')}>
+    <div class="stack-lg">
+      <HowItWorks steps={tv<string[]>(lang, 'next.how')} />
+      <ReadinessCheck lang={lang} />
+    </div>
+  </Section>
+
+  <div data-placement hidden>
+    <Section id="your-place" tone="sage" title={t(lang, 'next.placeTitle')} badge="your-choice" intro={t(lang, 'next.placeIntro')}>
+      <Roadmap lang={lang} mode="personal" />
+    </Section>
+  </div>
+
+  <Section id="pause" title={t(lang, 'next.andon.title')} badge="your-choice">
+    <div class="andon">
+      <span class="andon-icon"><Icon name="pause" size={28} /></span>
+      <p>{t(lang, 'next.andon.body')}</p>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .stack-lg > :global(* + *) { margin-top: var(--space-5); }
+  .andon {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+    max-width: 720px;
+    padding: var(--space-5);
+    border-radius: var(--radius);
+    background: var(--surface-mist);
+  }
+  .andon-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--accent);
+  }
+  .andon p { color: var(--ink-soft); }
+</style>

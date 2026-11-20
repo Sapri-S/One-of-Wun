@@ -6,7 +6,8 @@ test('no outside requests, cookies or storage after using every tool', async ({ 
 
   await page.goto('/');
   await page.getByRole('button', { name: 'Ready', exact: true }).click();
-  await page.locator('input[name="highInterestDebt"][value="no"]').check();
+  await page.goto('/next-step');
+  for (let i = 0; i < 3; i++) await page.locator('[data-q]:not([hidden]) button[data-answer="no"]').click();
   await page.goto('/grow');
   await page.locator('#kz-weekly').fill('50');
 

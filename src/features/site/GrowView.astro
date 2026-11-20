@@ -3,6 +3,7 @@ import BaseLayout from '../../components/BaseLayout.astro';
 import Section from '../../components/Section.astro';
 import OnThisPage from '../../components/OnThisPage.astro';
 import Button from '../../components/Button.astro';
+import HowItWorks from '../../components/HowItWorks.astro';
 import KaizenCalculator from '../kaizen/KaizenCalculator.astro';
 import { t, tv, localizePath, type Lang } from '../../i18n/utils';
 
@@ -13,6 +14,7 @@ const why = tv<string[]>(lang, 'grow.why');
 <BaseLayout title={t(lang, 'grow.meta.title')} description={t(lang, 'grow.meta.description')} lang={lang}>
   <Section id="calculator" level={1} title={t(lang, 'grow.title')} badge="education" intro={t(lang, 'grow.lead')}>
     <div class="otp-wrap">
+      <HowItWorks steps={tv<string[]>(lang, 'grow.how3')} />
       <OnThisPage items={[
         { id: 'generations', label: t(lang, 'grow.gensTitle') },
         { id: 'why', label: t(lang, 'grow.whyTitle') },
@@ -28,7 +30,7 @@ const why = tv<string[]>(lang, 'grow.why');
     </ul>
     <div class="ready">
       <p>{t(lang, 'grow.readyCheck')}</p>
-      <Button href={localizePath('/#readiness', lang)} variant="quiet">{t(lang, 'grow.readyCheckLink')}</Button>
+      <Button href={localizePath('/next-step', lang)} variant="quiet">{t(lang, 'grow.readyCheckLink')}</Button>
     </div>
   </Section>
 
@@ -40,6 +42,7 @@ const why = tv<string[]>(lang, 'grow.why');
 
 <style>
   .otp-wrap { margin-bottom: var(--space-5); }
+  .otp-wrap > :global(* + *) { margin-top: var(--space-4); }
   .why { display: grid; gap: var(--space-3); padding-left: 1.25em; }
   .why li::marker { color: var(--primary); }
   .ready {

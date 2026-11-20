@@ -1,5 +1,9 @@
 {
-  "_meta": { "lang": "es", "reviewed": false, "note": "Borrador. Debe revisarlo una persona hablante nativa antes de publicar." },
+  "_meta": {
+    "lang": "es",
+    "reviewed": false,
+    "note": "Borrador. Debe revisarlo una persona hablante nativa antes de publicar."
+  },
   "common": {
     "siteName": "Where You Want to Be",
     "tagline": "Un mapa tranquilo y gratis para tu dinero.",
@@ -7,17 +11,18 @@
     "navLabel": "Principal",
     "nav": {
       "home": "Inicio",
-      "grow": "Crecer",
-      "learn": "Aprender",
-      "practice": "Practicar",
-      "path": "Tu camino",
-      "help": "Ayuda"
+      "next": "Mi siguiente paso",
+      "grow": "Calculadora de ahorro",
+      "learn": "Lo básico de invertir",
+      "practice": "Practica una caída",
+      "path": "Mi situación",
+      "help": "Ayuda gratis"
     },
     "lang": {
       "switchTo": "English",
       "switchAria": "View this page in English"
     },
-    "eduStrip": "Solo educación. No es asesoría financiera. No guardamos nada de lo que escribes.",
+    "eduStrip": "Solo educación, no es asesoría financiera.",
     "disclaimer": {
       "education": "Solo educación — no es asesoría financiera.",
       "projection": "Es un ejemplo, no una promesa."
@@ -51,7 +56,17 @@
       "privacy": "No recopilamos nada. Sin cookies, sin rastreo, sin anuncios. Lo que escribes no sale de tu dispositivo.",
       "nonCommercial": "Un proyecto educativo gratis y sin fines comerciales. No vendemos ni recomendamos ningún producto.",
       "explore": "Explorar"
-    }
+    },
+    "navShort": {
+      "home": "Inicio",
+      "next": "Siguiente",
+      "grow": "Ahorro",
+      "learn": "Básico",
+      "practice": "Practicar",
+      "path": "Situación",
+      "help": "Ayuda"
+    },
+    "howItWorks": "Cómo funciona"
   },
   "home": {
     "meta": {
@@ -60,14 +75,14 @@
     },
     "hero": {
       "title": "Llega a donde quieres estar, un paso tranquilo a la vez.",
-      "lead": "Un mapa gratis para tu dinero. Mira cuál es el siguiente paso y por qué, en palabras sencillas. Sin registrarte. No guardamos nada de lo que escribes.",
-      "ctaPrimary": "Revisa si estás listo",
-      "ctaQuiet": "Ver todas las páginas"
+      "lead": "Gratis. Sin registrarte. No guardamos nada de lo que escribes.",
+      "ask": "¿Qué te gustaría hacer hoy?",
+      "more": "También aquí:"
     },
     "roadmap": {
-      "title": "Tu camino de 8 pasos",
-      "intro": "Cada paso hace que el siguiente sea más seguro. Cambia entre dos personas de ejemplo para ver cómo cambia el camino.",
-      "toggleLabel": "Mostrar una persona de ejemplo",
+      "title": "Cómo funciona el camino",
+      "intro": "Todo plan de dinero sigue los mismos 8 pasos. Estas dos personas son ejemplos inventados, no tú. Cambia entre ellas para ver cómo cambia el camino.",
+      "toggleLabel": "Elige una persona de ejemplo",
       "profiles": {
         "notReady": {
           "label": "Todavía no",
@@ -97,73 +112,146 @@
         "ready": "La luz está en verde. Las cuentas están cubiertas, no hay deudas de interés alto y hay un colchón de $1,000. Ahora tiene sentido hacer crecer el colchón y empezar a aprender sobre inversiones."
       },
       "milestones": [
-        { "title": "Cubre lo básico", "body": "Renta, comida, servicios y transporte al trabajo van primero. Un plan sencillo de a dónde va cada dólar te ayuda a ver lo que sobra." },
-        { "title": "Abre una cuenta bancaria sin comisiones", "body": "Una cuenta gratis en un banco asegurado por la FDIC o en una cooperativa de crédito asegurada por la NCUA protege tu dinero y evita las comisiones por cambiar cheques." },
-        { "title": "Ahorra un colchón de $1,000", "body": "Un pequeño fondo de emergencia evita que una llanta ponchada o una cuenta médica se conviertan en deuda nueva. Poco a poco, con regularidad, se logra." },
-        { "title": "Recibe la aportación 401(k) de tu trabajo", "body": "Si tu trabajo agrega dinero cuando ahorras para el retiro, es pago extra. Ahorrar lo suficiente para recibir la aportación completa casi siempre vale la pena." },
-        { "title": "Paga las deudas de interés alto", "body": "Las deudas de más de 15% APR, como la mayoría de las tarjetas, crecen rápido. Pagarlas es una de las formas más seguras de quedarte con más de tu dinero." },
-        { "title": "Haz crecer tu colchón a 3–6 meses", "body": "Un colchón más grande te cubre si pierdes el trabajo o tienes meses flojos. Quienes trabajan por app suelen apuntar a lo más alto porque su pago sube y baja." },
-        { "title": "Invierte para tu retiro", "body": "Con una base segura, ahorrar con regularidad en una IRA o más en un 401(k) puede crecer por décadas. Es dinero para después, no para las cuentas." },
-        { "title": "Invierte en una cuenta regular", "body": "Cuando tu ahorro para el retiro va bien, una cuenta de inversión regular (con impuestos) puede ayudarte con otras metas a largo plazo." }
-      ]
-    },
-    "readiness": {
-      "title": "¿Estás listo para invertir? Tres preguntas rápidas",
-      "intro": "Responde sí o no. Tus respuestas se quedan en esta página y desaparecen cuando sales.",
-      "yes": "Sí",
-      "no": "No",
-      "questions": [
-        { "q": "¿Tienes alguna deuda de más de 15% APR?", "hint": "Incluye la mayoría de las tarjetas de crédito, préstamos de día de pago y préstamos sobre el título del auto." },
-        { "q": "¿Tienes al menos $1,000 ahorrados para emergencias?", "hint": "Dinero que podrías usar hoy sin pedir prestado." },
-        { "q": "¿Cubres tus cuentas básicas cada mes?", "hint": "Renta, comida, servicios y transporte al trabajo." }
+        {
+          "title": "Cubre lo básico",
+          "body": "Renta, comida, servicios y transporte al trabajo van primero. Un plan sencillo de a dónde va cada dólar te ayuda a ver lo que sobra."
+        },
+        {
+          "title": "Abre una cuenta bancaria sin comisiones",
+          "body": "Una cuenta gratis en un banco asegurado por la FDIC o en una cooperativa de crédito asegurada por la NCUA protege tu dinero y evita las comisiones por cambiar cheques."
+        },
+        {
+          "title": "Ahorra un colchón de $1,000",
+          "body": "Un pequeño fondo de emergencia evita que una llanta ponchada o una cuenta médica se conviertan en deuda nueva. Poco a poco, con regularidad, se logra."
+        },
+        {
+          "title": "Recibe la aportación 401(k) de tu trabajo",
+          "body": "Si tu trabajo agrega dinero cuando ahorras para el retiro, es pago extra. Ahorrar lo suficiente para recibir la aportación completa casi siempre vale la pena."
+        },
+        {
+          "title": "Paga las deudas de interés alto",
+          "body": "Las deudas de más de 15% APR, como la mayoría de las tarjetas, crecen rápido. Pagarlas es una de las formas más seguras de quedarte con más de tu dinero."
+        },
+        {
+          "title": "Haz crecer tu colchón a 3–6 meses",
+          "body": "Un colchón más grande te cubre si pierdes el trabajo o tienes meses flojos. Quienes trabajan por app suelen apuntar a lo más alto porque su pago sube y baja."
+        },
+        {
+          "title": "Invierte para tu retiro",
+          "body": "Con una base segura, ahorrar con regularidad en una IRA o más en un 401(k) puede crecer por décadas. Es dinero para después, no para las cuentas."
+        },
+        {
+          "title": "Invierte en una cuenta regular",
+          "body": "Cuando tu ahorro para el retiro va bien, una cuenta de inversión regular (con impuestos) puede ayudarte con otras metas a largo plazo."
+        }
       ],
-      "pending": "Responde las tres preguntas para ver tu luz.",
-      "resultLabel": "Tu luz",
-      "results": {
-        "stopBills": "Empieza por lo básico. Cuando tus cuentas estén cubiertas cada mes, todos los demás pasos serán más fáciles. Ayuda gratis: un consejero de crédito sin fines de lucro o las guías de la CFPB en la página de Ayuda.",
-        "stopDebt": "Paga las deudas de más de 15% APR antes de invertir. Cada dólar que pagas en una tarjeta al 24.9% te ahorra unos 25 centavos al año. Eso supera lo que normalmente gana una inversión.",
-        "wait": "Ya casi. Primero crea un colchón de $1,000 para que una cuenta inesperada no te regrese a las deudas. Incluso $5 o $10 a la semana suman.",
-        "go": "Tu base es segura. Estás listo para aprender cómo funciona invertir. Empieza en la página Aprender y luego prueba una cuenta de práctica antes de usar dinero real."
-      },
-      "nextLinks": {
-        "stop": "Ver ayuda gratis",
-        "wait": "Mira cómo crecen $5 a la semana",
-        "go": "Aprende lo básico de invertir"
-      },
-      "startOver": "Empezar de nuevo",
-      "andon": {
-        "title": "¿Pasó algo en tu vida? Haz una pausa.",
-        "body": "Menos horas de trabajo, una cuenta médica, una necesidad de la familia. Pausar tu plan es parte del plan. Deja de agregar dinero, cuida tu colchón y sigue cuando puedas. Sin culpa."
-      }
+      "tryYours": "¿Quieres ver dónde estás tú?",
+      "tryYoursLink": "Encuentra tu siguiente paso"
     },
     "toyota": {
       "title": "Tres ideas sencillas detrás del camino",
       "intro": "Vienen de una fábrica de autos famosa por su trabajo constante y cuidadoso. También funcionan con el dinero.",
       "cards": [
-        { "name": "Kaizen", "plain": "Pasos pequeños", "body": "Pasos pequeños y constantes son mejores que pasos grandes y raros. $5 a la semana es un comienzo real." },
-        { "name": "Jidoka", "plain": "Puertas de seguridad", "body": "No pases al siguiente paso hasta que este sea seguro. Por eso la deuda va antes que invertir." },
-        { "name": "Andon", "plain": "El botón de pausa", "body": "Cualquiera puede parar la línea si algo anda mal. Tú también puedes pausar tu plan, sin vergüenza." }
+        {
+          "name": "Kaizen",
+          "plain": "Pasos pequeños",
+          "body": "Pasos pequeños y constantes son mejores que pasos grandes y raros. $5 a la semana es un comienzo real."
+        },
+        {
+          "name": "Jidoka",
+          "plain": "Puertas de seguridad",
+          "body": "No pases al siguiente paso hasta que este sea seguro. Por eso la deuda va antes que invertir."
+        },
+        {
+          "name": "Andon",
+          "plain": "El botón de pausa",
+          "body": "Cualquiera puede parar la línea si algo anda mal. Tú también puedes pausar tu plan, sin vergüenza."
+        }
       ]
     },
-    "start": {
-      "title": "¿A dónde quieres ir ahora?",
-      "tiles": {
-        "readiness": { "title": "Revisa si estás listo", "body": "Tres preguntas de sí o no. Recibe una luz clara: roja, amarilla o verde." },
-        "grow": { "title": "Mira crecer los pasos pequeños", "body": "Mueve de $5 a $100 a la semana y mira lo que el tiempo puede hacer." },
-        "learn": { "title": "Aprende lo básico", "body": "Fondos indexados, acciones y bonos en palabras sencillas, con costos reales." },
-        "practice": { "title": "Practica una caída del mercado", "body": "Mira cómo $1,000 de práctica bajan 30% y aprende qué hacer." },
-        "path": { "title": "Encuentra tu camino", "body": "Historias para ponerse al día después de los 50, trabajo por app, primera generación y cuentas bancarias nuevas." },
-        "help": { "title": "Consigue ayuda gratis", "body": "Recursos públicos confiables para impuestos, deudas y bancos." }
+    "tasks": {
+      "next": {
+        "title": "Encuentra tu siguiente paso",
+        "body": "Responde 3 preguntas de sí o no. Mira dónde estás en el camino y qué hacer ahora.",
+        "time": "Como 1 minuto"
+      },
+      "grow": {
+        "title": "Mira cómo crecen $5 a la semana",
+        "body": "Mueve dos controles y mira en qué podría convertirse un ahorro pequeño y constante.",
+        "time": "Como 2 minutos"
+      },
+      "learn": {
+        "title": "Aprende lo básico de invertir",
+        "body": "Fondos indexados, acciones y bonos en palabras sencillas, con costos reales.",
+        "time": "Como 3 minutos"
+      },
+      "help": {
+        "title": "Consigue ayuda gratis ahora",
+        "body": "Recursos gratis y confiables para deudas, impuestos y bancos.",
+        "time": "De inmediato"
+      },
+      "practice": "Practica una caída del mercado",
+      "path": "Consejos para mi situación"
+    }
+  },
+  "next": {
+    "yes": "Sí",
+    "no": "No",
+    "questions": [
+      {
+        "q": "¿Tienes alguna deuda de más de 15% APR?",
+        "hint": "Incluye la mayoría de las tarjetas de crédito, préstamos de día de pago y préstamos sobre el título del auto."
+      },
+      {
+        "q": "¿Tienes al menos $1,000 ahorrados para emergencias?",
+        "hint": "Dinero que podrías usar hoy sin pedir prestado."
+      },
+      {
+        "q": "¿Cubres tus cuentas básicas cada mes?",
+        "hint": "Renta, comida, servicios y transporte al trabajo."
       }
+    ],
+    "results": {
+      "stopBills": "Empieza por lo básico. Cuando tus cuentas estén cubiertas cada mes, todos los demás pasos serán más fáciles. Ayuda gratis: un consejero de crédito sin fines de lucro o las guías de la CFPB en la página de Ayuda.",
+      "stopDebt": "Paga las deudas de más de 15% APR antes de invertir. Cada dólar que pagas en una tarjeta al 24.9% te ahorra unos 25 centavos al año. Eso supera lo que normalmente gana una inversión.",
+      "wait": "Ya casi. Primero crea un colchón de $1,000 para que una cuenta inesperada no te regrese a las deudas. Incluso $5 o $10 a la semana suman.",
+      "go": "Tu base es segura. Estás listo para aprender cómo funciona invertir. Empieza en la página Aprender y luego prueba una cuenta de práctica antes de usar dinero real."
+    },
+    "startOver": "Empezar de nuevo",
+    "andon": {
+      "title": "¿Pasó algo en tu vida? Haz una pausa.",
+      "body": "Menos horas de trabajo, una cuenta médica, una necesidad de la familia. Pausar tu plan es parte del plan. Deja de agregar dinero, cuida tu colchón y sigue cuando puedas. Sin culpa."
+    },
+    "meta": {
+      "title": "Encuentra tu siguiente paso con el dinero",
+      "description": "Responde 3 preguntas de sí o no para ver tu luz y tu lugar en el camino de 8 pasos."
+    },
+    "title": "Encuentra tu siguiente paso con el dinero",
+    "intro": "Tres preguntas de sí o no. Como un minuto. Tus respuestas se quedan en esta página y desaparecen cuando sales.",
+    "how": [
+      "Responde 3 preguntas de sí o no",
+      "Mira tu luz roja, amarilla o verde",
+      "Mira tu siguiente paso en el camino"
+    ],
+    "progress": "Pregunta {n} de {total}",
+    "back": "Atrás",
+    "lightTitle": "¿Estás listo para invertir?",
+    "nextStepLabel": "Tu siguiente paso",
+    "placeTitle": "Tu lugar en el camino",
+    "placeIntro": "Según tus respuestas. Los pasos con candado esperan hasta que los anteriores sean seguros.",
+    "nextButtons": {
+      "stop": "Ver ayuda gratis",
+      "wait": "Mira cómo crecen los ahorros pequeños",
+      "go": "Aprende lo básico de invertir"
     }
   },
   "grow": {
     "meta": {
-      "title": "Pasos pequeños, gran futuro",
+      "title": "Calculadora de ahorro",
       "description": "Mueve de $5 a $100 a la semana y mira cómo un ahorro pequeño y constante podría crecer en 10 a 60 años."
     },
-    "title": "Pasos pequeños, gran futuro",
-    "lead": "Esto es Kaizen: pasos pequeños y constantes. Mueve los controles para ver cómo una cantidad semanal pequeña podría crecer con el tiempo.",
+    "title": "Calculadora de ahorro",
+    "lead": "Mira cómo una cantidad pequeña cada semana podría crecer con el tiempo. Empieza con $5. Eso es Kaizen: pasos pequeños y constantes.",
     "calcTitle": "Tu paso semanal",
     "weekly": "¿Cuánto cada semana?",
     "years": "¿Por cuántos años?",
@@ -202,7 +290,12 @@
       "¿Tu pago por app sube y baja? Ahorra $5 en las semanas flojas y más en las buenas."
     ],
     "readyCheck": "Antes de invertir, asegúrate de que tu base sea segura.",
-    "readyCheckLink": "Revisa si estás listo"
+    "readyCheckLink": "Encuentra tu siguiente paso",
+    "how3": [
+      "Elige cuánto ahorrar cada semana",
+      "Elige por cuántos años",
+      "Mira hasta dónde podría crecer"
+    ]
   },
   "glossary": {
     "meta": {

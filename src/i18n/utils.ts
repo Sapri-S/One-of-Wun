@@ -80,9 +80,10 @@ export function formatMoney(n: number, lang: Lang): string {
   return new Intl.NumberFormat(LOCALE[lang], { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(Math.round(n));
 }
 
-/** The six main pages, in nav order. Single source for nav, tiles and the 404 page. */
+/** The main pages, in nav order. Single source for nav, footer and the 404 page. */
 export const PAGES = [
   { key: 'home', path: '/', icon: 'home' },
+  { key: 'next', path: '/next-step', icon: 'gate' },
   { key: 'grow', path: '/grow', icon: 'sprout' },
   { key: 'learn', path: '/learn', icon: 'book' },
   { key: 'practice', path: '/practice', icon: 'practice' },

@@ -1,7 +1,7 @@
 ---
 /**
- * Sticky header. Desktop: wordmark + 6 nav links + language switch.
- * Mobile (<768px): wordmark + language switch on top; 5 pages in a bottom tab bar (Home = wordmark).
+ * Sticky header. Wide screens (≥1280px): wordmark (= Home) + 6 task links + language switch.
+ * Narrower: wordmark + language switch on top; the 6 tasks in a bottom tab bar with short labels.
  * Internal to BaseLayout — Part 2 does not use this directly.
  */
 import Icon from './Icon.astro';
@@ -26,7 +26,7 @@ const alt = alternatePath(Astro.url);
 
     <nav class="top-nav" aria-label={t(lang, 'common.navLabel')}>
       <ul>
-        {PAGES.map((p) => (
+        {PAGES.filter((p) => p.key !== 'home').map((p) => (
           <li>
             <a href={localizePath(p.path, lang)} aria-current={isCurrent(p.path) ? 'page' : undefined}>
               {t(lang, `common.nav.${p.key}`)}
@@ -48,7 +48,8 @@ const alt = alternatePath(Astro.url);
       <li>
         <a href={localizePath(p.path, lang)} aria-current={isCurrent(p.path) ? 'page' : undefined}>
           <Icon name={p.icon} size={22} />
-          <span>{t(lang, `common.nav.${p.key}`)}</span>
+          <span aria-hidden="true">{t(lang, `common.navShort.${p.key}`)}</span>
+          <span class="visually-hidden">{t(lang, `common.nav.${p.key}`)}</span>
         </a>
       </li>
     ))}
@@ -65,6 +66,7 @@ const alt = alternatePath(Astro.url);
     border-bottom: 1px solid var(--border);
   }
   .bar {
+    max-width: calc(1400px + 2 * var(--gutter));
     display: flex;
     align-items: center;
     gap: var(--space-4);
@@ -82,6 +84,9 @@ const alt = alternatePath(Astro.url);
     margin-right: auto;
     line-height: 1.15;
   }
+  @media (min-width: 480px) {
+    .wordmark { white-space: nowrap; }
+  }
   .wordmark .mark { color: var(--primary); }
 
   .top-nav { display: none; }
@@ -95,8 +100,9 @@ const alt = alternatePath(Astro.url);
     display: inline-flex;
     align-items: center;
     min-height: var(--tap);
-    padding: 0 var(--space-3);
+    padding: 0 10px;
     border-radius: var(--radius-pill);
+    white-space: nowrap;
     color: var(--ink-soft);
     text-decoration: none;
     font-size: var(--fs-small);
@@ -135,10 +141,10 @@ const alt = alternatePath(Astro.url);
   }
   .tab-bar ul {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     list-style: none;
     padding: 0;
-    max-width: 560px;
+    max-width: 640px;
     margin: 0 auto;
   }
   .tab-bar li { max-width: none; }
@@ -154,12 +160,13 @@ const alt = alternatePath(Astro.url);
     text-decoration: none;
     font-size: 0.8125rem;
     line-height: 1.15;
+    word-break: break-word;
     text-align: center;
   }
   .tab-bar a[aria-current='page'] { color: var(--primary); font-weight: 700; }
   .tab-bar a[aria-current='page'] :global(.icon) { stroke-width: 2.25; }
 
-  @media (min-width: 768px) {
+  @media (min-width: 1280px) {
     .top-nav { display: block; }
     .tab-bar { display: none; }
     .wordmark { margin-right: var(--space-4); }
