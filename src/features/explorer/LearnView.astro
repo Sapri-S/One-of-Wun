@@ -5,6 +5,7 @@ import Section from '../../components/Section.astro';
 import OnThisPage from '../../components/OnThisPage.astro';
 import Button from '../../components/Button.astro';
 import ExternalLink from '../../components/ExternalLink.astro';
+import HowItWorks from '../../components/HowItWorks.astro';
 import InvestmentExplorer from './InvestmentExplorer.astro';
 import { t, tv, localizePath, type Lang } from '../../i18n/utils';
 
@@ -15,6 +16,7 @@ const ask = tv<string[]>(lang, 'learn.ask');
 <BaseLayout title={t(lang, 'learn.meta.title')} description={t(lang, 'learn.meta.description')} lang={lang}>
   <Section id="compare" level={1} title={t(lang, 'learn.title')} badge="education" intro={t(lang, 'learn.lead')}>
     <div class="otp-wrap">
+      <HowItWorks steps={tv<string[]>(lang, 'learn.how3')} />
       <OnThisPage items={[
         { id: 'ask', label: t(lang, 'learn.otp.ask') },
         { id: 'check', label: t(lang, 'learn.otp.check') },
@@ -28,7 +30,7 @@ const ask = tv<string[]>(lang, 'learn.ask');
       {ask.map((q) => <li>{q}</li>)}
     </ol>
     <div class="actions">
-      <Button href={localizePath('/#readiness', lang)}>{t(lang, 'learn.askReady')}</Button>
+      <Button href={localizePath('/next-step', lang)}>{t(lang, 'learn.askReady')}</Button>
       <Button href={localizePath('/invest', lang)} variant="quiet">{t(lang, 'learn.askPractice')}</Button>
     </div>
   </Section>
@@ -52,6 +54,7 @@ const ask = tv<string[]>(lang, 'learn.ask');
 
 <style>
   .otp-wrap { margin-bottom: var(--space-6); }
+  .otp-wrap > :global(* + *) { margin-top: var(--space-4); }
   .ask {
     display: grid;
     gap: var(--space-3);

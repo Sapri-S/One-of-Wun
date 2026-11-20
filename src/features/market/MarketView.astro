@@ -6,6 +6,7 @@ import OnThisPage from '../../components/OnThisPage.astro';
 import Button from '../../components/Button.astro';
 import Icon from '../../components/Icon.astro';
 import Term from '../../components/Term.astro';
+import HowItWorks from '../../components/HowItWorks.astro';
 import MockMarket from './MockMarket.astro';
 import { t, tv, localizePath, type Lang } from '../../i18n/utils';
 
@@ -17,6 +18,7 @@ const how = tv<string[]>(lang, 'invest.how');
 <BaseLayout title={t(lang, 'invest.meta.title')} description={t(lang, 'invest.meta.description')} lang={lang}>
   <Section id="market" level={1} title={t(lang, 'invest.title')} badge="your-choice" intro={t(lang, 'invest.lead')}>
     <div class="otp-wrap">
+      <HowItWorks steps={tv<string[]>(lang, 'invest.how3')} />
       <OnThisPage items={[
         { id: 'drops', label: t(lang, 'invest.dropsTitle') },
         { id: 'how', label: t(lang, 'invest.howTitle') },
@@ -46,13 +48,14 @@ const how = tv<string[]>(lang, 'invest.how');
     </ul>
     <div class="actions">
       <Button href={localizePath('/learn', lang)}>{t(lang, 'invest.toLearn')}</Button>
-      <Button href={localizePath('/#readiness', lang)} variant="quiet">{t(lang, 'invest.toReady')}</Button>
+      <Button href={localizePath('/next-step', lang)} variant="quiet">{t(lang, 'invest.toReady')}</Button>
     </div>
   </Section>
 </BaseLayout>
 
 <style>
   .otp-wrap { margin-bottom: var(--space-5); }
+  .otp-wrap > :global(* + *) { margin-top: var(--space-4); }
   .drops { list-style: none; padding: 0; display: grid; gap: var(--space-4); }
   @media (min-width: 900px) { .drops { grid-template-columns: 1fr 1fr; } }
   .drops li {

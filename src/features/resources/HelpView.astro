@@ -4,8 +4,9 @@ import BaseLayout from '../../components/BaseLayout.astro';
 import Section from '../../components/Section.astro';
 import OnThisPage from '../../components/OnThisPage.astro';
 import Icon from '../../components/Icon.astro';
+import HowItWorks from '../../components/HowItWorks.astro';
 import ResourceFinder from './ResourceFinder.astro';
-import { t, type Lang } from '../../i18n/utils';
+import { t, tv, type Lang } from '../../i18n/utils';
 import faqEn from '../../content/faq.en.json';
 import faqEs from '../../content/faq.es.json';
 
@@ -16,6 +17,7 @@ const faq = lang === 'es' ? faqEs : faqEn;
 <BaseLayout title={t(lang, 'help.meta.title')} description={t(lang, 'help.meta.description')} lang={lang}>
   <Section id="resources" level={1} title={t(lang, 'help.title')} badge="your-choice" intro={t(lang, 'help.lead')}>
     <div class="otp-wrap">
+      <HowItWorks steps={tv<string[]>(lang, 'help.how3')} />
       <OnThisPage items={[{ id: 'faq', label: t(lang, 'help.otp.faq') }]} />
     </div>
     <ResourceFinder lang={lang} />
@@ -38,6 +40,7 @@ const faq = lang === 'es' ? faqEs : faqEn;
 
 <style>
   .otp-wrap { margin-bottom: var(--space-6); }
+  .otp-wrap > :global(* + *) { margin-top: var(--space-4); }
   .faq { display: grid; gap: var(--space-3); max-width: 820px; }
   details {
     border-radius: var(--radius);

@@ -1,6 +1,6 @@
 # HANDOFF.md: Part 1 → Part 2
 
-Part 1 is done: commit **`b35c7aa`** on branch `claude/pensive-newton-q7dfkn`. Create your branch from that branch (that commit or later).
+Part 1 is done: start from the latest commit (foundation was **`b35c7aa`**; the first-visit UX rework came after it) on branch `claude/pensive-newton-q7dfkn`. Create your branch from that branch (that commit or later).
 Read `context/SHARED.md` and `context/PART-2.md` first. This file covers **how to use what Part 1 built**.
 
 ---
@@ -34,7 +34,7 @@ Route files are thin. The real page is a **view** inside your feature folder:
 ```
 src/pages/learn.astro      →  <View lang="en" />   (already exists, don't need to touch)
 src/pages/es/learn.astro   →  <View lang="es" />   (already exists)
-src/features/explorer/LearnView.astro   ← YOU REPLACE THIS (currently a ComingSoon stub)
+src/features/explorer/LearnView.astro   ← the real page (Part 2)
 ```
 
 Starter for a view:
@@ -81,8 +81,8 @@ const { lang } = Astro.props;
 | `OnThisPage` | `<OnThisPage items={[{id, label}]} />` | Jump-link chips; use on long pages |
 | `Disclaimer` | `<Disclaimer variant="projection" />` | **Required next to every projection** ("Example, not a promise.") |
 | `ExternalLink` | `<ExternalLink href org="CFPB">Consumer guides</ExternalLink>` | Same tab, ↗ icon, `rel="noopener noreferrer"`, screen-reader "(opens CFPB website)" |
+| `HowItWorks` | `<HowItWorks steps={tv<string[]>(lang, 'learn.how')} />` | **Required at the top of every tool.** 3 verb-first steps, ≤ 6 words each |
 | `Icon` | `<Icon name="check" size={20} />` | Names: home sprout book practice route lifebuoy external check pause hourglass info close flag chevron-left chevron-right minus plus reset lock arrow-down steps gate hand |
-| `ComingSoon` | stub only | Delete once all four Part 2 views are real |
 
 ### Tabs (for `/your-path`)
 ```astro
@@ -150,9 +150,10 @@ Motion: use `var(--dur)` and `var(--ease)`. `prefers-reduced-motion` is already 
 
 - **Astro 7.4.13** (latest stable at build time), not Astro 4.
 - **Background** changed from cream `#F7F5F0` to sage-tinted `#F3F6F2`. Tokens in `src/styles/tokens.css` are the source of truth.
-- **Mobile nav**: bottom tab bar with 5 items (Grow, Learn, Practice, Your path, Help); Home is the wordmark. The tab labels are 13px; that's the one exception to the 16px minimum, because they're paired with icons.
+- **Nav**: plain task names (`common.nav.*`). At ≥ 1280px there's a top bar with 6 links (the logo is Home). Below that, a bottom tab bar with 6 icons and short labels (`common.navShort.*`). The 13px tab labels are the one exception to the 16px minimum, because they're paired with icons.
+- **Home** opens with "What would you like to do today?" and 4 task cards. The readiness check moved to **`/next-step`** and asks one question at a time.
 - **Roadmap demo**: "Not ready yet" puts *You are here* on step 3 (cushion) with steps 7–8 *Paused*; "Ready" puts it on step 6 with steps 7–8 *Open*.
-- **Readiness order**: bills not covered → Stop; debt over 15% → Stop; under $1,000 → Wait; else Go. Result links: Stop → `/help`, Wait → `/grow`, Go → `/learn`. **Your `/help` and `/learn` pages are linked from here.**
+- **Readiness order**: bills not covered → Stop; debt over 15% → Stop; under $1,000 → Wait; else Go. Result buttons: Stop → `/help`, Wait → `/grow`, Go → `/learn`. **Your `/help` and `/learn` pages are linked from here and from the Home task cards.**
 - **Generations**: +25 years of growth per generation, no new money, shown at 6% by default with a 4/6/8 toggle; bars are linear.
 - **Offline**: the service worker precaches every built file automatically; no action needed.
 - **Theme**: follows the device's light/dark setting. There's no manual toggle, because that would need storage.
@@ -212,8 +213,14 @@ All four have `/es/` versions through the existing route files.
 | `/save` (was `/grow`) | Demo bank (mock data in fixed random ranges), high-yield savings comparison + demo "move money", Kaizen calculator | `src/features/save/{SaveView,DemoBank,HighYield}.astro`, `mockBank.ts`, `hys.ts`, `bankStore.ts` |
 | `/api/quote`, `/api/search` | Vercel functions that call Finnhub with `FINNHUB_API_KEY` (server-side only), 15s CDN cache, 503 when unavailable | `api/{quote,search,_lib}.ts` |
 
-- **Nav** (`src/i18n/utils.ts` `PAGES`): Home, Save, Learn, Invest, Your path, Help. `/practice` → `/invest` and `/grow` → `/save#calculator` redirect (`vercel.json` + `astro.config.mjs` `redirects`).
+- **Nav** (`src/i18n/utils.ts` `PAGES`, after merging the first-visit UX work): Home (logo), My next step, Save money, Investing basics, Mock market, My situation, Free help. `/practice` → `/invest` and `/grow` → `/save#calculator` redirect (`vercel.json` + `astro.config.mjs` `redirects`).
 - **Part 1 files touched** (owner-approved): `utils.ts` PAGES, `HomeView.astro` tiles, `ReadinessCheck.astro` "wait" link, `KaizenCalculator.astro` (input card no longer `position: sticky`), `common.nav` + `home.start.tiles` strings, `SHARED.md` rules 1 and 4, site map, click budget, F7/F10.
 - **Storage:** only `localStorage['wywtb.mockMarket.v1']` (play portfolio). The demo bank is in memory only.
 - **Setup needed:** add `FINNHUB_API_KEY` in Vercel (Project → Settings → Environment Variables, Production + Preview). Without it, `/invest` shows "Live prices are unavailable" and trading pauses; everything else works. Local: `vercel dev` (the plain `astro dev` server doesn't run `/api`).
 - **Free-tier limits:** Finnhub free has no historical candles, so there is no price-history chart; 60 calls/min shared by all visitors (the 15s cache covers this for normal traffic).
+
+### Merge note (Nov 20 2026): two Part 2 builds
+The Part 1 session also built its own Part 2 (commit `aeaefeb` on `claude/pensive-newton-q7dfkn`). The product owner chose **"ours wins"** where they overlap:
+- **Kept from this branch:** `/learn`, `/your-path`, `/help` (and their content files), `/invest` and `/save`. Their crash simulator and `/practice` were dropped, because `/invest` replaced Practice.
+- **Taken from theirs:** the first-visit UX (`/next-step` guided readiness check, home task cards, task-named nav with short phone labels), the `HowItWorks` strip (now on every tool page, including Save, Invest, Learn, Your path and Help), the preview build config, and the glossary terms `overdraft` and `active-fund`.
+- **Links:** everything that used to point at `/#readiness` now points at `/next-step`.

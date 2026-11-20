@@ -3,11 +3,12 @@
 import BaseLayout from '../../components/BaseLayout.astro';
 import Section from '../../components/Section.astro';
 import Tabs from '../../components/Tabs.astro';
+import HowItWorks from '../../components/HowItWorks.astro';
 import Button from '../../components/Button.astro';
 import Icon from '../../components/Icon.astro';
 import StagePanel from './StagePanel.astro';
 import { STAGES } from './stages';
-import { t, localizePath, type Lang } from '../../i18n/utils';
+import { t, tv, localizePath, type Lang } from '../../i18n/utils';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -15,6 +16,7 @@ const tabs = STAGES.map((s) => ({ id: s.id, label: t(lang, `path.tabs.${s.key}`)
 ---
 <BaseLayout title={t(lang, 'path.meta.title')} description={t(lang, 'path.meta.description')} lang={lang}>
   <Section id="stages" level={1} title={t(lang, 'path.title')} badge="education" intro={t(lang, 'path.lead')}>
+    <div class="how-wrap"><HowItWorks steps={tv<string[]>(lang, 'path.how3')} /></div>
     <Tabs idPrefix="path" label={t(lang, 'path.tabsLabel')} tabs={tabs}>
       <div slot="catch-up"><StagePanel lang={lang} stage={STAGES[0]} /></div>
       <div slot="gig"><StagePanel lang={lang} stage={STAGES[1]} /></div>
@@ -29,7 +31,7 @@ const tabs = STAGES.map((s) => ({ id: s.id, label: t(lang, `path.tabs.${s.key}`)
       <div>
         <p>{t(lang, 'path.pause')}</p>
         <div class="pause-action">
-          <Button href={localizePath('/#readiness', lang)} variant="quiet">{t(lang, 'path.pauseLink')}</Button>
+          <Button href={localizePath('/next-step', lang)} variant="quiet">{t(lang, 'path.pauseLink')}</Button>
         </div>
       </div>
     </div>
@@ -37,6 +39,7 @@ const tabs = STAGES.map((s) => ({ id: s.id, label: t(lang, `path.tabs.${s.key}`)
 </BaseLayout>
 
 <style>
+  .how-wrap { margin-bottom: var(--space-5); }
   .pause { display: flex; gap: var(--space-4); align-items: flex-start; }
   .pause-icon {
     display: grid;

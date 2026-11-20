@@ -1,55 +1,93 @@
 import { test, expect } from './fixtures';
+import type { Page } from '@playwright/test';
 
-test('roadmap toggle switches profile, light and explanation', async ({ page, problems }) => {
+test('home asks one question and offers the main tasks', async ({ page, problems }) => {
   await page.goto('/');
-  const status = page.locator('#rm-status');
+  await expect(page.getByRole('heading', { level: 2, name: 'What would you like to do today?' })).toBeVisible();
+  const tasks = page.locator('.tasks a');
+  await expect(tasks).toHaveCount(4);
+  await expect(tasks.first()).toHaveAttribute('href', '/next-step');
+  // Everything else is one click away (3-click rule).
+  for (const href of ['/save', '/learn', '/help', '/invest', '/your-path']) {
+    await expect(page.locator(`.hero a[href="${href}"]`)).toHaveCount(1);
+  }
+  expect(problems).toEqual([]);
+});
+
+test('example roadmap toggle switches profile, light and explanation', async ({ page, problems }) => {
+  await page.goto('/');
+  const status = page.locator('#roadmap .status');
   await expect(status).toHaveAttribute('data-status', 'stop');
-  await expect(page.locator('[aria-current="step"]')).toContainText('$1,000');
+  await expect(page.locator('#roadmap [aria-current="step"]')).toContainText('$1,000');
 
   await page.getByRole('button', { name: 'Ready', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Ready', exact: true })).toHaveAttribute('aria-pressed', 'true');
   await expect(status).toHaveAttribute('data-status', 'go');
   await expect(page.locator('[data-explain]')).toContainText('green');
-  await expect(page.locator('li.is-open')).toHaveCount(2);
+  await expect(page.locator('#roadmap li.is-open')).toHaveCount(2);
 
   await page.getByRole('button', { name: /Pay off high-interest debt/ }).click();
-  await expect(page.locator('[data-detail="4"]')).toBeVisible();
+  await expect(page.locator('#roadmap [data-detail="4"]')).toBeVisible();
   expect(problems).toEqual([]);
 });
 
-const answer = async (page: import('@playwright/test').Page, name: string, v: 'yes' | 'no') =>
-  page.locator(`input[name="${name}"][value="${v}"]`).check({ force: true });
+const answer = (page: Page, v: 'yes' | 'no') => page.locator(`[data-q]:not([hidden]) button[data-answer="${v}"]`).click();
 
-test('readiness check: deterministic stop / wait / go and start over', async ({ page }) => {
-  await page.goto('/');
-  const box = page.locator('[data-result]');
-  await expect(box).toHaveAttribute('data-state', 'pending');
+test('guided check: one question at a time, back, result, path placement, start over', async ({ page, problems }) => {
+  await page.goto('/next-step');
+  await expect(page.locator('[data-progress]')).toHaveText('Question 1 of 3');
+  await expect(page.locator('[data-q]:not([hidden])')).toHaveCount(1);
+  await expect(page.locator('[data-placement]')).toBeHidden();
 
-  await answer(page, 'highInterestDebt', 'yes');
-  await answer(page, 'hasThousandSaved', 'yes');
-  await answer(page, 'billsCovered', 'yes');
-  await expect(box).toHaveAttribute('data-state', 'stop');
-  await expect(box).toContainText('Pay down debt over 15% APR');
+  await answer(page, 'yes'); // debt
+  await expect(page.locator('[data-progress]')).toHaveText('Question 2 of 3');
+  await page.getByRole('button', { name: 'Back' }).click();
+  await expect(page.locator('[data-progress]')).toHaveText('Question 1 of 3');
+  await expect(page.locator('[data-q="0"] button[data-answer="yes"]')).toHaveAttribute('aria-pressed', 'true');
+  await answer(page, 'yes');
+  await answer(page, 'yes'); // $1,000 saved
+  await answer(page, 'yes'); // bills covered
 
-  await answer(page, 'highInterestDebt', 'no');
-  await answer(page, 'hasThousandSaved', 'no');
-  await expect(box).toHaveAttribute('data-state', 'wait');
+  const result = page.locator('[data-result]');
+  await expect(result).toBeVisible();
+  await expect(result).toHaveAttribute('data-state', 'stop');
+  await expect(result).toContainText('Pay down debt over 15% APR');
+  await expect(page.locator('[data-next-title]')).toHaveText('5. Pay off high-interest debt');
+  await expect(page.locator('[data-result-title]')).toBeFocused();
 
-  await answer(page, 'hasThousandSaved', 'yes');
-  await expect(box).toHaveAttribute('data-state', 'go');
-  await expect(box.getByRole('link')).toHaveAttribute('href', '/learn');
+  await expect(page.locator('[data-placement]')).toBeVisible();
+  await expect(page.locator('#your-place [aria-current="step"]')).toContainText('high-interest debt');
+  await expect(page.locator('#your-place li.is-gated')).toHaveCount(2);
 
-  await answer(page, 'billsCovered', 'no');
-  await expect(box).toHaveAttribute('data-state', 'stop');
-  await expect(box).toContainText('Start with the basics');
+  await page.getByRole('button', { name: 'Start over' }).click();
+  await expect(page.locator('[data-progress]')).toHaveText('Question 1 of 3');
+  await expect(page.locator('[data-placement]')).toBeHidden();
 
-  await box.getByRole('button', { name: 'Start over' }).click();
-  await expect(box).toHaveAttribute('data-state', 'pending');
+  await answer(page, 'no');
+  await answer(page, 'yes');
+  await answer(page, 'yes');
+  await expect(result).toHaveAttribute('data-state', 'go');
+  await expect(result.getByRole('link', { name: 'Learn investing basics' })).toHaveAttribute('href', '/learn');
+  await expect(page.locator('#your-place li.is-open')).toHaveCount(2);
+
+  await page.getByRole('button', { name: 'Start over' }).click();
+  await answer(page, 'no');
+  await answer(page, 'no');
+  await answer(page, 'yes');
+  await expect(result).toHaveAttribute('data-state', 'wait');
+
+  await page.getByRole('button', { name: 'Start over' }).click();
+  await answer(page, 'no');
+  await answer(page, 'yes');
+  await answer(page, 'no');
+  await expect(result).toContainText('Start with the basics');
+  await expect(page.locator('[data-next-title]')).toHaveText('1. Cover the basics');
+  expect(problems).toEqual([]);
 });
 
 test('jargon term opens, closes with Escape and returns focus', async ({ page }) => {
-  await page.goto('/');
-  const term = page.locator('#roadmap button.term', { hasText: 'APR' });
+  await page.goto('/next-step');
+  const term = page.locator('[data-q="0"] button.term');
   await term.click();
   const pop = page.getByRole('dialog', { name: 'APR' });
   await expect(pop).toBeVisible();
@@ -59,12 +97,18 @@ test('jargon term opens, closes with Escape and returns focus', async ({ page })
   await expect(term).toBeFocused();
 });
 
-test('3-click rule: every main page linked from home', async ({ page }) => {
-  await page.goto('/');
-  for (const href of ['/save', '/learn', '/invest', '/your-path', '/help']) {
-    await expect(page.locator(`#start a[href="${href}"]`)).toHaveCount(1);
+test('every tool page explains how it works', async ({ page }) => {
+  for (const r of ['/next-step', '/save', '/invest', '/learn', '/your-path', '/help']) {
+    await page.goto(r);
+    await expect(page.getByText('How this works')).toBeVisible();
   }
-  await expect(page.locator('#start a[href="#readiness"]')).toHaveCount(1);
+});
+
+test('3-click rule: every main page is in the nav', async ({ page }) => {
+  await page.goto('/');
+  for (const href of ['/next-step', '/save', '/learn', '/invest', '/your-path', '/help']) {
+    await expect(page.locator(`header a[href="${href}"], nav a[href="${href}"]`).first()).toBeAttached();
+  }
 });
 
 test('language switch keeps the same page', async ({ page }) => {

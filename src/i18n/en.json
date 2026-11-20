@@ -1,5 +1,8 @@
 {
-  "_meta": { "lang": "en", "reviewed": true },
+  "_meta": {
+    "lang": "en",
+    "reviewed": true
+  },
   "common": {
     "siteName": "Where You Want to Be",
     "tagline": "A calm, free map for your money.",
@@ -7,17 +10,18 @@
     "navLabel": "Main",
     "nav": {
       "home": "Home",
-      "save": "Save",
-      "learn": "Learn",
-      "invest": "Invest",
-      "path": "Your path",
-      "help": "Help"
+      "next": "My next step",
+      "save": "Save money",
+      "learn": "Investing basics",
+      "invest": "Mock market",
+      "path": "My situation",
+      "help": "Free help"
     },
     "lang": {
       "switchTo": "Español",
       "switchAria": "Ver esta página en español"
     },
-    "eduStrip": "Education only. Not financial advice. Nothing you type is saved.",
+    "eduStrip": "Education only, not financial advice.",
     "disclaimer": {
       "education": "Education only — not financial advice.",
       "projection": "Example, not a promise."
@@ -51,7 +55,17 @@
       "privacy": "We don't collect anything. No cookies, no tracking, no ads. Nothing you type leaves your device.",
       "nonCommercial": "A free, non-commercial education project. We don't sell or recommend any product.",
       "explore": "Explore"
-    }
+    },
+    "navShort": {
+      "home": "Home",
+      "next": "Next step",
+      "save": "Save",
+      "learn": "Basics",
+      "invest": "Invest",
+      "path": "Situation",
+      "help": "Help"
+    },
+    "howItWorks": "How this works"
   },
   "home": {
     "meta": {
@@ -60,14 +74,14 @@
     },
     "hero": {
       "title": "Get to where you want to be, one calm step at a time.",
-      "lead": "A free map for your money. See which step comes next and why, in plain words. No sign-up. Nothing you type is saved.",
-      "ctaPrimary": "Check if you're ready",
-      "ctaQuiet": "Explore all pages"
+      "lead": "Free. No sign-up. Nothing you type is saved.",
+      "ask": "What would you like to do today?",
+      "more": "Also here:"
     },
     "roadmap": {
-      "title": "Your 8-step money path",
-      "intro": "Each step makes the next one safer. Switch between two example people to see how the path changes.",
-      "toggleLabel": "Show an example person",
+      "title": "How the path works",
+      "intro": "Every money plan follows the same 8 steps. These two people are made-up examples, not you. Switch between them to see how the path changes.",
+      "toggleLabel": "Pick an example person",
       "profiles": {
         "notReady": {
           "label": "Not ready yet",
@@ -97,73 +111,146 @@
         "ready": "The light is green. Bills are covered, there's no high-interest debt, and there's a $1,000 cushion. Now it makes sense to grow the cushion and start learning about investing."
       },
       "milestones": [
-        { "title": "Cover the basics", "body": "Rent, food, utilities and getting to work come first. A simple plan for where each dollar goes helps you see what's left." },
-        { "title": "Open a fee-free bank account", "body": "A free FDIC-insured bank or NCUA-insured credit union account keeps your money safe and stops check-cashing fees from eating your pay." },
-        { "title": "Save a $1,000 cushion", "body": "A small emergency fund means a flat tire or a doctor bill doesn't turn into new debt. Small, regular amounts get you there." },
-        { "title": "Get your job's 401(k) match", "body": "If your job adds money when you save for retirement, that's extra pay. Saving enough to get the full match is usually worth it." },
-        { "title": "Pay off high-interest debt", "body": "Debt over 15% APR, like most credit cards, grows fast. Paying it off is one of the surest ways to keep more of your money." },
-        { "title": "Grow your cushion to 3–6 months", "body": "A bigger cushion covers a job loss or slow months. Gig workers often aim for the higher end because pay goes up and down." },
-        { "title": "Invest for retirement", "body": "With a safe base in place, regular saving in an IRA or more in a 401(k) can grow for decades. This is money for later, not for bills." },
-        { "title": "Invest in a regular account", "body": "Once retirement saving is on track, a regular (taxable) investment account can help with other long-term goals." }
-      ]
-    },
-    "readiness": {
-      "title": "Are you ready to invest? Three quick questions",
-      "intro": "Answer yes or no. Your answers stay on this page and disappear when you leave.",
-      "yes": "Yes",
-      "no": "No",
-      "questions": [
-        { "q": "Do you have any debt over 15% APR?", "hint": "This includes most credit cards, payday loans and title loans." },
-        { "q": "Do you have at least $1,000 saved for emergencies?", "hint": "Money you could use today without borrowing." },
-        { "q": "Are your basic bills covered each month?", "hint": "Rent, food, utilities and getting to work." }
+        {
+          "title": "Cover the basics",
+          "body": "Rent, food, utilities and getting to work come first. A simple plan for where each dollar goes helps you see what's left."
+        },
+        {
+          "title": "Open a fee-free bank account",
+          "body": "A free FDIC-insured bank or NCUA-insured credit union account keeps your money safe and stops check-cashing fees from eating your pay."
+        },
+        {
+          "title": "Save a $1,000 cushion",
+          "body": "A small emergency fund means a flat tire or a doctor bill doesn't turn into new debt. Small, regular amounts get you there."
+        },
+        {
+          "title": "Get your job's 401(k) match",
+          "body": "If your job adds money when you save for retirement, that's extra pay. Saving enough to get the full match is usually worth it."
+        },
+        {
+          "title": "Pay off high-interest debt",
+          "body": "Debt over 15% APR, like most credit cards, grows fast. Paying it off is one of the surest ways to keep more of your money."
+        },
+        {
+          "title": "Grow your cushion to 3–6 months",
+          "body": "A bigger cushion covers a job loss or slow months. Gig workers often aim for the higher end because pay goes up and down."
+        },
+        {
+          "title": "Invest for retirement",
+          "body": "With a safe base in place, regular saving in an IRA or more in a 401(k) can grow for decades. This is money for later, not for bills."
+        },
+        {
+          "title": "Invest in a regular account",
+          "body": "Once retirement saving is on track, a regular (taxable) investment account can help with other long-term goals."
+        }
       ],
-      "pending": "Answer all three questions to see your light.",
-      "resultLabel": "Your light",
-      "results": {
-        "stopBills": "Start with the basics. When your bills are covered each month, every other step gets easier. Free help: a nonprofit credit counselor or the CFPB guides on the Help page.",
-        "stopDebt": "Pay down debt over 15% APR before investing. Every dollar you pay on a 24.9% card saves you about 25 cents a year. That beats what investing usually earns.",
-        "wait": "You're close. Build a $1,000 cushion first so a surprise bill doesn't send you back into debt. Even $5 or $10 a week adds up.",
-        "go": "Your base is safe. You're ready to learn how investing works. Start with the Learn page, then try the mock market with play money before using real money."
-      },
-      "nextLinks": {
-        "stop": "See free help",
-        "wait": "See how $5 a week grows",
-        "go": "Learn the basics of investing"
-      },
-      "startOver": "Start over",
-      "andon": {
-        "title": "Life happened? Press pause.",
-        "body": "Lost hours, a medical bill, a family need. Pausing your plan is part of the plan. Stop adding money, keep your cushion, and pick up again when you can. No guilt."
-      }
+      "tryYours": "Want to see where you are?",
+      "tryYoursLink": "Find my next money step"
     },
     "toyota": {
       "title": "Three simple ideas behind the path",
       "intro": "These come from a car factory famous for steady, careful work. They work for money, too.",
       "cards": [
-        { "name": "Kaizen", "plain": "Small steps", "body": "Tiny, regular steps beat big, rare ones. $5 a week is a real start." },
-        { "name": "Jidoka", "plain": "Safety gates", "body": "Don't move to the next step until this one is safe. That's why debt comes before investing." },
-        { "name": "Andon", "plain": "The pause button", "body": "Anyone can stop the line when something's wrong. You can pause your plan too, without shame." }
+        {
+          "name": "Kaizen",
+          "plain": "Small steps",
+          "body": "Tiny, regular steps beat big, rare ones. $5 a week is a real start."
+        },
+        {
+          "name": "Jidoka",
+          "plain": "Safety gates",
+          "body": "Don't move to the next step until this one is safe. That's why debt comes before investing."
+        },
+        {
+          "name": "Andon",
+          "plain": "The pause button",
+          "body": "Anyone can stop the line when something's wrong. You can pause your plan too, without shame."
+        }
       ]
     },
-    "start": {
-      "title": "Where would you like to go next?",
-      "tiles": {
-        "readiness": { "title": "Check your readiness", "body": "Three yes-or-no questions. Get a clear red, yellow or green light." },
-        "save": { "title": "Save smarter", "body": "Connect a demo bank, compare high-yield savings, and watch $5 a week grow." },
-        "learn": { "title": "Learn the basics", "body": "Index funds, stocks and bonds in plain words, with real costs." },
-        "invest": { "title": "Try the mock market", "body": "Buy and sell real stocks at real prices with $10,000 of play money." },
-        "path": { "title": "Find your path", "body": "Stories for 50+ catch-up, gig work, first-gen and new bank accounts." },
-        "help": { "title": "Get free help", "body": "Trusted public resources for taxes, debt and banking." }
+    "tasks": {
+      "next": {
+        "title": "Find my next money step",
+        "body": "Answer 3 yes-or-no questions. See where you are on the path and what to do next.",
+        "time": "About 1 minute"
+      },
+      "save": {
+        "title": "Save more and watch it grow",
+        "body": "Connect a demo bank, compare high-yield savings, and see what $5 a week can become.",
+        "time": "About 3 minutes"
+      },
+      "learn": {
+        "title": "Learn investing basics",
+        "body": "Index funds, stocks and bonds in plain words, with real costs.",
+        "time": "About 3 minutes"
+      },
+      "help": {
+        "title": "Get free help now",
+        "body": "Trusted free resources for debt, taxes and banking.",
+        "time": "Right away"
+      },
+      "invest": "Try the mock market with play money",
+      "path": "Advice for my situation"
+    }
+  },
+  "next": {
+    "yes": "Yes",
+    "no": "No",
+    "questions": [
+      {
+        "q": "Do you have any debt over 15% APR?",
+        "hint": "This includes most credit cards, payday loans and title loans."
+      },
+      {
+        "q": "Do you have at least $1,000 saved for emergencies?",
+        "hint": "Money you could use today without borrowing."
+      },
+      {
+        "q": "Are your basic bills covered each month?",
+        "hint": "Rent, food, utilities and getting to work."
       }
+    ],
+    "results": {
+      "stopBills": "Start with the basics. When your bills are covered each month, every other step gets easier. Free help: a nonprofit credit counselor or the CFPB guides on the Help page.",
+      "stopDebt": "Pay down debt over 15% APR before investing. Every dollar you pay on a 24.9% card saves you about 25 cents a year. That beats what investing usually earns.",
+      "wait": "You're close. Build a $1,000 cushion first so a surprise bill doesn't send you back into debt. Even $5 or $10 a week adds up.",
+      "go": "Your base is safe. You're ready to learn how investing works. Start with the Learn page, then try the mock market with play money before using real money."
+    },
+    "startOver": "Start over",
+    "andon": {
+      "title": "Life happened? Press pause.",
+      "body": "Lost hours, a medical bill, a family need. Pausing your plan is part of the plan. Stop adding money, keep your cushion, and pick up again when you can. No guilt."
+    },
+    "meta": {
+      "title": "Find your next money step",
+      "description": "Answer 3 yes-or-no questions to see your readiness light and your place on the 8-step money path."
+    },
+    "title": "Find your next money step",
+    "intro": "Three yes-or-no questions. About one minute. Your answers stay on this page and disappear when you leave.",
+    "how": [
+      "Answer 3 yes-or-no questions",
+      "See your red, yellow or green light",
+      "See your next step on the path"
+    ],
+    "progress": "Question {n} of {total}",
+    "back": "Back",
+    "lightTitle": "Are you ready to invest?",
+    "nextStepLabel": "Your next step",
+    "placeTitle": "Your place on the path",
+    "placeIntro": "Based on your answers. Steps with a lock wait until the steps before them are safe.",
+    "nextButtons": {
+      "stop": "See free help",
+      "wait": "See how small savings grow",
+      "go": "Learn investing basics"
     }
   },
   "grow": {
     "meta": {
-      "title": "Small steps, big future",
+      "title": "Savings calculator",
       "description": "Slide from $5 to $100 a week and see how small, regular saving could grow over 10 to 60 years."
     },
-    "title": "Small steps, big future",
-    "lead": "This is Kaizen: tiny, steady steps. Move the sliders to see how a small weekly amount could grow over time.",
+    "title": "Savings calculator",
+    "lead": "See how a small amount each week could grow over time. Start with $5. That's Kaizen: tiny, steady steps.",
     "calcTitle": "Your weekly step",
     "weekly": "How much each week?",
     "years": "For how many years?",
@@ -202,7 +289,12 @@
       "Gig pay goes up and down? Save $5 in slow weeks and more in good ones."
     ],
     "readyCheck": "Before investing, make sure your base is safe.",
-    "readyCheckLink": "Check your readiness"
+    "readyCheckLink": "Find my next money step",
+    "how3": [
+      "Pick how much to save each week",
+      "Pick how many years",
+      "See what it could grow to"
+    ]
   },
   "glossary": {
     "meta": {
@@ -316,7 +408,12 @@
     "checkBasics": "Read the basics of investing",
     "checkBasicsOrg": "Investor.gov",
     "checkBasicsBody": "Free, plain guides from the U.S. Securities and Exchange Commission (SEC).",
-    "checkPro": "A licensed, fee-only adviser can help with your full picture. Ask how they are paid before you start."
+    "checkPro": "A licensed, fee-only adviser can help with your full picture. Ask how they are paid before you start.",
+    "how3": [
+      "Pick an amount to compare",
+      "Read each type side by side",
+      "Check the questions before you choose"
+    ]
   },
   "path": {
     "meta": {
@@ -415,7 +512,12 @@
     },
     "pauseTitle": "Every path has a pause button",
     "pause": "Lost hours, a medical bill, a family need: life happens. Pausing your plan is part of the plan. Keep your cushion, stop adding for a while, and pick up again when you can.",
-    "pauseLink": "Check where you are now"
+    "pauseLink": "Check where you are now",
+    "how3": [
+      "Pick the story closest to yours",
+      "Tick the steps as you read",
+      "Try the tool for your situation"
+    ]
   },
   "help": {
     "meta": {
@@ -445,7 +547,12 @@
     "noMatchBody": "Try a different word, or clear the search to see everything.",
     "clear": "Clear search",
     "faqTitle": "Common questions",
-    "faqIntro": "Short, honest answers."
+    "faqIntro": "Short, honest answers.",
+    "how3": [
+      "Pick a topic or search",
+      "Choose a free resource",
+      "Read the common questions"
+    ]
   },
   "invest": {
     "meta": {
@@ -551,7 +658,12 @@
       "Nothing here is a recommendation. It's a safe place to learn how investing feels."
     ],
     "toLearn": "Learn the basics first",
-    "toReady": "Check your readiness"
+    "toReady": "Check your readiness",
+    "how3": [
+      "Pick a stock or ETF",
+      "Buy or sell with play money",
+      "Watch your portfolio change"
+    ]
   },
   "save": {
     "meta": {
@@ -626,6 +738,11 @@
         "checking": "Checking",
         "savings": "Savings"
       }
-    }
+    },
+    "how3": [
+      "Connect a demo bank",
+      "Compare high-yield savings",
+      "See small steps grow"
+    ]
   }
 }

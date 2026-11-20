@@ -1,23 +1,26 @@
 ---
 /**
- * F2 — Ready-to-Invest check (FR-02). Three yes/no questions → Stop / Wait / Go.
+ * F2 — guided Ready-to-Invest check (FR-02). One question at a time → light + next step,
+ * then places the visitor on the personal roadmap (if one is on the page).
  * Answers live only in the page; nothing is stored.
  */
 import Icon from '../../components/Icon.astro';
 import Term from '../../components/Term.astro';
+import Button from '../../components/Button.astro';
 import { t, tv, localizePath, type Lang } from '../../i18n/utils';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
-const qs = tv<{ q: string; hint: string }[]>(lang, 'home.readiness.questions');
+const qs = tv<{ q: string; hint: string }[]>(lang, 'next.questions');
 // Order matches logic.ts fields.
 const fields = ['highInterestDebt', 'hasThousandSaved', 'billsCovered'] as const;
 
 const i18n = {
+  progress: t(lang, 'next.progress'),
   status: tv<Record<string, string>>(lang, 'common.status'),
-  results: tv<Record<string, string>>(lang, 'home.readiness.results'),
-  next: tv<Record<string, string>>(lang, 'home.readiness.nextLinks'),
-  pending: t(lang, 'home.readiness.pending'),
+  results: tv<Record<string, string>>(lang, 'next.results'),
+  buttons: tv<Record<string, string>>(lang, 'next.nextButtons'),
+  milestones: tv<{ title: string }[]>(lang, 'home.roadmap.milestones').map((m) => m.title),
   links: {
     stop: localizePath('/help', lang),
     wait: localizePath('/save#calculator', lang),
@@ -25,253 +28,224 @@ const i18n = {
   },
 };
 ---
-<div class="readiness" data-readiness data-i18n={JSON.stringify(i18n)}>
-  <form class="questions" novalidate>
+<div class="guided" data-guided data-i18n={JSON.stringify(i18n)}>
+  <div class="asking" data-asking>
+    <div class="progress">
+      <p class="progress-text" data-progress>{t(lang, 'next.progress', { n: 1, total: 3 })}</p>
+      <ol class="dots" aria-hidden="true">
+        {qs.map((_, i) => <li class:list={{ on: i === 0 }} data-dot={i}></li>)}
+      </ol>
+    </div>
+
     {qs.map((q, i) => (
-      <fieldset class="q">
-        <legend class="q-text">
-          <span class="q-num" aria-hidden="true">{i + 1}</span>
-          <span>
-            {i === 0 ? (
-              <Fragment>{q.q.split('APR')[0]}<Term id="apr">APR</Term>{q.q.split('APR')[1]}</Fragment>
-            ) : q.q}
-          </span>
-        </legend>
+      <div class="q" data-q={i} hidden={i !== 0}>
+        <h2 class="q-text" id={`rq-${i}`} tabindex="-1">
+          {i === 0 ? (
+            <Fragment>{q.q.split('APR')[0]}<Term id="apr">APR</Term>{q.q.split('APR')[1]}</Fragment>
+          ) : q.q}
+        </h2>
         <p class="q-hint" id={`rq-hint-${i}`}>{q.hint}</p>
-        <div class="choices">
+        <div class="choices" role="group" aria-labelledby={`rq-${i}`} aria-describedby={`rq-hint-${i}`}>
           {(['yes', 'no'] as const).map((v) => (
-            <label class="choice">
-              <input type="radio" name={fields[i]} value={v} aria-describedby={`rq-hint-${i}`} />
-              <span>{t(lang, `home.readiness.${v}`)}</span>
-            </label>
+            <button type="button" class="choice" data-field={fields[i]} data-answer={v} aria-pressed="false">
+              {t(lang, `next.${v}`)}
+            </button>
           ))}
         </div>
-      </fieldset>
+      </div>
     ))}
-  </form>
 
-  <div class="result" data-result data-state="pending" aria-live="polite" aria-atomic="true">
-    <p class="result-label">{t(lang, 'home.readiness.resultLabel')}</p>
-    <div class="light" aria-hidden="true">
-      <span class="lamp lamp--stop"></span>
-      <span class="lamp lamp--wait"></span>
-      <span class="lamp lamp--go"></span>
-    </div>
-    <p class="result-title" data-result-title>{i18n.pending}</p>
-    <p class="result-body" data-result-body hidden></p>
-    <a class="result-link" data-result-link href="#" hidden></a>
-    <button type="button" class="start-over" data-reset>
-      <Icon name="reset" size={20} />
-      {t(lang, 'home.readiness.startOver')}
+    <button type="button" class="back" data-back hidden>
+      <Icon name="chevron-left" size={20} />
+      {t(lang, 'next.back')}
     </button>
+  </div>
+
+  <div class="result" data-result data-state="stop" hidden>
+    <p class="result-kicker">{t(lang, 'next.lightTitle')}</p>
+    <div class="light-row">
+      <span class="light" aria-hidden="true">
+        <span class="lamp lamp--stop"></span>
+        <span class="lamp lamp--wait"></span>
+        <span class="lamp lamp--go"></span>
+      </span>
+      <h2 class="result-title" data-result-title tabindex="-1"></h2>
+    </div>
+    <p class="result-body" data-result-body></p>
+    <div class="next-step">
+      <p class="next-label">{t(lang, 'next.nextStepLabel')}</p>
+      <p class="next-title" data-next-title></p>
+    </div>
+    <div class="actions">
+      <Button href="#" data-result-link>…</Button>
+      <Button variant="quiet" data-reset>
+        <Icon name="reset" size={20} />
+        {t(lang, 'next.startOver')}
+      </Button>
+    </div>
   </div>
 </div>
 
-<aside class="andon" aria-labelledby="andon-title">
-  <span class="andon-icon"><Icon name="pause" size={28} /></span>
-  <div>
-    <h3 id="andon-title">{t(lang, 'home.readiness.andon.title')}</h3>
-    <p>{t(lang, 'home.readiness.andon.body')}</p>
-  </div>
-</aside>
-
 <script>
-  import { evaluate, type Answers } from './logic';
+  import { evaluate, placeOnPath, type Answers } from './logic';
 
-  document.querySelectorAll<HTMLElement>('[data-readiness]').forEach((root) => {
+  document.querySelectorAll<HTMLElement>('[data-guided]').forEach((root) => {
     const i18n = JSON.parse(root.dataset.i18n || '{}');
-    const form = root.querySelector('form')!;
-    const box = root.querySelector<HTMLElement>('[data-result]')!;
-    const title = root.querySelector<HTMLElement>('[data-result-title]')!;
-    const body = root.querySelector<HTMLElement>('[data-result-body]')!;
+    const asking = root.querySelector<HTMLElement>('[data-asking]')!;
+    const qs = Array.from(root.querySelectorAll<HTMLElement>('[data-q]'));
+    const dots = Array.from(root.querySelectorAll<HTMLElement>('[data-dot]'));
+    const back = root.querySelector<HTMLButtonElement>('[data-back]')!;
+    const result = root.querySelector<HTMLElement>('[data-result]')!;
     const link = root.querySelector<HTMLAnchorElement>('[data-result-link]')!;
+    const placement = document.querySelector<HTMLElement>('[data-placement]');
+    const roadmap = document.querySelector<HTMLElement>('[data-roadmap][data-mode="personal"]');
 
-    const read = (name: string): boolean | null => {
-      const v = (form.elements.namedItem(name) as RadioNodeList | null)?.value;
-      return v === 'yes' ? true : v === 'no' ? false : null;
-    };
+    const answers: Answers = { highInterestDebt: null, hasThousandSaved: null, billsCovered: null };
+    let step = 0;
 
-    function render() {
-      const answers: Answers = {
-        highInterestDebt: read('highInterestDebt'),
-        hasThousandSaved: read('hasThousandSaved'),
-        billsCovered: read('billsCovered'),
-      };
-      const r = evaluate(answers);
-      if (!r) {
-        box.dataset.state = 'pending';
-        title.textContent = i18n.pending;
-        body.hidden = true;
-        link.hidden = true;
-        return;
-      }
-      box.dataset.state = r.status;
-      title.textContent = i18n.status[r.status];
-      const key = r.status === 'stop' ? (r.reason === 'bills' ? 'stopBills' : 'stopDebt') : r.status;
-      body.textContent = i18n.results[key];
-      body.hidden = false;
-      link.textContent = i18n.next[r.status];
-      link.href = i18n.links[r.status];
-      link.hidden = false;
+    function show(i: number, focus = true) {
+      step = i;
+      qs.forEach((q, j) => (q.hidden = j !== i));
+      dots.forEach((d, j) => d.classList.toggle('on', j <= i));
+      root.querySelector('[data-progress]')!.textContent = i18n.progress.replace('{n}', String(i + 1)).replace('{total}', String(qs.length));
+      back.hidden = i === 0;
+      if (focus) qs[i].querySelector<HTMLElement>('.q-text')!.focus();
     }
 
-    form.addEventListener('change', render);
-    form.addEventListener('submit', (e) => e.preventDefault());
-    root.querySelector('[data-reset]')!.addEventListener('click', () => {
-      form.reset();
-      render();
-      form.querySelector<HTMLInputElement>('input')?.focus();
+    function finish() {
+      const r = evaluate(answers)!;
+      const place = placeOnPath(answers)!;
+      asking.hidden = true;
+      result.hidden = false;
+      result.dataset.state = r.status;
+      const key = r.status === 'stop' ? (r.reason === 'bills' ? 'stopBills' : 'stopDebt') : r.status;
+      root.querySelector('[data-result-title]')!.textContent = i18n.status[r.status];
+      root.querySelector('[data-result-body]')!.textContent = i18n.results[key];
+      root.querySelector('[data-next-title]')!.textContent = `${place.current + 1}. ${i18n.milestones[place.current]}`;
+      link.textContent = i18n.buttons[r.status];
+      link.href = i18n.links[r.status];
+      if (placement && roadmap) {
+        placement.hidden = false;
+        roadmap.dispatchEvent(new CustomEvent('roadmap:place', { detail: place }));
+      }
+      root.querySelector<HTMLElement>('[data-result-title]')!.focus();
+    }
+
+    function reset() {
+      (Object.keys(answers) as (keyof Answers)[]).forEach((k) => (answers[k] = null));
+      root.querySelectorAll('[data-answer]').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+      result.hidden = true;
+      asking.hidden = false;
+      if (placement) placement.hidden = true;
+      show(0);
+    }
+
+    root.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const choice = target.closest<HTMLButtonElement>('[data-answer]');
+      if (choice) {
+        const field = choice.dataset.field as keyof Answers;
+        answers[field] = choice.dataset.answer === 'yes';
+        choice.parentElement!.querySelectorAll('[data-answer]').forEach((b) => b.setAttribute('aria-pressed', String(b === choice)));
+        if (step < qs.length - 1) show(step + 1);
+        else finish();
+        return;
+      }
+      if (target.closest('[data-back]')) return show(Math.max(0, step - 1));
+      if (target.closest('[data-reset]')) return reset();
     });
-    render();
   });
 </script>
 
 <style>
-  .readiness {
-    display: grid;
-    gap: var(--space-5);
-  }
-  .questions { display: grid; gap: var(--space-4); }
-  .q {
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
+  .guided {
+    max-width: 720px;
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
     background: var(--surface);
-    padding: var(--space-4) var(--space-5) var(--space-5);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
   }
-  .q-text {
-    display: flex;
-    gap: var(--space-3);
-    align-items: flex-start;
-    font-weight: 700;
-    font-size: var(--fs-body);
-    line-height: 1.4;
-    padding: 0;
-    float: left; /* lets the legend sit inside the padded box */
-    width: 100%;
-  }
-  .q-num {
-    display: grid;
-    place-items: center;
-    flex: 0 0 auto;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
+  .progress { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+  .progress-text { font-weight: 700; color: var(--ink-soft); font-size: var(--fs-small); }
+  .dots { display: flex; gap: var(--space-2); list-style: none; padding: 0; }
+  .dots li {
+    width: 36px;
+    height: 8px;
+    border-radius: 4px;
     background: var(--surface-sage);
-    color: var(--primary);
-    font-size: var(--fs-small);
+    transition: background-color var(--dur) var(--ease);
   }
-  .q-hint { clear: both; padding-top: var(--space-1); padding-left: 42px; color: var(--ink-muted); font-size: var(--fs-small); }
+  .dots li.on { background: var(--primary); }
+
+  .q { margin-top: var(--space-5); }
+  .q:not([hidden]) { animation: q-in var(--dur) var(--ease); }
+  .q-text { font-size: var(--fs-h3); line-height: 1.3; }
+  .q-text:focus { outline: none; }
+  .q-text:focus-visible { outline: 3px solid var(--focus); }
+  .q-hint { margin-top: var(--space-2); color: var(--ink-muted); }
   .choices {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--space-3);
-    margin-top: var(--space-4);
+    margin-top: var(--space-5);
   }
-  .choice { position: relative; }
-  .choice input {
-    position: absolute;
-    opacity: 0;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    cursor: pointer;
-  }
-  .choice span {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 52px;
-    border-radius: var(--radius-sm);
+  .choice {
+    min-height: 64px;
+    border-radius: var(--radius);
     border: 2px solid var(--border);
     background: var(--bg);
+    font-size: 1.25rem;
     font-weight: 700;
     transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease);
   }
-  .choice:hover span { border-color: var(--primary); }
-  .choice input:checked + span { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
-  .choice input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 3px; }
-
-  .result {
-    position: relative;
-    border-radius: var(--radius-lg);
-    padding: var(--space-5);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    transition: background-color var(--dur) var(--ease);
+  .choice:hover { border-color: var(--primary); }
+  .choice[aria-pressed='true'] { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: var(--tap);
+    margin-top: var(--space-4);
+    padding: 0 var(--space-3) 0 var(--space-2);
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: none;
+    color: var(--accent);
+    font-weight: 700;
   }
-  .result[data-state='stop'] { background: var(--stop-bg); border-color: transparent; }
-  .result[data-state='wait'] { background: var(--wait-bg); border-color: transparent; }
-  .result[data-state='go'] { background: var(--go-bg); border-color: transparent; }
-  .result-label { font-size: var(--fs-small); color: var(--ink-muted); font-weight: 700; }
-  .result:not([data-state='pending']) .result-label { color: var(--ink); }
+  .back[hidden] { display: none; }
 
+  .result:not([hidden]) { animation: q-in var(--dur) var(--ease); }
+  .result-kicker { color: var(--ink-muted); font-weight: 700; font-size: var(--fs-small); }
+  .light-row { display: flex; align-items: center; gap: var(--space-4); margin-top: var(--space-3); }
   .light {
     display: inline-flex;
     gap: var(--space-2);
     padding: var(--space-2) var(--space-3);
-    margin-block: var(--space-3);
     border-radius: var(--radius-pill);
-    background: var(--surface);
+    background: var(--bg);
     border: 1px solid var(--border);
   }
-  .lamp {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: var(--border);
-    transition: background-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
-  }
+  .lamp { width: 22px; height: 22px; border-radius: 50%; background: var(--border); }
   [data-state='stop'] .lamp--stop { background: var(--stop-ink); box-shadow: 0 0 0 4px color-mix(in srgb, var(--stop-ink) 20%, transparent); }
   [data-state='wait'] .lamp--wait { background: var(--wait-ink); box-shadow: 0 0 0 4px color-mix(in srgb, var(--wait-ink) 20%, transparent); }
   [data-state='go'] .lamp--go { background: var(--go-ink); box-shadow: 0 0 0 4px color-mix(in srgb, var(--go-ink) 20%, transparent); }
-
-  .result-title { font-size: var(--fs-h3); font-weight: 700; line-height: 1.25; }
-  .result[data-state='pending'] .result-title { font-size: var(--fs-body); font-weight: 400; color: var(--ink-soft); }
+  .result-title { font-size: var(--fs-h3); line-height: 1.25; }
+  .result-title:focus { outline: none; }
   [data-state='stop'] .result-title { color: var(--stop-ink); }
   [data-state='wait'] .result-title { color: var(--wait-ink); }
   [data-state='go'] .result-title { color: var(--go-ink); }
-  .result-body { margin-top: var(--space-2); color: var(--ink); }
-  .result-link { display: inline-flex; align-items: center; min-height: var(--tap); margin-top: var(--space-2); font-weight: 700; }
-  .result-link[hidden] { display: none; }
-  .start-over {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    min-height: var(--tap);
-    margin-top: var(--space-4);
-    padding: 0 var(--space-4);
-    border-radius: var(--radius-pill);
-    border: 1px solid var(--border);
-    background: var(--surface);
-    font-weight: 700;
-    display: flex;
-  }
-
-  .andon {
-    display: flex;
-    gap: var(--space-4);
-    align-items: flex-start;
+  .result-body { margin-top: var(--space-3); }
+  .next-step {
     margin-top: var(--space-5);
-    padding: var(--space-5);
+    padding: var(--space-4) var(--space-5);
     border-radius: var(--radius);
-    background: var(--surface-mist);
+    background: var(--surface-sage);
   }
-  .andon-icon {
-    display: grid;
-    place-items: center;
-    flex: 0 0 auto;
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    background: var(--surface);
-    color: var(--accent);
-  }
-  .andon h3 { font-size: var(--fs-body); }
-  .andon p { margin-top: var(--space-1); color: var(--ink-soft); }
+  .next-label { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 700; }
+  .next-title { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
+  .actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-5); }
 
-  @media (min-width: 900px) {
-    .readiness { grid-template-columns: 3fr 2fr; align-items: start; }
-    .result { position: sticky; top: 96px; }
-  }
+  @keyframes q-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 </style>

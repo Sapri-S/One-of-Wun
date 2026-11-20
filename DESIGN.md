@@ -7,6 +7,14 @@ Calm, smooth, obvious. A quiet, sunlit room for money decisions. **Values live i
 - **Obvious, not clever.** Verb-first buttons that say exactly what happens. Icons always come with text.
 - **Forward, never behind.** Progress flows left to right toward "Where you want to be".
 
+## First visit
+A new visitor should know what to do without help:
+- Ask first ("What would you like to do today?"), then explain.
+- Use task names, not labels ("Savings calculator").
+- Every tool starts with a "How this works" strip.
+- Ask one question at a time.
+- Show one primary button per screen.
+
 ## The one memorable element
 The **money path** on Home: 8 round stops joined by a trail line (dashed ahead, solid where you've walked), ending in a flag. Everything else stays quiet so the path can lead. Don't add other decorative illustrations that compete with it.
 

@@ -1,0 +1,51 @@
+---
+/**
+ * "How this works" strip: 3 short numbered steps at the top of every interactive tool,
+ * so a first-time visitor knows what to do without help.
+ * <HowItWorks steps={['Pick an amount', 'Pick the years', 'See the result']} />
+ * Keep each step under ~6 words and start it with a verb.
+ */
+import { getLang, t } from '../i18n/utils';
+interface Props { steps: string[] }
+const { steps } = Astro.props;
+const lang = getLang(Astro.url);
+---
+<div class="how">
+  <p class="how-label">{t(lang, 'common.howItWorks')}</p>
+  <ol>
+    {steps.map((s, i) => (
+      <li><span class="n" aria-hidden="true">{i + 1}</span><span>{s}</span></li>
+    ))}
+  </ol>
+</div>
+
+<style>
+  .how {
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .how-label { font-weight: 700; color: var(--ink-soft); font-size: var(--fs-small); }
+  ol {
+    display: grid;
+    gap: var(--space-3);
+    list-style: none;
+    padding: 0;
+    margin-top: var(--space-3);
+  }
+  li { display: flex; align-items: center; gap: var(--space-3); max-width: none; font-weight: 700; }
+  .n {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--surface-sage);
+    color: var(--primary);
+  }
+  @media (min-width: 768px) {
+    ol { grid-auto-flow: column; grid-auto-columns: 1fr; }
+  }
+</style>

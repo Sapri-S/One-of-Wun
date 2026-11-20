@@ -32,3 +32,14 @@ test('no horizontal scroll at 320px on any page', async ({ page }) => {
     expect(overflow, route).toBeLessThanOrEqual(0);
   }
 });
+
+test('header fits at desktop widths in both languages', async ({ page }) => {
+  for (const width of [1279, 1280, 1440]) {
+    await page.setViewportSize({ width, height: 800 });
+    for (const route of ['/', '/es/']) {
+      await page.goto(route);
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      expect(overflow, `${route} @ ${width}px`).toBeLessThanOrEqual(0);
+    }
+  }
+});

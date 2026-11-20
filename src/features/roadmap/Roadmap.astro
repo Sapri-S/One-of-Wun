@@ -1,16 +1,20 @@
 ---
 /**
- * F1 — 8-milestone roadmap with "Not ready yet / Ready" demo switch (FR-01, US-01).
- * All data is synthetic. Nothing is stored.
+ * F1 — the 8-step money path (FR-01, US-01). Two modes:
+ *   mode="demo"     Home: "Pick an example person" switch between two made-up profiles.
+ *   mode="personal" /next-step: starts hidden; the readiness check places the visitor by
+ *                   dispatching  root.dispatchEvent(new CustomEvent('roadmap:place', { detail: profile }))
+ * Nothing is stored.
  */
 import Icon from '../../components/Icon.astro';
 import StatusPill from '../../components/StatusPill.astro';
-import Term from '../../components/Term.astro';
 import { t, tv, type Lang } from '../../i18n/utils';
 import { PROFILES, stepState, type ProfileId } from './profiles';
 
-interface Props { lang: Lang }
-const { lang } = Astro.props;
+interface Props { lang: Lang; mode?: 'demo' | 'personal' }
+const { lang, mode = 'demo' } = Astro.props;
+const demo = mode === 'demo';
+const uid = `rm-${mode}`;
 const milestones = tv<{ title: string; body: string }[]>(lang, 'home.roadmap.milestones');
 const initial: ProfileId = 'notReady';
 const p = PROFILES[initial];
@@ -27,22 +31,25 @@ const i18n = {
   },
 };
 ---
-<div class="roadmap" data-roadmap data-i18n={JSON.stringify(i18n)} data-profiles={JSON.stringify(PROFILES)} data-profile={initial}>
-  <div class="controls">
-    <p class="toggle-label" id="rm-toggle-label">{t(lang, 'home.roadmap.toggleLabel')}</p>
-    <div class="segmented" role="group" aria-labelledby="rm-toggle-label">
-      {(['notReady', 'ready'] as const).map((id) => (
-        <button type="button" class="seg" data-profile-btn={id} aria-pressed={id === initial ? 'true' : 'false'}>
-          {t(lang, `home.roadmap.profiles.${id}.label`)}
-        </button>
-      ))}
-    </div>
-  </div>
-
-  <div class="summary-row" aria-live="polite">
-    <StatusPill status={p.status} label={t(lang, `common.status.${p.status}`)} id="rm-status" />
-    <p class="summary" data-summary>{t(lang, `home.roadmap.profiles.${initial}.summary`)}</p>
-  </div>
+<div class="roadmap" data-roadmap data-mode={mode} data-i18n={JSON.stringify(i18n)} data-profile={demo ? initial : undefined}>
+  {demo && (
+    <Fragment>
+      <div class="controls">
+        <p class="toggle-label" id={`${uid}-toggle-label`}>{t(lang, 'home.roadmap.toggleLabel')}</p>
+        <div class="segmented" role="group" aria-labelledby={`${uid}-toggle-label`}>
+          {(['notReady', 'ready'] as const).map((id) => (
+            <button type="button" class="seg" data-profile-btn={id} aria-pressed={id === initial ? 'true' : 'false'}>
+              {t(lang, `home.roadmap.profiles.${id}.label`)}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div class="summary-row" aria-live="polite">
+        <StatusPill status={p.status} label={t(lang, `common.status.${p.status}`)} id={`${uid}-status`} />
+        <p class="summary" data-summary>{t(lang, `home.roadmap.profiles.${initial}.summary`)}</p>
+      </div>
+    </Fragment>
+  )}
 
   <div class="path-wrap">
     <button type="button" class="scroll-btn scroll-prev" data-scroll="-1" aria-label={t(lang, 'home.roadmap.scrollPrev')}>
@@ -54,7 +61,7 @@ const i18n = {
           const s = stepState(p, i);
           return (
             <li class:list={['stop', `is-${s}`]} data-step={i}>
-              <button type="button" class="stop-btn" data-step-btn={i} aria-controls="rm-detail" aria-current={s === 'current' ? 'step' : undefined}>
+              <button type="button" class="stop-btn" data-step-btn={i} aria-controls={`${uid}-detail`} aria-current={s === 'current' ? 'step' : undefined}>
                 <span class="dot" aria-hidden="true">
                   <span class="dot-num">{i + 1}</span>
                   <span class="dot-icon dot-icon--done"><Icon name="check" size={20} /></span>
@@ -79,8 +86,8 @@ const i18n = {
     </button>
   </div>
 
-  <div class="detail" id="rm-detail" aria-live="polite">
-    <p class="detail-hint" data-detail-hint>{t(lang, 'home.roadmap.detailHint')}</p>
+  <div class="detail" id={`${uid}-detail`} aria-live="polite">
+    <p class="detail-hint">{t(lang, 'home.roadmap.detailHint')}</p>
     {milestones.map((m, i) => (
       <div class="detail-item" data-detail={i} hidden={i !== p.current}>
         <p class="detail-kicker">{t(lang, 'home.roadmap.stepWord')} {i + 1} {t(lang, 'home.roadmap.ofWord')} 8</p>
@@ -90,26 +97,22 @@ const i18n = {
     ))}
   </div>
 
-  <div class="explain" data-explain-box>
-    <p data-explain>{t(lang, `home.roadmap.explain.${initial}`)}</p>
-    <p class="explain-terms">
-      <Term id="apr">APR</Term>
-      <Term id="emergency-fund">{lang === 'es' ? 'Fondo de emergencia' : 'Emergency fund'}</Term>
-      <Term id="401k-match">{lang === 'es' ? 'Aportación 401(k)' : '401(k) match'}</Term>
-      <Term id="jidoka">Jidoka</Term>
-    </p>
-  </div>
+  {demo && (
+    <div class="explain">
+      <p data-explain>{t(lang, `home.roadmap.explain.${initial}`)}</p>
+    </div>
+  )}
 </div>
 
 <script>
-  import { PROFILES, stepState, type ProfileId } from './profiles';
+  import { PROFILES, stepState, type Profile, type ProfileId } from './profiles';
 
   document.querySelectorAll<HTMLElement>('[data-roadmap]').forEach((root) => {
     const i18n = JSON.parse(root.dataset.i18n || '{}');
     const stops = Array.from(root.querySelectorAll<HTMLLIElement>('li[data-step]'));
     const details = Array.from(root.querySelectorAll<HTMLElement>('[data-detail]'));
     const scroller = root.querySelector<HTMLElement>('[data-scroller]')!;
-    const status = root.querySelector<HTMLElement>('#rm-status')!;
+    const status = root.querySelector<HTMLElement>('.status');
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     function showDetail(i: number) {
@@ -117,19 +120,14 @@ const i18n = {
       stops.forEach((s, j) => s.classList.toggle('is-selected', j === i));
     }
 
-    function centerStop(i: number) {
+    function centerStop(i: number, smooth: boolean) {
       const el = stops[i];
       if (!el) return;
-      const left = el.offsetLeft - scroller.clientWidth / 2 + el.clientWidth / 2;
-      scroller.scrollTo({ left: Math.max(0, left), behavior: reduce ? 'auto' : 'smooth' });
+      const left = Math.max(0, el.offsetLeft - scroller.clientWidth / 2 + el.clientWidth / 2);
+      scroller.scrollTo({ left, behavior: smooth && !reduce ? 'smooth' : 'auto' });
     }
 
-    function setProfile(id: ProfileId, center = true) {
-      const p = PROFILES[id];
-      root.dataset.profile = id;
-      root.querySelectorAll<HTMLButtonElement>('[data-profile-btn]').forEach((b) =>
-        b.setAttribute('aria-pressed', String(b.dataset.profileBtn === id)),
-      );
+    function apply(p: Profile, smooth = true) {
       stops.forEach((li, i) => {
         const s = stepState(p, i);
         li.className = `stop is-${s}`;
@@ -138,23 +136,39 @@ const i18n = {
         if (s === 'current') btn.setAttribute('aria-current', 'step');
         else btn.removeAttribute('aria-current');
       });
-      status.className = `status status--${p.status}`;
-      status.dataset.status = p.status;
-      status.querySelector('.status-label')!.textContent = i18n.status[p.status];
+      if (status) {
+        status.className = `status status--${p.status}`;
+        status.dataset.status = p.status;
+        status.querySelector('.status-label')!.textContent = i18n.status[p.status];
+      }
+      showDetail(p.current);
+      centerStop(p.current, smooth);
+    }
+
+    function setDemo(id: ProfileId, smooth = true) {
+      root.dataset.profile = id;
+      root.querySelectorAll<HTMLButtonElement>('[data-profile-btn]').forEach((b) =>
+        b.setAttribute('aria-pressed', String(b.dataset.profileBtn === id)),
+      );
       root.querySelector('[data-summary]')!.textContent = i18n.summary[id];
       root.querySelector('[data-explain]')!.textContent = i18n.explain[id];
-      showDetail(p.current);
-      if (center) centerStop(p.current);
+      apply(PROFILES[id], smooth);
     }
 
     root.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       const pb = target.closest<HTMLButtonElement>('[data-profile-btn]');
-      if (pb) return setProfile(pb.dataset.profileBtn as ProfileId);
+      if (pb) return setDemo(pb.dataset.profileBtn as ProfileId);
       const sb = target.closest<HTMLButtonElement>('[data-step-btn]');
       if (sb) return showDetail(Number(sb.dataset.stepBtn));
       const sc = target.closest<HTMLButtonElement>('[data-scroll]');
       if (sc) scroller.scrollBy({ left: Number(sc.dataset.scroll) * scroller.clientWidth * 0.8, behavior: reduce ? 'auto' : 'smooth' });
+    });
+
+    // Personal mode: placed by the readiness check.
+    root.addEventListener('roadmap:place', (e) => {
+      const p = (e as CustomEvent<Profile>).detail;
+      requestAnimationFrame(() => apply(p, false));
     });
 
     // Arrow keys move between steps.
@@ -171,12 +185,9 @@ const i18n = {
       }
     });
 
-    setProfile(root.dataset.profile as ProfileId, false);
-    // Start with "You are here" in view without animating the page.
-    requestAnimationFrame(() => {
-      const el = stops[PROFILES[root.dataset.profile as ProfileId].current];
-      if (el) scroller.scrollLeft = Math.max(0, el.offsetLeft - scroller.clientWidth / 2 + el.clientWidth / 2);
-    });
+    if (root.dataset.mode === 'demo') {
+      setDemo(root.dataset.profile as ProfileId, false);
+    }
   });
 </script>
 
@@ -340,14 +351,6 @@ const i18n = {
   }
   [data-profile='notReady'] .explain { border-left-color: var(--stop-ink); }
   [data-profile='ready'] .explain { border-left-color: var(--go-ink); }
-  .explain-terms {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2) var(--space-5);
-    margin-top: var(--space-3);
-    font-size: var(--fs-small);
-  }
-  .explain-terms :global(.term) { min-height: 44px; }
 
   @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 

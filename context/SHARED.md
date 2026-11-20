@@ -39,31 +39,35 @@ A **calm, free, educational marketing website** for the *Where You Want to Be* f
 
 ---
 
-## 2. The 3-click rule (navigation law)
+## 2. Navigation: "a new visitor finds it without help"
 
-**Any piece of content or any interactive tool on the site must be reachable in 3 clicks or fewer from the home page — and in 2 or fewer from any page via the top nav.**
+Two laws. **(a) Ask before explaining:** the first screen asks one question ("What would you like to do today?") and offers task cards. **(b) 3 clicks max:** any content or tool is reachable in 3 clicks or fewer from Home, and in 2 or fewer from any page via the nav.
 
 How we guarantee it:
 
-- **Flat information architecture: max depth = 2** (Home → Page → in-page section). No sub-sub-pages.
-- **Top nav is always visible** (sticky) with ≤ 6 items + language toggle. On mobile it becomes a bottom tab bar (thumb reach) — *not* a hidden hamburger maze.
-- **Home page has one "Start here" tile per page** (direct links — 1 click).
-- Long pages get an **in-page "On this page" chip row** at the top that jump-links to each section (click 2).
-- Tools open **inline** (no modals that lead to more modals). Popovers (jargon) are the only overlay type, and they close with Esc / tap-outside / ✕.
-- Every interactive tool has a **visible "Reset"** — never a dead end.
-- **Click budget table** — every new page/feature must be added here with its click path. If it's > 3, redesign it.
+- **Flat information architecture, max depth 2** (Home → Page → in-page section). No sub-sub-pages.
+- **Page names are tasks in plain words** ("Savings calculator", not "Grow"). A page's `<h1>` matches its menu name.
+- **The nav is always visible.** At ≥ 1280px it's a top bar with 6 task links (the logo is Home). Below 1280px it's a bottom tab bar with 6 icons and short labels, not a hidden hamburger menu.
+- **Home's first screen** has 4 big task cards (each saying what happens and how long it takes) plus 2 secondary links. That covers every page in 1 click.
+- **Every interactive tool opens with a "How this works" strip** (`<HowItWorks>`): 3 numbered, verb-first steps of ≤ 6 words each.
+- **Multi-question tools ask one question at a time**, with "Question n of N", a Back button and Start over.
+- **Long pages** get an "On this page" chip row that jump-links to each section.
+- **Tools open inline.** Popovers (jargon) are the only overlay; they close with Esc, an outside tap or the Close button.
+- **Every tool has a visible reset**, so there's never a dead end.
+- **One primary (filled) button per screen.**
+- **Click budget table:** add every new page or feature here with its click path. If it's more than 3, redesign it.
 
 | Destination | Click path from Home | Clicks |
 |---|---|---|
-| Roadmap + demo toggle | Home hero (already visible) → toggle | 1 |
-| Readiness check | Home → "Check your readiness" (scrolls inline) → answer | 1–2 |
-| Kaizen calculator | Nav "Save" → "Small steps calculator" chip (or `/save#calculator`) | 2 |
-| Demo bank + high-yield savings | Nav "Save" → "Connect demo bank" | 2 |
-| Investment explorer | Nav "Learn" → card | 2 |
-| Mock market (buy/sell) | Nav "Invest" → watchlist symbol → Buy | 3 |
-| Persona / life stage | Nav "Your path" → persona tab | 2 |
-| Catch-Up Sprint | Nav "Your path" → "50+ Catch-Up" tab | 2 |
-| A specific public resource | Nav "Help" → category chip → link | 3 |
+| Readiness check + your place on the path | Home card "Find my next money step" → answer | 1 |
+| Example roadmap demo | Home (scroll) → toggle | 1 |
+| Kaizen calculator | Home card / nav "Save money" → "Small steps calculator" chip (or `/save#calculator`) | 2 |
+| Demo bank + high-yield savings | Home card / nav "Save money" → "Connect demo bank" | 2 |
+| Investing basics | Home card / nav "Investing basics" → card | 1–2 |
+| Mock market (buy/sell) | Home link / nav "Mock market" → watchlist symbol → Buy | 3 |
+| Persona / life stage | Home link / nav "My situation" → tab | 2 |
+| Catch-Up Sprint | `/your-path#catch-up` or nav → tab | 2 |
+| A specific public resource | Home card / nav "Free help" → category chip → link | 3 |
 | Jargon definition | Tap any underlined term | 1 |
 | Spanish version of current page | Language toggle | 1 |
 
@@ -71,21 +75,20 @@ How we guarantee it:
 
 ## 3. Site map (pages & routes)
 
-All routes have an English and Spanish version: `/…` and `/es/…`.
+All routes have an English and Spanish version: `/…` and `/es/…`. Menu labels live in `common.nav` (full) and `common.navShort` (phone tab bar).
 
-| # | Route | Nav label (EN / ES) | Contains | Owner |
+| # | Route | Menu label EN / ES (short) | Contains | Owner |
 |---|---|---|---|---|
-| 1 | `/` | Home / Inicio | Hero, 8-milestone roadmap with demo toggle, Readiness card, Toyota-Way trio (Kaizen/Jidoka/Andon), "Start here" tiles | **Part 1** |
-| 2 | `/save` | Save / Ahorrar | Demo bank connection (mock data), high-yield savings comparison, Kaizen Generational Calculator (moved from `/grow`, which now redirects here) | **Part 2** (calculator component: Part 1) |
-| 3 | `/learn` | Learn / Aprender | Plain-Language Investment Explorer (Index funds, Single stocks, Bonds) | **Part 2** |
-| 4 | `/invest` | Invest / Invertir | Mock market: real prices, $10,000 play money, buy/sell, holdings, history (replaces `/practice`, which now redirects here) | **Part 2** |
-| 5 | `/your-path` | Your path / Tu camino | Life Stages hub: tabs for Catch-Up Sprint (50+), Gig Kaizen, First-Gen, Unbanked→Banked | **Part 2** |
-| 6 | `/help` | Help / Ayuda | Trusted public resources directory + FAQ | **Part 2** |
+| 1 | `/` | Home / Inicio (logo) | Hero + "What would you like to do today?" task cards, example roadmap demo, Toyota-Way trio | **Part 1** |
+| 2 | `/next-step` | My next step / Mi siguiente paso (Next step) | Guided 3-question readiness check → light, next step, your place on the path; Andon pause note | **Part 1** |
+| 3 | `/save` | Save money / Ahorrar dinero (Save) | Demo bank connection (mock data), high-yield savings comparison, Kaizen Generational Calculator (moved from `/grow`, which now redirects here) | **Part 2** (calculator component: Part 1) |
+| 4 | `/learn` | Investing basics / Lo básico de invertir (Basics) | Plain-Language Investment Explorer (Index funds, Single stocks, Bonds) | **Part 2** |
+| 5 | `/invest` | Mock market / Mercado de práctica (Invest) | Mock market: real prices, $10,000 play money, buy/sell, holdings, history (replaces `/practice`, which now redirects here) | **Part 2** |
+| 6 | `/your-path` | My situation / Mi situación (Situation) | Life Stages hub: tabs for Catch-Up Sprint (50+), Gig Kaizen, First-Gen, Unbanked→Banked | **Part 2** |
+| 7 | `/help` | Free help / Ayuda gratis (Help) | Trusted public resources directory + FAQ | **Part 2** |
 | — | `/glossary` | (footer link) | Full jargon lexicon list, A–Z | **Part 1** |
 | — | `/about` | (footer link) | Mission, privacy promise ("we collect nothing"), disclosures | **Part 1** |
-| — | `404` | — | Calm "this page moved" + links to all 6 pages | **Part 1** |
-
----
+| — | `404` | — | Calm "this page moved" + links to every page | **Part 1** |
 
 ## 4. Tech stack (decided)
 
@@ -214,7 +217,7 @@ All live in `src/components/`. Part 2 **imports** these and **must not fork or r
 
 ### PART 1 features
 
-**F1 — Hero & 8-Milestone Roadmap (FR-01, US-01, P0)** — `/`
+**F1 — Hero & 8-Milestone Roadmap (FR-01, US-01, P0)** — `/` (example demo, below the task cards) and `/next-step` (personal placement after the check)
 - Headline idea: "Get to where you want to be — one calm step at a time." Sub: free, no sign-up, nothing saved.
 - Demo switcher (segmented control, 2 options, `aria-pressed`): **"Not ready yet"** (synthetic: $2,400 card debt at 24.9% APR, $300 saved) vs **"Ready"** (no high-interest debt, $1,000 buffer).
 - 8 milestones, horizontal path (horizontal scroll-snap with ‹ › buttons below 1100px; all 8 visible at ≥ 1100px). **Default milestone list (confirm in §11 Q2):**
@@ -229,7 +232,7 @@ All live in `src/components/`. Part 2 **imports** these and **must not fork or r
 - Switching profile animates (240ms) the "You are here" marker and updates the readiness light. **As built:** "Not ready yet" → steps 1–2 done, **You are here = step 3** ($300 of $1,000 saved), steps 7–8 shown as *Paused for now* (Jidoka gate, lock icon), Red light, explanation that debt over 15% APR comes before investing. "Ready" → steps 1–5 done, You are here = step 6, steps 7–8 *Open*, Green light. Data: `src/features/roadmap/profiles.ts`.
 - Each milestone is a button; clicking shows a 2–3 sentence explanation panel below (inline, no modal).
 
-**F2 — Readiness Check (FR-02, P0)** — `/` (section `#readiness`)
+**F2 — Readiness Check (FR-02, P0)** — `/next-step`. **As built:** guided, one question per screen; the result shows the light, a "Your next step" milestone, a primary button (Stop → Free help, Wait → Savings calculator, Go → Investing basics) and places the visitor on the path (`placeOnPath()` in `src/features/readiness/logic.ts`). With high-interest debt the next step is step 5 (pay off debt), with step 4 (employer match) marked Open.
 - 3 yes/no questions, big toggle buttons, one per row:
   1. "Do you have any debt over 15% APR?" (credit cards, payday, title loans)
   2. "Do you have at least $1,000 saved for emergencies?"
@@ -313,7 +316,7 @@ All live in `src/components/`. Part 2 **imports** these and **must not fork or r
 | `src/features/roadmap/*`, `readiness/*`, `kaizen/*` | ✅ | ❌ |
 | `src/pages/learn.astro`, `practice.astro`, `your-path.astro`, `help.astro` (+ `/es/` twins) — thin wrappers, usually no edits needed | ✅ created | ✅ may edit |
 | `src/features/explorer/*`, `crash-sim/*`, `life-stages/*`, `resources/*` (each has a stub `*View.astro` to replace) | stub only | ✅ |
-| `src/features/site/*` (Home, Grow, Glossary, About views), `src/components/ComingSoon.astro` | ✅ | ❌ (ComingSoon may be deleted once unused) |
+| `src/features/site/*` (Home, Next step, Grow, Glossary, About views) | ✅ | ❌ |
 | `tests/e2e/*` | ✅ harness | ✅ may **add** new `*.spec.ts` files; don't edit Part 1's |
 | `src/content/resources.json`, `faq.{en,es}.json` | ❌ | ✅ |
 | `src/content/glossary.{en,es}.json` | ✅ seeds | ✅ **append-only** new keys |
