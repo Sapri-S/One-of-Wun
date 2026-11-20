@@ -1,3 +1,5 @@
+> **Status: ✅ shipped.** All four pages are built; see "Part 2 notes" in `/HANDOFF.md`. The brief below is kept for reference and for future edits.
+
 # PART 2 brief: Learn, Practice, Your Path, Help
 
 > Read `SHARED.md` in full first, then `/HANDOFF.md` (written by Part 1). This brief only says what is **yours**.

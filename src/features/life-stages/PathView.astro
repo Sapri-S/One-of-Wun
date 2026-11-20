@@ -1,11 +1,166 @@
 ---
 /**
- * PART 2 OWNS THIS FILE. Stub from Part 1 — replace the ComingSoon with the real page.
- * Spec: context/SHARED.md §7 and context/PART-2.md.
+ * PART 2 — /your-path: Life Stages & Persona Explorer (FR-06, US-04).
+ * Tabs deep-link by hash: #catch-up, #gig, #first-gen, #banked.
+ * Catch-up is framed forward from "Day 1"; never shows missed-years math.
  */
-import ComingSoon from '../../components/ComingSoon.astro';
-import type { Lang } from '../../i18n/utils';
+import BaseLayout from '../../components/BaseLayout.astro';
+import Section from '../../components/Section.astro';
+import HowItWorks from '../../components/HowItWorks.astro';
+import Tabs from '../../components/Tabs.astro';
+import SafetyBadge from '../../components/SafetyBadge.astro';
+import Button from '../../components/Button.astro';
+import Icon from '../../components/Icon.astro';
+import Term from '../../components/Term.astro';
+import ExternalLink from '../../components/ExternalLink.astro';
+import Disclaimer from '../../components/Disclaimer.astro';
+import { t, tv, localizePath, type Lang } from '../../i18n/utils';
+
 interface Props { lang: Lang }
 const { lang } = Astro.props;
+type TabData = { label: string; story: string; steps: string[]; facts: string[]; tool: string; toolPath: string };
+const ids = ['catch-up', 'gig', 'first-gen', 'banked'] as const;
+const data = Object.fromEntries(ids.map((id) => [id, tv<TabData>(lang, `path.tabs.${id}`)])) as Record<(typeof ids)[number], TabData>;
+const badge = { 'catch-up': 'talk-to-pro', gig: 'your-choice', 'first-gen': 'education', banked: 'education' } as const;
+const icon = { 'catch-up': 'flag', gig: 'steps', 'first-gen': 'route', banked: 'home' } as const;
+const es = lang === 'es';
+const terms: Record<(typeof ids)[number], { id: string; label: string }[]> = {
+  'catch-up': [
+    { id: 'catch-up-contribution', label: es ? 'Aportación para ponerse al día' : 'Catch-up contribution' },
+    { id: 'secure-2', label: 'SECURE 2.0' },
+    { id: 'social-security', label: es ? 'Seguro Social' : 'Social Security' },
+    { id: '401k', label: '401(k)' },
+    { id: 'ira', label: 'IRA' },
+  ],
+  gig: [
+    { id: '1099', label: es ? 'Trabajo 1099' : '1099 work' },
+    { id: 'kaizen', label: 'Kaizen' },
+    { id: 'emergency-fund', label: es ? 'Fondo de emergencia' : 'Emergency fund' },
+  ],
+  'first-gen': [
+    { id: 'apr', label: 'APR' },
+    { id: '401k-match', label: es ? 'Aportación 401(k)' : '401(k) match' },
+    { id: 'roth-ira', label: 'Roth IRA' },
+  ],
+  banked: [
+    { id: 'fdic', label: 'FDIC' },
+    { id: 'credit-union', label: es ? 'Cooperativa de crédito' : 'Credit union' },
+    { id: 'check-casher', label: es ? 'Tienda para cambiar cheques' : 'Check-cashing store' },
+    { id: 'overdraft', label: es ? 'Comisión por sobregiro' : 'Overdraft fee' },
+  ],
+};
 ---
-<ComingSoon lang={lang} pageKey="path" />
+<BaseLayout title={t(lang, 'path.meta.title')} description={t(lang, 'path.meta.description')} lang={lang}>
+  <Section id="situations" level={1} title={t(lang, 'path.title')} badge="your-choice" intro={t(lang, 'path.lead')}>
+    <div class="stack">
+      <HowItWorks steps={tv<string[]>(lang, 'path.how')} />
+      <Tabs idPrefix="path" label={t(lang, 'path.tabsLabel')} tabs={ids.map((id) => ({ id, label: data[id].label }))}>
+        {ids.map((id) => (
+          <div slot={id} class="panel">
+            <div class="story">
+              <span class="story-icon"><Icon name={icon[id]} size={28} /></span>
+              <div>
+                <SafetyBadge kind={badge[id]} />
+                <p class="story-text">{data[id].story}</p>
+              </div>
+            </div>
+
+            <div class="cols">
+              <div class="steps">
+                <h2 class="h">{t(lang, 'path.stepsTitle')}</h2>
+                <ol>
+                  {data[id].steps.map((s, i) => (
+                    <li><span class="n" aria-hidden="true">{i + 1}</span><span>{s}</span></li>
+                  ))}
+                </ol>
+              </div>
+              <div class="side">
+                <div class="facts">
+                  <h2 class="h">{t(lang, 'path.factsTitle')}</h2>
+                  <ul>
+                    {data[id].facts.map((f) => <li><Icon name="info" size={20} /><span>{f}</span></li>)}
+                  </ul>
+                  {id === 'gig' && <Disclaimer variant="projection" />}
+                  {id === 'gig' && (
+                    <p class="ext"><ExternalLink href="https://www.irs.gov/individuals/free-tax-return-preparation-for-qualifying-taxpayers" org="IRS VITA">IRS VITA</ExternalLink></p>
+                  )}
+                  {id === 'catch-up' && (
+                    <p class="ext"><ExternalLink href="https://www.ssa.gov/" org="Social Security">{es ? 'Seguro Social' : 'Social Security'}</ExternalLink></p>
+                  )}
+                </div>
+                <p class="terms">{terms[id].map((tm) => <Term id={tm.id}>{tm.label}</Term>)}</p>
+              </div>
+            </div>
+
+            <div class="try">
+              <p>{t(lang, 'path.tryTool')}</p>
+              <Button href={localizePath(data[id].toolPath, lang)}>{data[id].tool}</Button>
+            </div>
+          </div>
+        ))}
+      </Tabs>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .stack > :global(* + *) { margin-top: var(--space-5); }
+  .panel {
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+  .story { display: flex; gap: var(--space-4); align-items: flex-start; }
+  .story-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--surface-sage);
+    color: var(--primary);
+  }
+  .story-text { margin-top: var(--space-3); font-size: 1.1875rem; }
+  .cols { display: grid; gap: var(--space-5); margin-top: var(--space-6); }
+  .h { font-size: var(--fs-body); }
+  .steps ol { list-style: none; padding: 0; display: grid; gap: var(--space-3); margin-top: var(--space-3); }
+  .steps li { display: flex; gap: var(--space-3); align-items: flex-start; }
+  .n {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--surface-sage);
+    color: var(--primary);
+    font-weight: 700;
+    font-size: var(--fs-small);
+  }
+  .facts {
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius);
+    background: var(--surface-mist);
+  }
+  .facts > :global(* + *) { margin-top: var(--space-3); }
+  .facts ul { list-style: none; padding: 0; display: grid; gap: var(--space-2); }
+  .facts li { display: flex; gap: var(--space-2); align-items: flex-start; }
+  .facts li :global(svg) { margin-top: 4px; color: var(--accent); }
+  .terms { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); margin-top: var(--space-4); font-size: var(--fs-small); }
+  .try {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-4);
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border);
+  }
+  .try p { font-weight: 700; }
+  @media (min-width: 900px) {
+    .cols { grid-template-columns: 3fr 2fr; }
+  }
+</style>

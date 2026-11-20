@@ -1,11 +1,223 @@
 ---
 /**
- * PART 2 OWNS THIS FILE. Stub from Part 1 — replace the ComingSoon with the real page.
- * Spec: context/SHARED.md §7 and context/PART-2.md.
+ * PART 2 — /help: Trusted public resources + FAQ (FR-07).
+ * Topic chips + client-side search (no network). "/help#banking" opens with that topic chosen.
  */
-import ComingSoon from '../../components/ComingSoon.astro';
-import type { Lang } from '../../i18n/utils';
+import BaseLayout from '../../components/BaseLayout.astro';
+import Section from '../../components/Section.astro';
+import HowItWorks from '../../components/HowItWorks.astro';
+import ExternalLink from '../../components/ExternalLink.astro';
+import Icon from '../../components/Icon.astro';
+import Button from '../../components/Button.astro';
+import { t, tv, type Lang } from '../../i18n/utils';
+import data from '../../content/resources.json';
+import faqEn from '../../content/faq.en.json';
+import faqEs from '../../content/faq.es.json';
+
 interface Props { lang: Lang }
 const { lang } = Astro.props;
+const cats = data._meta.categories as Record<string, { en: string; es: string }>;
+const catIds = Object.keys(cats);
+const faq = lang === 'es' ? faqEs : faqEn;
+const resources = data.resources;
+const i18n = {
+  count: t(lang, 'help.count'),
+  countOne: t(lang, 'help.countOne'),
+};
 ---
-<ComingSoon lang={lang} pageKey="help" />
+<BaseLayout title={t(lang, 'help.meta.title')} description={t(lang, 'help.meta.description')} lang={lang}>
+  <Section id="resources" level={1} title={t(lang, 'help.title')} badge="education" intro={t(lang, 'help.lead')}>
+    <div class="finder" data-finder data-i18n={JSON.stringify(i18n)}>
+      <HowItWorks steps={tv<string[]>(lang, 'help.how')} />
+
+      <div class="filters">
+        <div class="chips" role="group" aria-label={t(lang, 'help.topicsLabel')}>
+          <button type="button" class="chip" data-cat="all" aria-pressed="true">{t(lang, 'help.all')}</button>
+          {catIds.map((c) => <button type="button" class="chip" data-cat={c} aria-pressed="false">{cats[c][lang]}</button>)}
+        </div>
+        <div class="search">
+          <label for="help-search" class="search-label">{t(lang, 'help.searchLabel')}</label>
+          <input id="help-search" type="search" autocomplete="off" aria-describedby="help-search-hint help-count" data-search />
+          <p id="help-search-hint" class="search-hint">{t(lang, 'help.searchHint')}</p>
+        </div>
+      </div>
+
+      <p class="count" id="help-count" aria-live="polite" data-count>{t(lang, 'help.count', { n: resources.length })}</p>
+
+      <ul class="list">
+        {resources.map((r) => (
+          <li class="res" data-res data-cat={r.category} data-text={`${r.org} ${r.name.en} ${r.name.es} ${r.desc[lang]} ${r.keywords} ${cats[r.category].en} ${cats[r.category].es}`.toLowerCase()}>
+            <p class="res-top">
+              <span class="res-cat">{cats[r.category][lang]}</span>
+              <span class="free">{t(lang, 'help.free')}</span>
+            </p>
+            <h2 class="res-name">{r.name[lang]}</h2>
+            <p class="res-desc">{r.desc[lang]}</p>
+            <ExternalLink href={r.url} org={r.org}>{t(lang, 'help.visit', { org: r.org })}</ExternalLink>
+          </li>
+        ))}
+      </ul>
+
+      <div class="empty" data-empty hidden>
+        <Icon name="info" size={28} />
+        <p>{t(lang, 'help.none')}</p>
+        <Button variant="quiet" data-clear>{t(lang, 'help.clear')}</Button>
+      </div>
+    </div>
+  </Section>
+
+  <Section id="faq" tone="sage" title={t(lang, 'help.faqTitle')} badge="education">
+    <div class="faq">
+      {faq.map((f) => (
+        <details>
+          <summary>{f.q}<Icon name="chevron-right" size={20} class="chev" /></summary>
+          <p>{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </Section>
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-finder]').forEach((root) => {
+    const i18n = JSON.parse(root.dataset.i18n || '{}');
+    const items = Array.from(root.querySelectorAll<HTMLElement>('[data-res]'));
+    const search = root.querySelector<HTMLInputElement>('[data-search]')!;
+    const chips = Array.from(root.querySelectorAll<HTMLButtonElement>('.chip'));
+    const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+    let cat = 'all';
+
+    const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+    function apply() {
+      const words = norm(search.value).split(/\s+/).filter(Boolean);
+      let n = 0;
+      for (const el of items) {
+        const text = norm(el.dataset.text || '');
+        const show = (cat === 'all' || el.dataset.cat === cat) && words.every((w) => text.includes(w));
+        el.hidden = !show;
+        if (show) n++;
+      }
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.cat === cat)));
+      root.querySelector('[data-count]')!.textContent = n === 1 ? i18n.countOne : i18n.count.replace('{n}', String(n));
+      empty.hidden = n > 0;
+    }
+
+    root.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const chip = target.closest<HTMLButtonElement>('.chip');
+      if (chip) {
+        cat = chip.dataset.cat || 'all';
+        history.replaceState(null, '', cat === 'all' ? location.pathname : `#${cat}`);
+        return apply();
+      }
+      if (target.closest('[data-clear]')) {
+        search.value = '';
+        cat = 'all';
+        history.replaceState(null, '', location.pathname);
+        apply();
+        search.focus();
+      }
+    });
+    search.addEventListener('input', apply);
+
+    const fromHash = () => {
+      const h = decodeURIComponent(location.hash.slice(1));
+      if (chips.some((c) => c.dataset.cat === h)) {
+        cat = h;
+        apply();
+      }
+    };
+    window.addEventListener('hashchange', fromHash);
+    fromHash();
+  });
+</script>
+
+<style>
+  .finder > :global(* + *) { margin-top: var(--space-5); }
+  .filters { display: grid; gap: var(--space-4); }
+  .chips { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .chip {
+    min-height: var(--tap);
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-weight: 700;
+    font-size: var(--fs-small);
+    transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  }
+  .chip:hover { border-color: var(--primary); }
+  .chip[aria-pressed='true'] { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+  .search { max-width: 520px; }
+  .search-label { display: block; font-weight: 700; }
+  .search input {
+    width: 100%;
+    min-height: 52px;
+    margin-top: var(--space-2);
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--border);
+    background: var(--surface);
+  }
+  .search input:focus-visible { border-color: var(--focus); outline-offset: 1px; }
+  .search-hint { margin-top: var(--space-1); font-size: var(--fs-small); color: var(--ink-muted); }
+  .count { font-weight: 700; color: var(--ink-soft); }
+  .list { display: grid; gap: var(--space-4); list-style: none; padding: 0; margin-top: var(--space-3) !important; }
+  .res {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    max-width: none;
+    padding: var(--space-5);
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .res[hidden] { display: none; }
+  .res-top { display: flex; justify-content: space-between; gap: var(--space-3); font-size: var(--fs-small); }
+  .res-cat { color: var(--ink-muted); }
+  .free { padding: 0 10px; border-radius: var(--radius-pill); background: var(--go-bg); color: var(--go-ink); font-weight: 700; }
+  .res-name { font-size: var(--fs-h3); }
+  .res-desc { color: var(--ink-soft); flex: 1; }
+  .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    border-radius: var(--radius);
+    background: var(--surface-mist);
+  }
+  .empty[hidden] { display: none; }
+  .empty p { font-weight: 700; }
+
+  .faq { display: grid; gap: var(--space-3); max-width: 820px; }
+  details {
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    min-height: 56px;
+    padding: var(--space-3) var(--space-5);
+    font-weight: 700;
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary :global(.chev) { color: var(--primary); transition: transform var(--dur) var(--ease); }
+  details[open] summary :global(.chev) { transform: rotate(90deg); }
+  details p { padding: 0 var(--space-5) var(--space-5); color: var(--ink-soft); }
+
+  @media (min-width: 768px) {
+    .list { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1100px) {
+    .list { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>

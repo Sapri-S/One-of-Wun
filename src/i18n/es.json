@@ -336,5 +336,237 @@
   "notFound": {
     "title": "Esta página se movió o no existe",
     "lead": "No hay problema. Aquí están todas las páginas:"
+  },
+  "learn": {
+    "meta": {
+      "title": "Lo básico de invertir",
+      "description": "Fondos indexados, acciones individuales y fondos de bonos comparados en palabras sencillas, con riesgo del 1 al 5 y costos anuales en dólares."
+    },
+    "title": "Lo básico de invertir",
+    "lead": "Tres formas comunes de invertir, lado a lado. Sin productos ni recomendaciones. Solo qué es cada una, qué tan arriesgada es y cuánto cuesta.",
+    "how": [
+      "Elige una cantidad para comparar",
+      "Lee las tres tarjetas",
+      "Toca las palabras subrayadas"
+    ],
+    "amountLabel": "Mostrar costos anuales para",
+    "riskLabel": "Riesgo: {n} de 5",
+    "riskLow": "Menos riesgo",
+    "riskHigh": "Más riesgo",
+    "costLabel": "Costo anual típico",
+    "costFor": "sobre {amount}",
+    "goodToKnow": "Es bueno saber",
+    "cards": [
+      {
+        "id": "index",
+        "name": "Fondos indexados",
+        "termId": "index-fund",
+        "plain": "Un grupo que tiene pedacitos de cientos de empresas.",
+        "risk": 3,
+        "feePct": 0.05,
+        "costNote": "Muchos cobran como 0.05% al año.",
+        "points": [
+          "Reparte tu dinero entre muchas empresas, así que una empresa mala no lo hunde.",
+          "Sube y baja con todo el mercado. Es mejor para dinero que no necesitarás en 5 años o más."
+        ]
+      },
+      {
+        "id": "stock",
+        "name": "Acciones individuales",
+        "termId": "single-stock",
+        "plain": "Un pedacito de una sola empresa.",
+        "risk": 5,
+        "feePct": 0,
+        "costNote": "Normalmente no hay comisión anual. El costo real es el riesgo.",
+        "points": [
+          "Si a esa empresa le va mal, tu dinero puede bajar mucho y rápido.",
+          "Es difícil diversificar con poco dinero. La mayoría empieza con fondos."
+        ]
+      },
+      {
+        "id": "bond",
+        "name": "Fondos de bonos",
+        "termId": "bond-fund",
+        "plain": "Un grupo de préstamos a gobiernos o empresas que pagan interés.",
+        "risk": 2,
+        "feePct": 0.05,
+        "costNote": "Muchos cobran como 0.05% al año.",
+        "points": [
+          "Normalmente sube y baja menos que las acciones.",
+          "Normalmente crece menos que las acciones a largo plazo. Se usa para calmar una mezcla."
+        ]
+      }
+    ],
+    "noFee": "$0",
+    "feeCheckTitle": "Las comisiones pequeñas suman",
+    "feeCheck": "Un fondo que cobra 1% al año cuesta {high} sobre {amount}. Un fondo que cobra 0.05% cuesta {low}. La misma cantidad, 20 veces la comisión. Siempre revisa el índice de gastos.",
+    "beforeTitle": "Antes de invertir dinero real",
+    "before": [
+      "Asegúrate de cubrir lo básico, pagar las deudas de interés alto y tener un colchón de $1,000.",
+      "Prueba primero una cuenta de práctica, para que una caída no te asuste y vendas.",
+      "Quien te dé consejos debe tener licencia. Puedes revisarlo gratis."
+    ],
+    "beforeNext": "Encuentra tu siguiente paso",
+    "beforePractice": "Practica una caída del mercado",
+    "brokerCheck": "Revisa a un profesional en FINRA BrokerCheck"
+  },
+  "practice": {
+    "meta": {
+      "title": "Practica una caída del mercado",
+      "description": "Mira cómo $1,000 de práctica bajan 30% y lee consejos tranquilos paso a paso. Sin dinero real."
+    },
+    "title": "Practica una caída del mercado",
+    "lead": "A veces los mercados bajan. Sentirlo una vez con dinero de mentira hace que asuste menos con dinero real. Nada aquí es real.",
+    "how": [
+      "Presiona el botón de caída",
+      "Mira el saldo de práctica",
+      "Lee los pasos tranquilos"
+    ],
+    "accountLabel": "Cuenta de práctica (dinero de mentira)",
+    "start": "Cantidad inicial",
+    "now": "Saldo ahora",
+    "change": "Cambio",
+    "drop": "Simular una caída del mercado de 30%",
+    "dropping": "Los precios están bajando…",
+    "afterDrop": "Tus $1,000 de práctica ahora son $700. Respira. Esto es lo que debes saber.",
+    "stepOf": "Paso {n} de {total}",
+    "next": "Siguiente",
+    "back": "Atrás",
+    "coach": [
+      {
+        "title": "Esto ya ha pasado antes",
+        "body": "Caídas grandes como esta han pasado muchas veces. En el pasado, los mercados se recuperaron con el tiempo, aunque a veces tomó años."
+      },
+      {
+        "title": "Vender ahora hace real la pérdida",
+        "body": "Ahora mismo la caída de $300 es solo en papel. Si vendes, se vuelve real. Muchas personas que venden por miedo se pierden la recuperación."
+      },
+      {
+        "title": "Repartir ayuda",
+        "body": "Tener muchas empresas (diversificación) hace que una empresa mala no lo hunda todo. Los fondos lo hacen por ti."
+      },
+      {
+        "title": "Invierte solo dinero que puedes dejar quieto",
+        "body": "El dinero para la renta, la comida o las cuentas va en ahorros, no en inversiones. Invierte solo lo que no necesitarás en 5 años o más."
+      }
+    ],
+    "recover": "Mostrar una posible recuperación",
+    "recovered": "En este ejemplo, el saldo sube poco a poco hasta {amount} en unos años. Las recuperaciones reales pueden ser más rápidas, más lentas o no llegar a tiempo.",
+    "reset": "Reiniciar la cuenta de práctica",
+    "chartDesc": "Una línea que empieza en $1,000, baja a $700 y puede volver a subir en el ejemplo de recuperación.",
+    "whatTitle": "¿Qué es una cuenta de práctica?",
+    "what": "Una cuenta de práctica usa dinero falso para comprar y vender inversiones reales a precios reales. Puedes aprender cómo se siente, sin riesgo. Algunas apps de inversión la ofrecen gratis. Esta página es un ejemplo sencillo, no una cuenta real.",
+    "endTitle": "¿Listo para aprender más?",
+    "endLearn": "Aprende lo básico de invertir",
+    "endNext": "Encuentra tu siguiente paso"
+  },
+  "path": {
+    "meta": {
+      "title": "Mi situación",
+      "description": "Historias y pasos para cuatro situaciones: ponerse al día después de los 50, trabajo por app, primera generación y pasar de cambiar cheques a un banco."
+    },
+    "title": "Mi situación",
+    "lead": "Elige la que más se parezca a ti. Cada una tiene una historia corta, algunos pasos que ayudan y una herramienta para probar.",
+    "how": [
+      "Elige la pestaña que te queda",
+      "Lee la historia corta",
+      "Prueba la herramienta sugerida"
+    ],
+    "tabsLabel": "Situaciones",
+    "stepsTitle": "Pasos que ayudan",
+    "factsTitle": "Números que debes saber",
+    "tryTool": "Prueba esto ahora",
+    "tabs": {
+      "catch-up": {
+        "label": "Ponerse al día (50+)",
+        "story": "Sunita tiene 58 años y dirige una oficina de servicios comunitarios. Se preguntaba si empezar ahora tenía sentido. Sí lo tiene. Desde el primer día, las reglas permiten que las personas de 50 años o más ahorren extra cada año, y ella tiene años de trabajo por delante.",
+        "steps": [
+          "Cuida tu colchón de $1,000 y haz que crezca hacia 3–6 meses. No pongas cada dólar extra en el retiro.",
+          "Paga las deudas de interés alto. Eso libera dinero cada mes.",
+          "Usa las cantidades extra para ponerte al día si puedes, poco a poco.",
+          "Aprende sobre cuándo cobrar el Seguro Social. Esperar más suele dar un cheque mensual más grande.",
+          "Habla con un profesional con licencia sobre impuestos y tus tiempos."
+        ],
+        "facts": [
+          "Extra que puedes poner en un 401(k) a los 50+: $8,000 al año (2026).",
+          "Extra que puedes poner en una IRA a los 50+: $1,100 al año (2026).",
+          "Entre los 60 y 63 años podrías poner aún más en un 401(k). Pregunta a tu plan o a un profesional con licencia."
+        ],
+        "tool": "Encuentra tu siguiente paso",
+        "toolPath": "/next-step"
+      },
+      "gig": {
+        "label": "Trabajo por app",
+        "story": "Tariq tiene 31 años, maneja y prepara comida para eventos. Algunas semanas son buenas y otras flojas. Un plan mensual fijo nunca le funcionó. Los pasos pequeños y flexibles sí.",
+        "steps": [
+          "Ahorra $5 en las semanas flojas y más en las buenas. El hábito importa más que la cantidad.",
+          "Crea un colchón más grande, cerca de 6 meses, porque tu pago sube y baja.",
+          "Aparta una parte de cada pago para impuestos. En el trabajo 1099 nadie te los descuenta.",
+          "Consigue ayuda gratis con tus impuestos en IRS VITA si calificas.",
+          "Practica una caída del mercado antes de invertir, para que una baja no te asuste."
+        ],
+        "facts": [
+          "$5 a la semana por 30 años al 6% podrían llegar a unos $20,555 (es un ejemplo, no una promesa)."
+        ],
+        "tool": "Mira cómo crecen $5 a la semana",
+        "toolPath": "/grow"
+      },
+      "first-gen": {
+        "label": "Primera generación",
+        "story": "Ayanna tiene 24 años y es la primera de su familia con un trabajo de oficina. Tiene una tarjeta al 24.9% y un trabajo que iguala sus ahorros 401(k). No sabía qué va primero.",
+        "steps": [
+          "Cubre lo básico y ahorra un colchón de $1,000.",
+          "Ahorra lo suficiente para recibir toda la aportación 401(k) de tu trabajo. Es pago extra.",
+          "Luego paga la tarjeta al 24.9% lo más rápido que puedas.",
+          "Después, haz crecer tu colchón y empieza a invertir para tu retiro.",
+          "Toca cualquier palabra subrayada en este sitio cuando algo suene confuso."
+        ],
+        "facts": [
+          "Un APR de 24.9% cuesta unos $249 al año por cada $1,000 que debes."
+        ],
+        "tool": "Encuentra tu siguiente paso",
+        "toolPath": "/next-step"
+      },
+      "banked": {
+        "label": "Nuevo en el banco",
+        "story": "Guadalupe tiene 38 años, es asistente de salud en casa y cuidadora. Usó tiendas para cambiar cheques por años porque no confiaba en los bancos. Las comisiones se comían su pago.",
+        "steps": [
+          "Busca una cuenta gratis en un banco asegurado por la FDIC o una cooperativa asegurada por la NCUA.",
+          "Pregunta por las comisiones: mensuales, por sobregiro y por saldo mínimo.",
+          "Busca cuentas sin comisiones por sobregiro. Algunas están hechas para empezar de nuevo.",
+          "Pide depósito directo para que tu pago llegue directo y gratis.",
+          "Empieza un colchón pequeño en el mismo lugar, aunque sean $5 a la semana."
+        ],
+        "facts": [
+          "El seguro de la FDIC y la NCUA protege hasta $250,000 por persona, por banco, si el banco quiebra."
+        ],
+        "tool": "Busca ayuda gratis con bancos",
+        "toolPath": "/help#banking"
+      }
+    }
+  },
+  "help": {
+    "meta": {
+      "title": "Ayuda gratis",
+      "description": "Recursos públicos y sin fines de lucro gratis y confiables para deudas, bancos, impuestos, invertir con cuidado y el retiro, y respuestas a preguntas comunes."
+    },
+    "title": "Ayuda gratis",
+    "lead": "Recursos gratis de agencias del gobierno y organizaciones sin fines de lucro. No ganamos nada con estos enlaces.",
+    "how": [
+      "Elige un tema o busca",
+      "Abre un recurso gratis",
+      "Regresa cuando quieras"
+    ],
+    "topicsLabel": "Temas",
+    "all": "Todos los temas",
+    "searchLabel": "Buscar recursos",
+    "searchHint": "Por ejemplo: impuestos, tarjeta, banco",
+    "count": "{n} recursos",
+    "countOne": "1 recurso",
+    "none": "Ningún recurso coincide con esa búsqueda.",
+    "clear": "Borrar búsqueda",
+    "free": "Gratis",
+    "visit": "Visitar {org}",
+    "faqTitle": "Preguntas comunes"
   }
 }

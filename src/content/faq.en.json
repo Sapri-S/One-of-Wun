@@ -1,0 +1,38 @@
+[
+  {
+    "q": "Is this financial advice?",
+    "a": "No. This site is education only. It doesn't know your full situation and doesn't recommend any product. For advice, talk to a licensed professional. You can check their license on FINRA BrokerCheck."
+  },
+  {
+    "q": "Do you save my numbers?",
+    "a": "No. Everything you type stays on your device and disappears when you leave. We have no accounts, no cookies and no tracking."
+  },
+  {
+    "q": "Can I still start at 50 or older?",
+    "a": "Yes. People 50 and older can save extra each year in retirement accounts. Paying off debt and choosing when to start Social Security also make a big difference."
+  },
+  {
+    "q": "I have credit card debt. Should I invest?",
+    "a": "Usually not yet. Debt over 15% APR grows faster than investments usually do. Build a $1,000 cushion, get any job match, then pay the debt down."
+  },
+  {
+    "q": "How much money do I need to start?",
+    "a": "Very little. $5 a week is a real start. Many funds let you start with small amounts."
+  },
+  {
+    "q": "What if the market drops after I invest?",
+    "a": "Drops are normal. Selling during a drop locks in the loss. Only invest money you won't need for 5 years or more, and try the practice page first."
+  },
+  {
+    "q": "I don't have a bank account. Where do I start?",
+    "a": "Look for a free account at an FDIC-insured bank or NCUA-insured credit union with no overdraft fees. The Banking topic above can help."
+  },
+  {
+    "q": "Who runs this site?",
+    "a": "A free, non-commercial education project. We don't sell anything and we don't earn money from links."
+  },
+  {
+    "q": "Is this available in Spanish?",
+    "a": "Yes. Use the Español button at the top of any page."
+  }
+]

@@ -313,7 +313,7 @@ All live in `src/components/`. Part 2 **imports** these and **must not fork or r
 | `src/features/roadmap/*`, `readiness/*`, `kaizen/*` | ✅ | ❌ |
 | `src/pages/learn.astro`, `practice.astro`, `your-path.astro`, `help.astro` (+ `/es/` twins) — thin wrappers, usually no edits needed | ✅ created | ✅ may edit |
 | `src/features/explorer/*`, `crash-sim/*`, `life-stages/*`, `resources/*` (each has a stub `*View.astro` to replace) | stub only | ✅ |
-| `src/features/site/*` (Home, Grow, Glossary, About views), `src/components/ComingSoon.astro` | ✅ | ❌ (ComingSoon may be deleted once unused) |
+| `src/features/site/*` (Home, Next step, Grow, Glossary, About views) | ✅ | ❌ |
 | `tests/e2e/*` | ✅ harness | ✅ may **add** new `*.spec.ts` files; don't edit Part 1's |
 | `src/content/resources.json`, `faq.{en,es}.json` | ❌ | ✅ |
 | `src/content/glossary.{en,es}.json` | ✅ seeds | ✅ **append-only** new keys |

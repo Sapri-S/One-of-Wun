@@ -1,0 +1,194 @@
+{
+  "_meta": {
+    "note": "Free public and nonprofit resources only. No affiliate links. Re-verify every URL before launch (see HANDOFF.md).",
+    "categories": {
+      "debt": {
+        "en": "Credit and debt",
+        "es": "Crédito y deudas"
+      },
+      "banking": {
+        "en": "Banking",
+        "es": "Bancos"
+      },
+      "taxes": {
+        "en": "Taxes",
+        "es": "Impuestos"
+      },
+      "investing": {
+        "en": "Investing safely",
+        "es": "Invertir con cuidado"
+      },
+      "retirement": {
+        "en": "Retirement",
+        "es": "Retiro"
+      }
+    }
+  },
+  "resources": [
+    {
+      "id": "cfpb",
+      "org": "CFPB",
+      "url": "https://www.consumerfinance.gov/",
+      "category": "debt",
+      "name": {
+        "en": "Consumer Financial Protection Bureau",
+        "es": "Oficina de Protección Financiera del Consumidor"
+      },
+      "desc": {
+        "en": "Plain guides on credit cards, debt collectors and loans. You can also file a complaint about a company.",
+        "es": "Guías sencillas sobre tarjetas, cobradores de deudas y préstamos. También puedes presentar una queja contra una empresa."
+      },
+      "keywords": "credit card debt collector loan complaint payday tarjeta deuda cobrador préstamo queja"
+    },
+    {
+      "id": "nfcc",
+      "org": "NFCC",
+      "url": "https://www.nfcc.org/",
+      "category": "debt",
+      "name": {
+        "en": "National Foundation for Credit Counseling",
+        "es": "Fundación Nacional para la Asesoría de Crédito"
+      },
+      "desc": {
+        "en": "Find a nonprofit credit counselor who can help you make a plan for debt, often for free.",
+        "es": "Encuentra un consejero de crédito sin fines de lucro que te ayude a hacer un plan para tus deudas, muchas veces gratis."
+      },
+      "keywords": "credit counseling debt plan budget consejero deuda presupuesto"
+    },
+    {
+      "id": "fdic-bankfind",
+      "org": "FDIC",
+      "url": "https://banks.data.fdic.gov/bankfind-suite/bankfind",
+      "category": "banking",
+      "name": {
+        "en": "FDIC BankFind",
+        "es": "FDIC BankFind"
+      },
+      "desc": {
+        "en": "Check that a bank is FDIC-insured, so your money is protected.",
+        "es": "Revisa que un banco esté asegurado por la FDIC para que tu dinero esté protegido."
+      },
+      "keywords": "bank insured fdic check banco asegurado"
+    },
+    {
+      "id": "ncua",
+      "org": "NCUA",
+      "url": "https://mycreditunion.gov/",
+      "category": "banking",
+      "name": {
+        "en": "MyCreditUnion.gov (NCUA)",
+        "es": "MyCreditUnion.gov (NCUA)"
+      },
+      "desc": {
+        "en": "Learn about credit unions and find one near you that is NCUA-insured.",
+        "es": "Aprende sobre las cooperativas de crédito y encuentra una cerca de ti asegurada por la NCUA."
+      },
+      "keywords": "credit union insured ncua cooperativa"
+    },
+    {
+      "id": "bankon",
+      "org": "Bank On",
+      "url": "https://joinbankon.org/",
+      "category": "banking",
+      "name": {
+        "en": "Bank On certified accounts",
+        "es": "Cuentas certificadas Bank On"
+      },
+      "desc": {
+        "en": "Find low-cost bank accounts with no overdraft fees, made for people starting or starting over.",
+        "es": "Encuentra cuentas bancarias de bajo costo sin comisiones por sobregiro, hechas para empezar o empezar de nuevo."
+      },
+      "keywords": "account no overdraft low cost second chance check cashing cuenta sobregiro cheque"
+    },
+    {
+      "id": "vita",
+      "org": "IRS VITA",
+      "url": "https://www.irs.gov/individuals/free-tax-return-preparation-for-qualifying-taxpayers",
+      "category": "taxes",
+      "name": {
+        "en": "IRS VITA free tax help",
+        "es": "Ayuda gratis con impuestos IRS VITA"
+      },
+      "desc": {
+        "en": "Free tax filing help from IRS-certified volunteers if you qualify, including many gig workers.",
+        "es": "Ayuda gratis para declarar impuestos con voluntarios certificados por el IRS si calificas, incluso para muchos trabajadores por app."
+      },
+      "keywords": "tax taxes free filing 1099 gig volunteer impuestos declarar gratis"
+    },
+    {
+      "id": "freefile",
+      "org": "IRS Free File",
+      "url": "https://www.irs.gov/filing/irs-free-file-do-your-taxes-for-free",
+      "category": "taxes",
+      "name": {
+        "en": "IRS Free File",
+        "es": "IRS Free File"
+      },
+      "desc": {
+        "en": "File your federal taxes online for free if your income qualifies.",
+        "es": "Declara tus impuestos federales en línea gratis si tus ingresos califican."
+      },
+      "keywords": "tax taxes free file online impuestos gratis"
+    },
+    {
+      "id": "brokercheck",
+      "org": "FINRA BrokerCheck",
+      "url": "https://brokercheck.finra.org/",
+      "category": "investing",
+      "name": {
+        "en": "FINRA BrokerCheck",
+        "es": "FINRA BrokerCheck"
+      },
+      "desc": {
+        "en": "Check if someone selling investments or giving advice is licensed, and see any past problems.",
+        "es": "Revisa si quien vende inversiones o da consejos tiene licencia y si ha tenido problemas."
+      },
+      "keywords": "advisor broker license scam check asesor licencia fraude"
+    },
+    {
+      "id": "investor-gov",
+      "org": "Investor.gov (SEC)",
+      "url": "https://www.investor.gov/",
+      "category": "investing",
+      "name": {
+        "en": "Investor.gov",
+        "es": "Investor.gov"
+      },
+      "desc": {
+        "en": "Free investing basics and calculators from the U.S. Securities and Exchange Commission. Spot fraud warnings too.",
+        "es": "Lo básico de invertir y calculadoras gratis de la Comisión de Bolsa y Valores de EE. UU. También alertas de fraude."
+      },
+      "keywords": "investing basics calculator fraud sec invertir calculadora fraude"
+    },
+    {
+      "id": "ssa",
+      "org": "Social Security",
+      "url": "https://www.ssa.gov/",
+      "category": "retirement",
+      "name": {
+        "en": "Social Security Administration",
+        "es": "Administración del Seguro Social"
+      },
+      "desc": {
+        "en": "See your estimated benefits and how the age you start changes your monthly check.",
+        "es": "Mira tus beneficios estimados y cómo la edad en que empiezas cambia tu cheque mensual."
+      },
+      "keywords": "social security retirement benefits age seguro social retiro beneficios"
+    },
+    {
+      "id": "irs-catchup",
+      "org": "IRS retirement plans",
+      "url": "https://www.irs.gov/retirement-plans",
+      "category": "retirement",
+      "name": {
+        "en": "IRS retirement plans",
+        "es": "Planes de retiro del IRS"
+      },
+      "desc": {
+        "en": "Official limits for 401(k)s and IRAs, including extra catch-up amounts for age 50+.",
+        "es": "Límites oficiales para 401(k) e IRA, incluyendo las cantidades extra para ponerse al día a los 50+."
+      },
+      "keywords": "401k ira limit catch-up 50 retirement límite retiro"
+    }
+  ]
+}

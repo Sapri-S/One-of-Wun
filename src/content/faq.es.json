@@ -1,0 +1,38 @@
+[
+  {
+    "q": "¿Esto es asesoría financiera?",
+    "a": "No. Este sitio es solo educación. No conoce toda tu situación y no recomienda ningún producto. Para consejos, habla con un profesional con licencia. Puedes revisar su licencia en FINRA BrokerCheck."
+  },
+  {
+    "q": "¿Guardan mis números?",
+    "a": "No. Todo lo que escribes se queda en tu dispositivo y desaparece cuando sales. No tenemos cuentas, cookies ni rastreo."
+  },
+  {
+    "q": "¿Todavía puedo empezar a los 50 o más?",
+    "a": "Sí. Las personas de 50 años o más pueden ahorrar extra cada año en cuentas de retiro. Pagar deudas y elegir cuándo cobrar el Seguro Social también hacen una gran diferencia."
+  },
+  {
+    "q": "Tengo deuda de tarjeta de crédito. ¿Debo invertir?",
+    "a": "Normalmente todavía no. Una deuda de más de 15% APR crece más rápido de lo que suelen crecer las inversiones. Crea un colchón de $1,000, recibe la aportación de tu trabajo y luego paga la deuda."
+  },
+  {
+    "q": "¿Cuánto dinero necesito para empezar?",
+    "a": "Muy poco. $5 a la semana es un comienzo real. Muchos fondos te dejan empezar con cantidades pequeñas."
+  },
+  {
+    "q": "¿Y si el mercado baja después de invertir?",
+    "a": "Las caídas son normales. Vender durante una caída hace real la pérdida. Invierte solo dinero que no necesitarás en 5 años o más, y prueba primero la página de práctica."
+  },
+  {
+    "q": "No tengo cuenta de banco. ¿Por dónde empiezo?",
+    "a": "Busca una cuenta gratis en un banco asegurado por la FDIC o una cooperativa asegurada por la NCUA, sin comisiones por sobregiro. El tema Bancos de arriba te puede ayudar."
+  },
+  {
+    "q": "¿Quién maneja este sitio?",
+    "a": "Un proyecto educativo gratis y sin fines comerciales. No vendemos nada y no ganamos dinero con los enlaces."
+  },
+  {
+    "q": "¿Está disponible en español?",
+    "a": "Sí. Usa el botón English/Español arriba en cualquier página."
+  }
+]

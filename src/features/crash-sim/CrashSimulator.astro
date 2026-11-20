@@ -1,0 +1,264 @@
+---
+/**
+ * PART 2 — Crash Simulator (FR-05, US-05). Scripted, pretend money only.
+ * $1,000 → "Simulate a 30% market drop" → $700 (1.5s, instant with reduced motion)
+ * → 4-step calm coaching → optional illustrative recovery. Reset is always visible.
+ */
+import Icon from '../../components/Icon.astro';
+import Disclaimer from '../../components/Disclaimer.astro';
+import Button from '../../components/Button.astro';
+import { t, tv, formatMoney, LOCALE, type Lang } from '../../i18n/utils';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const coach = tv<{ title: string; body: string }[]>(lang, 'practice.coach');
+const i18n = {
+  locale: LOCALE[lang],
+  stepOf: t(lang, 'practice.stepOf'),
+  dropping: t(lang, 'practice.dropping'),
+  afterDrop: t(lang, 'practice.afterDrop'),
+  recovered: t(lang, 'practice.recovered'),
+};
+---
+<div class="sim" data-sim data-state="start" data-i18n={JSON.stringify(i18n)}>
+  <div class="account">
+    <p class="account-label"><Icon name="practice" size={20} /> {t(lang, 'practice.accountLabel')}</p>
+    <dl class="figures">
+      <div><dt>{t(lang, 'practice.start')}</dt><dd class="num">{formatMoney(1000, lang)}</dd></div>
+      <div class="now"><dt>{t(lang, 'practice.now')}</dt><dd class="num" data-balance>{formatMoney(1000, lang)}</dd></div>
+      <div class="chg"><dt>{t(lang, 'practice.change')}</dt><dd class="num" data-change>{formatMoney(0, lang)}</dd></div>
+    </dl>
+    <svg class="chart" viewBox="0 0 640 200" preserveAspectRatio="none" role="img" aria-labelledby="sim-desc">
+      <desc id="sim-desc">{t(lang, 'practice.chartDesc')}</desc>
+      <line class="base" x1="0" x2="640" y1="60" y2="60" />
+      <path class="line" data-line d="" />
+    </svg>
+    <p class="status-msg" data-msg aria-live="polite"></p>
+  </div>
+
+  <div class="controls">
+    <Button data-drop>
+      <Icon name="arrow-down" size={20} />
+      {t(lang, 'practice.drop')}
+    </Button>
+  </div>
+
+  <div class="coach" data-coach hidden>
+    <p class="coach-progress" data-coach-progress></p>
+    {coach.map((c, i) => (
+      <div class="coach-step" data-coach-step={i} hidden={i !== 0}>
+        <h3 class="coach-title" tabindex="-1">{c.title}</h3>
+        <p>{c.body}</p>
+      </div>
+    ))}
+    <div class="coach-actions">
+      <Button variant="quiet" data-coach-back>
+        <Icon name="chevron-left" size={20} />{t(lang, 'practice.back')}
+      </Button>
+      <Button data-coach-next>
+        {t(lang, 'practice.next')}<Icon name="chevron-right" size={20} />
+      </Button>
+      <Button data-recover hidden>{t(lang, 'practice.recover')}</Button>
+    </div>
+  </div>
+
+  <div class="recovery" data-recovery hidden>
+    <p data-recovery-text></p>
+    <Disclaimer variant="projection" />
+  </div>
+
+  <Button variant="quiet" class="reset" data-reset>
+    <Icon name="reset" size={20} />
+    {t(lang, 'practice.reset')}
+  </Button>
+</div>
+
+<script>
+  const START = 1000, LOW = 700, RECOVERED = 1050;
+
+  // Scripted, illustrative series (not real market data).
+  function series(): number[] {
+    const flat = [1000, 1006, 998, 1004, 1000];
+    const drop: number[] = [];
+    for (let i = 1; i <= 14; i++) {
+      const f = i / 14;
+      drop.push(START - (START - LOW) * (1 - Math.pow(1 - f, 1.6)) + (i < 14 ? Math.sin(i * 1.7) * 12 : 0));
+    }
+    return [...flat, ...drop];
+  }
+  function recoverySeries(): number[] {
+    const out: number[] = [];
+    for (let i = 1; i <= 26; i++) {
+      const f = i / 26;
+      out.push(LOW + (RECOVERED - LOW) * f + (i < 26 ? Math.sin(i * 1.3) * 18 : 0));
+    }
+    return out;
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-sim]').forEach((root) => {
+    const i18n = JSON.parse(root.dataset.i18n || '{}');
+    const money = new Intl.NumberFormat(i18n.locale, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+    const fmt = (n: number) => money.format(Math.round(n));
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const $ = <T extends Element>(s: string) => root.querySelector<T>(s)!;
+    const line = $<SVGPathElement>('[data-line]');
+    const balance = $<HTMLElement>('[data-balance]');
+    const change = $<HTMLElement>('[data-change]');
+    const msg = $<HTMLElement>('[data-msg]');
+    const dropBtn = $<HTMLButtonElement>('[data-drop]');
+    const coach = $<HTMLElement>('[data-coach]');
+    const steps = Array.from(root.querySelectorAll<HTMLElement>('[data-coach-step]'));
+    const next = $<HTMLButtonElement>('[data-coach-next]');
+    const back = $<HTMLButtonElement>('[data-coach-back]');
+    const recover = $<HTMLButtonElement>('[data-recover]');
+    const recovery = $<HTMLElement>('[data-recovery]');
+
+    let points: number[] = [];
+    let raf = 0;
+    let step = 0;
+    // Fill the width with the drop; widen the scale only once the recovery starts.
+    const DROP_PTS = 19, ALL_PTS = 45;
+    const x = (i: number) => (i / ((points.length > DROP_PTS ? ALL_PTS : DROP_PTS) - 1)) * 640;
+    const y = (v: number) => 200 - ((v - 600) / 500) * 200;
+    function draw() {
+      line.setAttribute('d', points.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(''));
+    }
+    function setBalance(v: number) {
+      balance.textContent = fmt(v);
+      const d = Math.round(v - START);
+      change.textContent = `${d < 0 ? '−' : d > 0 ? '+' : ''}${fmt(Math.abs(d))} (${d < 0 ? '−' : d > 0 ? '+' : ''}${Math.round(Math.abs(d) / 10)}%)`;
+      root.dataset.trend = d < 0 ? 'down' : d > 0 ? 'up' : 'flat';
+    }
+
+    function play(from: number[], add: number[], ms: number, done: () => void) {
+      cancelAnimationFrame(raf);
+      if (reduce) {
+        points = [...from, ...add];
+        draw();
+        setBalance(points[points.length - 1]);
+        return done();
+      }
+      const t0 = performance.now();
+      const tick = (now: number) => {
+        const f = Math.min(1, (now - t0) / ms);
+        const n = Math.max(1, Math.round(f * add.length));
+        points = [...from, ...add.slice(0, n)];
+        draw();
+        setBalance(points[points.length - 1]);
+        if (f < 1) raf = requestAnimationFrame(tick);
+        else done();
+      };
+      raf = requestAnimationFrame(tick);
+    }
+
+    function showStep(i: number, focus = true) {
+      step = i;
+      steps.forEach((s, j) => (s.hidden = j !== i));
+      $('[data-coach-progress]').textContent = i18n.stepOf.replace('{n}', String(i + 1)).replace('{total}', String(steps.length));
+      back.hidden = i === 0;
+      const last = i === steps.length - 1;
+      next.hidden = last;
+      recover.hidden = !last || root.dataset.state === 'recovered';
+      if (focus) steps[i].querySelector<HTMLElement>('.coach-title')!.focus();
+    }
+
+    function reset() {
+      cancelAnimationFrame(raf);
+      root.dataset.state = 'start';
+      points = series().slice(0, 5);
+      draw();
+      setBalance(START);
+      msg.textContent = '';
+      dropBtn.hidden = false;
+      dropBtn.disabled = false;
+      coach.hidden = true;
+      recovery.hidden = true;
+    }
+
+    dropBtn.addEventListener('click', () => {
+      root.dataset.state = 'dropping';
+      dropBtn.disabled = true;
+      msg.textContent = i18n.dropping;
+      const s = series();
+      play(s.slice(0, 5), s.slice(5), 1500, () => {
+        root.dataset.state = 'dropped';
+        setBalance(LOW);
+        msg.textContent = i18n.afterDrop;
+        dropBtn.hidden = true;
+        coach.hidden = false;
+        showStep(0);
+      });
+    });
+    next.addEventListener('click', () => showStep(Math.min(steps.length - 1, step + 1)));
+    back.addEventListener('click', () => showStep(Math.max(0, step - 1)));
+    recover.addEventListener('click', () => {
+      recover.disabled = true;
+      play(points, recoverySeries(), 2000, () => {
+        root.dataset.state = 'recovered';
+        setBalance(RECOVERED);
+        recover.disabled = false;
+        recover.hidden = true;
+        recovery.hidden = false;
+        $('[data-recovery-text]').textContent = i18n.recovered.replace('{amount}', fmt(RECOVERED));
+      });
+    });
+    $('[data-reset]').addEventListener('click', () => {
+      reset();
+      dropBtn.focus();
+    });
+    reset();
+  });
+</script>
+
+<style>
+  .sim {
+    display: grid;
+    gap: var(--space-5);
+    max-width: 760px;
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+  .account-label { display: flex; align-items: center; gap: var(--space-2); font-weight: 700; color: var(--ink-soft); font-size: var(--fs-small); }
+  .figures { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); margin: var(--space-4) 0 0; }
+  .figures .now { grid-column: 1 / -1; order: -1; }
+  .figures div { padding: var(--space-3); border-radius: var(--radius); background: var(--bg); }
+  .figures dt { font-size: var(--fs-small); color: var(--ink-muted); }
+  .figures dd { margin: 0; font-weight: 700; font-size: 1.25rem; }
+  .figures .now dd { font-size: var(--fs-num); color: var(--ink); line-height: 1.2; }
+  [data-trend='down'] .chg dd { color: var(--stop-ink); }
+  [data-trend='up'] .chg dd { color: var(--go-ink); }
+  .chart { width: 100%; height: 160px; margin-top: var(--space-4); overflow: visible; }
+  .chart .base { stroke: var(--border); stroke-width: 1; stroke-dasharray: 4 6; vector-effect: non-scaling-stroke; }
+  .chart .line { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+  [data-trend='down'] .chart .line { stroke: var(--stop-ink); }
+  [data-state='recovered'] .chart .line { stroke: var(--go-ink); }
+  .status-msg { margin-top: var(--space-3); font-weight: 700; min-height: 1.6em; }
+
+  .controls :global(.btn) { width: 100%; }
+  .coach {
+    padding: var(--space-5);
+    border-radius: var(--radius);
+    background: var(--surface-sage);
+  }
+  .coach:not([hidden]) { animation: in var(--dur) var(--ease); }
+  .coach-progress { font-size: var(--fs-small); font-weight: 700; color: var(--ink-soft); }
+  .coach-step { margin-top: var(--space-2); }
+  .coach-title { font-size: var(--fs-h3); }
+  .coach-title:focus { outline: none; }
+  .coach-step p { margin-top: var(--space-2); }
+  .coach-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-5); }
+  .coach-actions [hidden] { display: none; }
+  .recovery > :global(* + *) { margin-top: var(--space-3); }
+  .reset { justify-self: start; }
+  [hidden] { display: none !important; }
+
+  @keyframes in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @media (min-width: 600px) {
+    .controls :global(.btn) { width: auto; }
+    .figures { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .figures .now { grid-column: auto; order: 0; }
+  }
+</style>

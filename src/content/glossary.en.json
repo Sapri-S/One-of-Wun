@@ -1,26 +1,106 @@
 {
-  "401k": { "term": "401(k)", "def": "A retirement savings account you get through your job. Money comes out of your paycheck before you see it, and it grows for later." },
-  "401k-match": { "term": "401(k) match", "def": "Extra money your job adds to your 401(k) when you save. For example, if you save $50, your job might add $50 too. It's like a raise." },
-  "1099": { "term": "1099 work", "def": "Work where you're paid as your own boss, like gig or delivery apps. No taxes are taken out, so it's smart to set some money aside for tax time." },
-  "andon": { "term": "Andon", "def": "A pause button. In a factory, anyone can stop the line when something's wrong. On this site, it means it's OK to pause your money plan when life happens." },
-  "apr": { "term": "APR", "def": "The yearly cost of borrowing money, shown as a percent. A 24.9% APR means about $249 a year in interest for every $1,000 you owe." },
-  "bond-fund": { "term": "Bond fund", "def": "A basket of loans to governments or companies. They pay you interest. They usually go up and down less than stocks, and usually grow less too." },
-  "catch-up-contribution": { "term": "Catch-up contribution", "def": "Extra money people age 50 and older are allowed to put into retirement accounts each year, on top of the normal limit." },
-  "check-casher": { "term": "Check-cashing store", "def": "A store that turns your paycheck into cash for a fee. The fees add up fast. A free bank or credit union account can do the same thing for free." },
-  "compound-growth": { "term": "Compound growth", "def": "When your money earns money, and then that new money earns money too. Over many years, this snowball does most of the work." },
-  "credit-union": { "term": "Credit union", "def": "A bank owned by its members instead of investors. Many have lower fees. Look for NCUA insurance, which protects your money like FDIC does." },
-  "diversification": { "term": "Diversification", "def": "Not putting all your eggs in one basket. Owning many different things means one bad one can't sink everything." },
-  "emergency-fund": { "term": "Emergency fund", "def": "Money saved just for surprises, like a car repair or a doctor bill, so you don't have to borrow. Some people call it a cushion." },
-  "expense-ratio": { "term": "Expense ratio", "def": "The yearly fee a fund charges, shown as a percent. A 0.05% expense ratio costs 50 cents a year for every $1,000 you have in it." },
-  "fdic": { "term": "FDIC", "def": "A U.S. government agency that protects money in member banks, up to $250,000 per person per bank. If the bank fails, you still get your money back." },
-  "index-fund": { "term": "Index fund", "def": "A basket that holds small pieces of many companies at once, like the 500 biggest U.S. companies. It usually has low fees." },
-  "ira": { "term": "IRA", "def": "A retirement account you open on your own, not through a job. It has tax benefits to help your money grow for later." },
-  "jidoka": { "term": "Jidoka", "def": "A safety gate. In a factory, work stops if something isn't right. On this site, it means you don't move to the next money step until the one you're on is safe." },
-  "kaizen": { "term": "Kaizen", "def": "Small, steady improvements. On this site, it means tiny regular money steps, like saving $5 a week, that add up over time." },
-  "market-drop": { "term": "Market drop", "def": "When prices of investments fall for a while. It happens often and is a normal part of investing. Prices have recovered over time in the past, but not always quickly." },
-  "paper-trading": { "term": "Practice account", "def": "A pretend investing account with fake money. You can learn how things work and how a drop feels, without any real risk." },
-  "roth-ira": { "term": "Roth IRA", "def": "A type of IRA where you pay taxes on the money now. Later, in retirement, you can usually take it out tax-free." },
-  "secure-2": { "term": "SECURE 2.0", "def": "A 2022 U.S. law that changed retirement rules. One change: people 50 and older can save extra each year in 401(k)s and IRAs." },
-  "single-stock": { "term": "Single stock", "def": "A small piece of one company. If that one company does badly, your money can drop a lot. That's why it's riskier than a fund." },
-  "social-security": { "term": "Social Security", "def": "Monthly money from the U.S. government after you retire, based on your work history. Waiting longer to start it usually means a bigger monthly check." }
+  "401k": {
+    "term": "401(k)",
+    "def": "A retirement savings account you get through your job. Money comes out of your paycheck before you see it, and it grows for later."
+  },
+  "401k-match": {
+    "term": "401(k) match",
+    "def": "Extra money your job adds to your 401(k) when you save. For example, if you save $50, your job might add $50 too. It's like a raise."
+  },
+  "1099": {
+    "term": "1099 work",
+    "def": "Work where you're paid as your own boss, like gig or delivery apps. No taxes are taken out, so it's smart to set some money aside for tax time."
+  },
+  "andon": {
+    "term": "Andon",
+    "def": "A pause button. In a factory, anyone can stop the line when something's wrong. On this site, it means it's OK to pause your money plan when life happens."
+  },
+  "apr": {
+    "term": "APR",
+    "def": "The yearly cost of borrowing money, shown as a percent. A 24.9% APR means about $249 a year in interest for every $1,000 you owe."
+  },
+  "bond-fund": {
+    "term": "Bond fund",
+    "def": "A basket of loans to governments or companies. They pay you interest. They usually go up and down less than stocks, and usually grow less too."
+  },
+  "catch-up-contribution": {
+    "term": "Catch-up contribution",
+    "def": "Extra money people age 50 and older are allowed to put into retirement accounts each year, on top of the normal limit."
+  },
+  "check-casher": {
+    "term": "Check-cashing store",
+    "def": "A store that turns your paycheck into cash for a fee. The fees add up fast. A free bank or credit union account can do the same thing for free."
+  },
+  "compound-growth": {
+    "term": "Compound growth",
+    "def": "When your money earns money, and then that new money earns money too. Over many years, this snowball does most of the work."
+  },
+  "credit-union": {
+    "term": "Credit union",
+    "def": "A bank owned by its members instead of investors. Many have lower fees. Look for NCUA insurance, which protects your money like FDIC does."
+  },
+  "diversification": {
+    "term": "Diversification",
+    "def": "Not putting all your eggs in one basket. Owning many different things means one bad one can't sink everything."
+  },
+  "emergency-fund": {
+    "term": "Emergency fund",
+    "def": "Money saved just for surprises, like a car repair or a doctor bill, so you don't have to borrow. Some people call it a cushion."
+  },
+  "expense-ratio": {
+    "term": "Expense ratio",
+    "def": "The yearly fee a fund charges, shown as a percent. A 0.05% expense ratio costs 50 cents a year for every $1,000 you have in it."
+  },
+  "fdic": {
+    "term": "FDIC",
+    "def": "A U.S. government agency that protects money in member banks, up to $250,000 per person per bank. If the bank fails, you still get your money back."
+  },
+  "index-fund": {
+    "term": "Index fund",
+    "def": "A basket that holds small pieces of many companies at once, like the 500 biggest U.S. companies. It usually has low fees."
+  },
+  "ira": {
+    "term": "IRA",
+    "def": "A retirement account you open on your own, not through a job. It has tax benefits to help your money grow for later."
+  },
+  "jidoka": {
+    "term": "Jidoka",
+    "def": "A safety gate. In a factory, work stops if something isn't right. On this site, it means you don't move to the next money step until the one you're on is safe."
+  },
+  "kaizen": {
+    "term": "Kaizen",
+    "def": "Small, steady improvements. On this site, it means tiny regular money steps, like saving $5 a week, that add up over time."
+  },
+  "market-drop": {
+    "term": "Market drop",
+    "def": "When prices of investments fall for a while. It happens often and is a normal part of investing. Prices have recovered over time in the past, but not always quickly."
+  },
+  "paper-trading": {
+    "term": "Practice account",
+    "def": "A pretend investing account with fake money. You can learn how things work and how a drop feels, without any real risk."
+  },
+  "roth-ira": {
+    "term": "Roth IRA",
+    "def": "A type of IRA where you pay taxes on the money now. Later, in retirement, you can usually take it out tax-free."
+  },
+  "secure-2": {
+    "term": "SECURE 2.0",
+    "def": "A 2022 U.S. law that changed retirement rules. One change: people 50 and older can save extra each year in 401(k)s and IRAs."
+  },
+  "single-stock": {
+    "term": "Single stock",
+    "def": "A small piece of one company. If that one company does badly, your money can drop a lot. That's why it's riskier than a fund."
+  },
+  "social-security": {
+    "term": "Social Security",
+    "def": "Monthly money from the U.S. government after you retire, based on your work history. Waiting longer to start it usually means a bigger monthly check."
+  },
+  "overdraft": {
+    "term": "Overdraft fee",
+    "def": "A fee a bank charges when you spend more than you have in your account. It's often about $35. Some accounts have no overdraft fees."
+  },
+  "active-fund": {
+    "term": "Actively managed fund",
+    "def": "A fund where people pick which investments to buy. It usually charges higher fees than an index fund, and often doesn't do better."
+  }
 }

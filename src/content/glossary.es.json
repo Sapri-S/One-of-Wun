@@ -1,26 +1,106 @@
 {
-  "401k": { "term": "401(k)", "def": "Una cuenta de ahorro para el retiro que obtienes por tu trabajo. El dinero sale de tu cheque antes de que lo veas y crece para después." },
-  "401k-match": { "term": "Aportación 401(k)", "def": "Dinero extra que tu trabajo agrega a tu 401(k) cuando ahorras. Por ejemplo, si ahorras $50, tu trabajo podría agregar otros $50. Es como un aumento." },
-  "1099": { "term": "Trabajo 1099", "def": "Trabajo en el que eres tu propio jefe, como las apps de entregas o viajes. No te descuentan impuestos, así que conviene apartar dinero para pagarlos." },
-  "andon": { "term": "Andon", "def": "Un botón de pausa. En una fábrica, cualquiera puede parar la línea si algo anda mal. En este sitio, significa que está bien pausar tu plan cuando pasa algo en tu vida." },
-  "apr": { "term": "APR", "def": "El costo anual de pedir dinero prestado, en porcentaje. Un APR de 24.9% significa unos $249 al año de interés por cada $1,000 que debes." },
-  "bond-fund": { "term": "Fondo de bonos", "def": "Un grupo de préstamos a gobiernos o empresas que te pagan interés. Suben y bajan menos que las acciones, y por lo general crecen menos." },
-  "catch-up-contribution": { "term": "Aportación para ponerse al día", "def": "Dinero extra que las personas de 50 años o más pueden poner en cuentas de retiro cada año, además del límite normal." },
-  "check-casher": { "term": "Tienda para cambiar cheques", "def": "Un negocio que cambia tu cheque por efectivo y te cobra una comisión. Las comisiones suman rápido. Una cuenta gratis de banco o cooperativa lo hace sin costo." },
-  "compound-growth": { "term": "Crecimiento compuesto", "def": "Cuando tu dinero gana dinero, y ese dinero nuevo también gana dinero. Con los años, esta bola de nieve hace casi todo el trabajo." },
-  "credit-union": { "term": "Cooperativa de crédito", "def": "Un banco que es de sus miembros, no de inversionistas. Muchas cobran menos comisiones. Busca el seguro de la NCUA, que protege tu dinero como la FDIC." },
-  "diversification": { "term": "Diversificación", "def": "No poner todos los huevos en una sola canasta. Tener muchas cosas distintas hace que una mala no lo hunda todo." },
-  "emergency-fund": { "term": "Fondo de emergencia", "def": "Dinero ahorrado solo para sorpresas, como arreglar el auto o pagar al doctor, para no tener que pedir prestado. Algunos le dicen colchón." },
-  "expense-ratio": { "term": "Índice de gastos", "def": "La comisión anual de un fondo, en porcentaje. Un índice de 0.05% cuesta 50 centavos al año por cada $1,000 que tienes en él." },
-  "fdic": { "term": "FDIC", "def": "Una agencia del gobierno de EE. UU. que protege el dinero en los bancos miembros, hasta $250,000 por persona por banco. Si el banco quiebra, recuperas tu dinero." },
-  "index-fund": { "term": "Fondo indexado", "def": "Un grupo que tiene pedacitos de muchas empresas a la vez, como las 500 empresas más grandes de EE. UU. Por lo general cobra comisiones bajas." },
-  "ira": { "term": "IRA", "def": "Una cuenta para el retiro que abres por tu cuenta, no por un trabajo. Tiene beneficios de impuestos para que tu dinero crezca para después." },
-  "jidoka": { "term": "Jidoka", "def": "Una puerta de seguridad. En una fábrica, el trabajo se detiene si algo no está bien. En este sitio, significa no pasar al siguiente paso hasta que el actual sea seguro." },
-  "kaizen": { "term": "Kaizen", "def": "Mejoras pequeñas y constantes. En este sitio, son pasos de dinero pequeños y regulares, como ahorrar $5 a la semana, que suman con el tiempo." },
-  "market-drop": { "term": "Caída del mercado", "def": "Cuando los precios de las inversiones bajan por un tiempo. Pasa seguido y es parte normal de invertir. En el pasado los precios se han recuperado con el tiempo, aunque no siempre rápido." },
-  "paper-trading": { "term": "Cuenta de práctica", "def": "Una cuenta de inversión de mentira con dinero falso. Puedes aprender cómo funciona y cómo se siente una caída, sin ningún riesgo real." },
-  "roth-ira": { "term": "Roth IRA", "def": "Un tipo de IRA en el que pagas impuestos sobre el dinero ahora. Después, en el retiro, normalmente puedes sacarlo sin pagar impuestos." },
-  "secure-2": { "term": "SECURE 2.0", "def": "Una ley de EE. UU. de 2022 que cambió las reglas del retiro. Un cambio: las personas de 50 años o más pueden ahorrar más cada año en 401(k) e IRA." },
-  "single-stock": { "term": "Acción individual", "def": "Un pedacito de una sola empresa. Si a esa empresa le va mal, tu dinero puede bajar mucho. Por eso es más arriesgado que un fondo." },
-  "social-security": { "term": "Seguro Social", "def": "Dinero mensual del gobierno de EE. UU. después de que te jubilas, según tu historial de trabajo. Esperar más para empezar a cobrarlo suele dar un cheque mensual más grande." }
+  "401k": {
+    "term": "401(k)",
+    "def": "Una cuenta de ahorro para el retiro que obtienes por tu trabajo. El dinero sale de tu cheque antes de que lo veas y crece para después."
+  },
+  "401k-match": {
+    "term": "Aportación 401(k)",
+    "def": "Dinero extra que tu trabajo agrega a tu 401(k) cuando ahorras. Por ejemplo, si ahorras $50, tu trabajo podría agregar otros $50. Es como un aumento."
+  },
+  "1099": {
+    "term": "Trabajo 1099",
+    "def": "Trabajo en el que eres tu propio jefe, como las apps de entregas o viajes. No te descuentan impuestos, así que conviene apartar dinero para pagarlos."
+  },
+  "andon": {
+    "term": "Andon",
+    "def": "Un botón de pausa. En una fábrica, cualquiera puede parar la línea si algo anda mal. En este sitio, significa que está bien pausar tu plan cuando pasa algo en tu vida."
+  },
+  "apr": {
+    "term": "APR",
+    "def": "El costo anual de pedir dinero prestado, en porcentaje. Un APR de 24.9% significa unos $249 al año de interés por cada $1,000 que debes."
+  },
+  "bond-fund": {
+    "term": "Fondo de bonos",
+    "def": "Un grupo de préstamos a gobiernos o empresas que te pagan interés. Suben y bajan menos que las acciones, y por lo general crecen menos."
+  },
+  "catch-up-contribution": {
+    "term": "Aportación para ponerse al día",
+    "def": "Dinero extra que las personas de 50 años o más pueden poner en cuentas de retiro cada año, además del límite normal."
+  },
+  "check-casher": {
+    "term": "Tienda para cambiar cheques",
+    "def": "Un negocio que cambia tu cheque por efectivo y te cobra una comisión. Las comisiones suman rápido. Una cuenta gratis de banco o cooperativa lo hace sin costo."
+  },
+  "compound-growth": {
+    "term": "Crecimiento compuesto",
+    "def": "Cuando tu dinero gana dinero, y ese dinero nuevo también gana dinero. Con los años, esta bola de nieve hace casi todo el trabajo."
+  },
+  "credit-union": {
+    "term": "Cooperativa de crédito",
+    "def": "Un banco que es de sus miembros, no de inversionistas. Muchas cobran menos comisiones. Busca el seguro de la NCUA, que protege tu dinero como la FDIC."
+  },
+  "diversification": {
+    "term": "Diversificación",
+    "def": "No poner todos los huevos en una sola canasta. Tener muchas cosas distintas hace que una mala no lo hunda todo."
+  },
+  "emergency-fund": {
+    "term": "Fondo de emergencia",
+    "def": "Dinero ahorrado solo para sorpresas, como arreglar el auto o pagar al doctor, para no tener que pedir prestado. Algunos le dicen colchón."
+  },
+  "expense-ratio": {
+    "term": "Índice de gastos",
+    "def": "La comisión anual de un fondo, en porcentaje. Un índice de 0.05% cuesta 50 centavos al año por cada $1,000 que tienes en él."
+  },
+  "fdic": {
+    "term": "FDIC",
+    "def": "Una agencia del gobierno de EE. UU. que protege el dinero en los bancos miembros, hasta $250,000 por persona por banco. Si el banco quiebra, recuperas tu dinero."
+  },
+  "index-fund": {
+    "term": "Fondo indexado",
+    "def": "Un grupo que tiene pedacitos de muchas empresas a la vez, como las 500 empresas más grandes de EE. UU. Por lo general cobra comisiones bajas."
+  },
+  "ira": {
+    "term": "IRA",
+    "def": "Una cuenta para el retiro que abres por tu cuenta, no por un trabajo. Tiene beneficios de impuestos para que tu dinero crezca para después."
+  },
+  "jidoka": {
+    "term": "Jidoka",
+    "def": "Una puerta de seguridad. En una fábrica, el trabajo se detiene si algo no está bien. En este sitio, significa no pasar al siguiente paso hasta que el actual sea seguro."
+  },
+  "kaizen": {
+    "term": "Kaizen",
+    "def": "Mejoras pequeñas y constantes. En este sitio, son pasos de dinero pequeños y regulares, como ahorrar $5 a la semana, que suman con el tiempo."
+  },
+  "market-drop": {
+    "term": "Caída del mercado",
+    "def": "Cuando los precios de las inversiones bajan por un tiempo. Pasa seguido y es parte normal de invertir. En el pasado los precios se han recuperado con el tiempo, aunque no siempre rápido."
+  },
+  "paper-trading": {
+    "term": "Cuenta de práctica",
+    "def": "Una cuenta de inversión de mentira con dinero falso. Puedes aprender cómo funciona y cómo se siente una caída, sin ningún riesgo real."
+  },
+  "roth-ira": {
+    "term": "Roth IRA",
+    "def": "Un tipo de IRA en el que pagas impuestos sobre el dinero ahora. Después, en el retiro, normalmente puedes sacarlo sin pagar impuestos."
+  },
+  "secure-2": {
+    "term": "SECURE 2.0",
+    "def": "Una ley de EE. UU. de 2022 que cambió las reglas del retiro. Un cambio: las personas de 50 años o más pueden ahorrar más cada año en 401(k) e IRA."
+  },
+  "single-stock": {
+    "term": "Acción individual",
+    "def": "Un pedacito de una sola empresa. Si a esa empresa le va mal, tu dinero puede bajar mucho. Por eso es más arriesgado que un fondo."
+  },
+  "social-security": {
+    "term": "Seguro Social",
+    "def": "Dinero mensual del gobierno de EE. UU. después de que te jubilas, según tu historial de trabajo. Esperar más para empezar a cobrarlo suele dar un cheque mensual más grande."
+  },
+  "overdraft": {
+    "term": "Comisión por sobregiro",
+    "def": "Lo que cobra un banco cuando gastas más de lo que tienes en tu cuenta. Muchas veces son unos $35. Algunas cuentas no cobran sobregiros."
+  },
+  "active-fund": {
+    "term": "Fondo administrado activamente",
+    "def": "Un fondo donde unas personas eligen qué inversiones comprar. Normalmente cobra más que un fondo indexado y muchas veces no le va mejor."
+  }
 }

@@ -1,11 +1,43 @@
 ---
-/**
- * PART 2 OWNS THIS FILE. Stub from Part 1 — replace the ComingSoon with the real page.
- * Spec: context/SHARED.md §7 and context/PART-2.md.
- */
-import ComingSoon from '../../components/ComingSoon.astro';
-import type { Lang } from '../../i18n/utils';
+/** PART 2 — /practice: paper-trading preview + 30% crash simulator (FR-05). */
+import BaseLayout from '../../components/BaseLayout.astro';
+import Section from '../../components/Section.astro';
+import HowItWorks from '../../components/HowItWorks.astro';
+import Term from '../../components/Term.astro';
+import Button from '../../components/Button.astro';
+import CrashSimulator from './CrashSimulator.astro';
+import { t, tv, localizePath, type Lang } from '../../i18n/utils';
+
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 ---
-<ComingSoon lang={lang} pageKey="practice" />
+<BaseLayout title={t(lang, 'practice.meta.title')} description={t(lang, 'practice.meta.description')} lang={lang}>
+  <Section id="simulator" level={1} title={t(lang, 'practice.title')} badge="education" intro={t(lang, 'practice.lead')}>
+    <div class="stack">
+      <HowItWorks steps={tv<string[]>(lang, 'practice.how')} />
+      <CrashSimulator lang={lang} />
+    </div>
+  </Section>
+
+  <Section id="what" tone="sage" title={t(lang, 'practice.whatTitle')} badge="education">
+    <p>{t(lang, 'practice.what')}</p>
+    <p class="terms">
+      <Term id="paper-trading">{lang === 'es' ? 'Cuenta de práctica' : 'Practice account'}</Term>
+      <Term id="market-drop">{lang === 'es' ? 'Caída del mercado' : 'Market drop'}</Term>
+      <Term id="diversification">{lang === 'es' ? 'Diversificación' : 'Diversification'}</Term>
+    </p>
+  </Section>
+
+  <Section id="next" title={t(lang, 'practice.endTitle')} badge="your-choice">
+    <div class="actions">
+      <Button href={localizePath('/learn', lang)}>{t(lang, 'practice.endLearn')}</Button>
+      <Button href={localizePath('/next-step', lang)} variant="quiet">{t(lang, 'practice.endNext')}</Button>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .stack > :global(* + *) { margin-top: var(--space-5); }
+  .terms { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); margin-top: var(--space-4); font-size: var(--fs-small); }
+  .actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+</style>

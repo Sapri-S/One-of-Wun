@@ -1,11 +1,200 @@
 ---
 /**
- * PART 2 OWNS THIS FILE. Stub from Part 1 — replace the ComingSoon with the real page.
- * Spec: context/SHARED.md §7 and context/PART-2.md.
+ * PART 2 — /learn: Plain-Language Investment Explorer (FR-03 content, US-03).
+ * No tickers, fund names or brokers. Costs shown in dollars for a chosen amount.
  */
-import ComingSoon from '../../components/ComingSoon.astro';
-import type { Lang } from '../../i18n/utils';
+import BaseLayout from '../../components/BaseLayout.astro';
+import Section from '../../components/Section.astro';
+import HowItWorks from '../../components/HowItWorks.astro';
+import Term from '../../components/Term.astro';
+import Button from '../../components/Button.astro';
+import Icon from '../../components/Icon.astro';
+import ExternalLink from '../../components/ExternalLink.astro';
+import { t, tv, localizePath, LOCALE, type Lang } from '../../i18n/utils';
+
 interface Props { lang: Lang }
 const { lang } = Astro.props;
+
+type CardData = { id: string; name: string; termId: string; plain: string; risk: number; feePct: number; costNote: string; points: string[] };
+const cards = tv<CardData[]>(lang, 'learn.cards');
+const AMOUNTS = [100, 1000, 10000];
+const initial = 1000;
+// Cents only when there are cents: $0.50, $5, $100.
+const money = (n: number) => {
+  const cents = Math.round(n * 100) % 100 !== 0;
+  return new Intl.NumberFormat(LOCALE[lang], { style: 'currency', currency: 'USD', minimumFractionDigits: cents ? 2 : 0, maximumFractionDigits: cents ? 2 : 0 }).format(n);
+};
+const cost = (pct: number, amount: number) => (pct / 100) * amount;
+const before = tv<string[]>(lang, 'learn.before');
+
+const i18n = {
+  locale: LOCALE[lang],
+  costFor: t(lang, 'learn.costFor'),
+  feeCheck: t(lang, 'learn.feeCheck'),
+};
 ---
-<ComingSoon lang={lang} pageKey="learn" />
+<BaseLayout title={t(lang, 'learn.meta.title')} description={t(lang, 'learn.meta.description')} lang={lang}>
+  <Section id="explorer" level={1} title={t(lang, 'learn.title')} badge="education" intro={t(lang, 'learn.lead')}>
+    <div class="explorer" data-explorer data-i18n={JSON.stringify(i18n)}>
+      <HowItWorks steps={tv<string[]>(lang, 'learn.how')} />
+
+      <div class="amounts">
+        <p class="amounts-label" id="amounts-label">{t(lang, 'learn.amountLabel')}</p>
+        <div class="chips" role="group" aria-labelledby="amounts-label">
+          {AMOUNTS.map((a) => (
+            <button type="button" class="chip num" data-amount={a} aria-pressed={a === initial ? 'true' : 'false'}>{money(a)}</button>
+          ))}
+        </div>
+      </div>
+
+      <ul class="cards">
+        {cards.map((c) => (
+          <li class="card" data-fee={c.feePct}>
+            <h2 class="card-name"><Term id={c.termId}>{c.name}</Term></h2>
+            <p class="plain">{c.plain}</p>
+
+            <div class="risk">
+              <p class="risk-text">{t(lang, 'learn.riskLabel', { n: c.risk })}</p>
+              <span class="risk-bar" aria-hidden="true">
+                {[1, 2, 3, 4, 5].map((n) => <span class:list={['seg', { on: n <= c.risk }]}></span>)}
+              </span>
+              <span class="risk-ends" aria-hidden="true"><span>{t(lang, 'learn.riskLow')}</span><span>{t(lang, 'learn.riskHigh')}</span></span>
+            </div>
+
+            <div class="cost">
+              <p class="cost-label">{t(lang, 'learn.costLabel')}</p>
+              <p class="cost-value num">
+                <strong data-cost>{c.feePct === 0 ? t(lang, 'learn.noFee') : money(cost(c.feePct, initial))}</strong>
+                <span data-cost-for>{t(lang, 'learn.costFor', { amount: money(initial) })}</span>
+              </p>
+              <p class="cost-note">{c.costNote}</p>
+            </div>
+
+            <div class="points">
+              <p class="points-title">{t(lang, 'learn.goodToKnow')}</p>
+              <ul>
+                {c.points.map((p) => <li><Icon name="check" size={20} /><span>{p}</span></li>)}
+              </ul>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <aside class="fee-check" aria-labelledby="fee-title">
+        <h2 id="fee-title" class="fee-title">{t(lang, 'learn.feeCheckTitle')}</h2>
+        <p data-fee-check>{t(lang, 'learn.feeCheck', { high: money(cost(1, initial)), low: money(cost(0.05, initial)), amount: money(initial) })}</p>
+        <p class="fee-terms"><Term id="expense-ratio">{lang === 'es' ? 'Índice de gastos' : 'Expense ratio'}</Term> <Term id="active-fund">{lang === 'es' ? 'Fondo administrado activamente' : 'Actively managed fund'}</Term> <Term id="diversification">{lang === 'es' ? 'Diversificación' : 'Diversification'}</Term></p>
+      </aside>
+    </div>
+  </Section>
+
+  <Section id="before" tone="sage" title={t(lang, 'learn.beforeTitle')} badge="talk-to-pro">
+    <ol class="before">
+      {before.map((b) => <li>{b}</li>)}
+    </ol>
+    <div class="actions">
+      <Button href={localizePath('/next-step', lang)}>{t(lang, 'learn.beforeNext')}</Button>
+      <Button href={localizePath('/practice', lang)} variant="quiet">{t(lang, 'learn.beforePractice')}</Button>
+    </div>
+    <p class="bc"><ExternalLink href="https://brokercheck.finra.org/" org="FINRA BrokerCheck">{t(lang, 'learn.brokerCheck')}</ExternalLink></p>
+  </Section>
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-explorer]').forEach((root) => {
+    const i18n = JSON.parse(root.dataset.i18n || '{}');
+    const money = (n: number) => {
+      const cents = Math.round(n * 100) % 100 !== 0;
+      return new Intl.NumberFormat(i18n.locale, {
+        style: 'currency', currency: 'USD', minimumFractionDigits: cents ? 2 : 0, maximumFractionDigits: cents ? 2 : 0,
+      }).format(n);
+    };
+
+    function setAmount(amount: number) {
+      root.querySelectorAll('[data-amount]').forEach((b) => b.setAttribute('aria-pressed', String(Number((b as HTMLElement).dataset.amount) === amount)));
+      root.querySelectorAll<HTMLElement>('[data-fee]').forEach((card) => {
+        const pct = Number(card.dataset.fee);
+        if (pct > 0) card.querySelector('[data-cost]')!.textContent = money((pct / 100) * amount);
+        card.querySelector('[data-cost-for]')!.textContent = i18n.costFor.replace('{amount}', money(amount));
+      });
+      root.querySelector('[data-fee-check]')!.textContent = i18n.feeCheck
+        .replace('{high}', money(0.01 * amount))
+        .replace('{low}', money(0.0005 * amount))
+        .replace('{amount}', money(amount));
+    }
+
+    root.addEventListener('click', (e) => {
+      const chip = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-amount]');
+      if (chip) setAmount(Number(chip.dataset.amount));
+    });
+  });
+</script>
+
+<style>
+  .explorer > :global(* + *) { margin-top: var(--space-5); }
+  .amounts { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); }
+  .amounts-label { font-weight: 700; }
+  .chips { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .chip {
+    min-height: var(--tap);
+    min-width: 88px;
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-weight: 700;
+    transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  }
+  .chip:hover { border-color: var(--primary); }
+  .chip[aria-pressed='true'] { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+
+  .cards {
+    display: grid;
+    gap: var(--space-4);
+    list-style: none;
+    padding: 0;
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    max-width: none;
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+  .card-name { font-size: var(--fs-h3); }
+  .plain { color: var(--ink-soft); }
+  .risk-text, .cost-label, .points-title { font-weight: 700; font-size: var(--fs-small); color: var(--ink-soft); }
+  .risk-bar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: var(--space-2); }
+  .seg { height: 10px; border-radius: 5px; background: var(--surface-sage); border: 1px solid var(--border); }
+  .seg.on { background: var(--accent); border-color: var(--accent); }
+  .risk-ends { display: flex; justify-content: space-between; margin-top: 4px; font-size: var(--fs-small); color: var(--ink-muted); }
+  .cost { padding: var(--space-3) var(--space-4); border-radius: var(--radius); background: var(--bg); }
+  .cost-value strong { font-size: var(--fs-num); color: var(--ink); margin-right: var(--space-2); }
+  .cost-value span { color: var(--ink-soft); }
+  .cost-note { font-size: var(--fs-small); color: var(--ink-muted); }
+  .points ul { list-style: none; padding: 0; display: grid; gap: var(--space-2); margin-top: var(--space-2); }
+  .points li { display: flex; gap: var(--space-2); align-items: flex-start; }
+  .points li :global(svg) { margin-top: 4px; color: var(--primary); }
+
+  .fee-check {
+    padding: var(--space-5);
+    border-radius: var(--radius);
+    background: var(--surface-mist);
+  }
+  .fee-title { font-size: var(--fs-body); }
+  .fee-check p { margin-top: var(--space-2); }
+  .fee-terms { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); font-size: var(--fs-small); }
+
+  .before { display: grid; gap: var(--space-3); padding-left: 1.4em; }
+  .before li::marker { color: var(--primary); font-weight: 700; }
+  .actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-5); }
+  .bc { margin-top: var(--space-4); }
+
+  @media (min-width: 900px) {
+    .cards { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>

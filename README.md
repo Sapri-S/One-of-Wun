@@ -1,6 +1,6 @@
 # Where You Want to Be
 
-A calm, free, non-commercial website that shows people a safe order of money steps: no sign-up, no tracking, nothing saved.
+A calm, free, non-commercial website (Part 1 and Part 2 both built) that shows people a safe order of money steps: no sign-up, no tracking, nothing saved.
 
 - **Spec and split:** [`context/`](context/README.md)
 - **Using the shared components:** [`HANDOFF.md`](HANDOFF.md)

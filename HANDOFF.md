@@ -34,7 +34,7 @@ Route files are thin. The real page is a **view** inside your feature folder:
 ```
 src/pages/learn.astro      →  <View lang="en" />   (already exists, don't need to touch)
 src/pages/es/learn.astro   →  <View lang="es" />   (already exists)
-src/features/explorer/LearnView.astro   ← YOU REPLACE THIS (currently a ComingSoon stub)
+src/features/explorer/LearnView.astro   ← the real page (Part 2)
 ```
 
 Starter for a view:
@@ -83,7 +83,6 @@ const { lang } = Astro.props;
 | `ExternalLink` | `<ExternalLink href org="CFPB">Consumer guides</ExternalLink>` | Same tab, ↗ icon, `rel="noopener noreferrer"`, screen-reader "(opens CFPB website)" |
 | `HowItWorks` | `<HowItWorks steps={tv<string[]>(lang, 'learn.how')} />` | **Required at the top of every tool.** 3 verb-first steps, ≤ 6 words each |
 | `Icon` | `<Icon name="check" size={20} />` | Names: home sprout book practice route lifebuoy external check pause hourglass info close flag chevron-left chevron-right minus plus reset lock arrow-down steps gate hand |
-| `ComingSoon` | stub only | Delete once all four Part 2 views are real |
 
 ### Tabs (for `/your-path`)
 ```astro
@@ -169,4 +168,25 @@ Motion: use `var(--dur)` and `var(--ease)`. `prefers-reduced-motion` is already 
 ---
 
 ## Part 2 notes
-_(Part 2: append what you shipped, defaults you used, and any prop requests here.)_
+
+**Status: ✅ shipped** (built in the same session as Part 1, on the same branch). All four routes are real pages in EN and ES. `ComingSoon.astro` has been deleted.
+
+| Route | File(s) | What it does |
+|---|---|---|
+| `/learn` | `features/explorer/LearnView.astro` | 3 cards (Index funds 3/5, Single stocks 5/5, Bond funds 2/5), $100 / $1,000 / $10,000 chips with costs shown in dollars, a "Small fees add up" box (1% vs 0.05%), and a "Before you invest" checklist with BrokerCheck |
+| `/practice` | `features/crash-sim/CrashSimulator.astro`, `PracticeView.astro` | $1,000 → "Simulate a 30% market drop" → $700 (1.5s, instant with reduced motion), 4-step coaching (Back/Next), an illustrative recovery to $1,050 with "Example, not a promise", and an always-visible Reset |
+| `/your-path` | `features/life-stages/PathView.astro` | Tabs `#catch-up` `#gig` `#first-gen` `#banked`. Each has a story, numbered steps, "Numbers to know", terms and a "Try this next" button |
+| `/help` | `features/resources/HelpView.astro`, `content/resources.json`, `content/faq.{en,es}.json` | Topic chips plus search (accent-insensitive, both languages), "no matches" state with Clear search, 11 free resources and a 9-question FAQ. `/help#banking` (or any category id) opens with that topic chosen |
+
+Defaults used:
+- **Risk scores:** index 3, stocks 5, bonds 2. **Typical fees:** 0.05% for index and bond funds; $0 yearly fund fee for single stocks, with the note "the real cost is risk".
+- **Recovery example:** ends at $1,050. It's scripted and illustrative, and labeled "Example, not a promise".
+- **No provider named** for practice accounts ("Some investing apps offer one for free").
+- **Catch-up figures:** $8,000 extra for a 401(k) and $1,100 extra for an IRA (2026). Ages 60–63 get one line with no number and a pointer to a licensed pro.
+- **Glossary additions:** `overdraft`, `active-fund`.
+
+Launch checks still open:
+- **Verify every URL in `resources.json`** and the inline links (IRS VITA, SSA, BrokerCheck). Outbound network was blocked in the build session, so none were opened. Stable homepage-level URLs were used where possible.
+- **Spanish copy** for these four pages is an AI draft too.
+
+Tests: `tests/e2e/part2.spec.ts` covers the chips, crash sim (animated and reduced-motion), tabs (click, arrow keys, hash), help filter/search/empty state/FAQ, outbound-link rules, and the Spanish pages. Lighthouse: `/learn`, `/practice`, `/your-path` and `/help` all scored 100/100/100/100.
