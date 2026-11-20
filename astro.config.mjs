@@ -49,6 +49,13 @@ export default defineConfig({
   site: 'https://one-of-wun-nu.vercel.app',
   output: 'static',
   trailingSlash: 'ignore',
+  // Old pages → new homes. Vercel also redirects these server-side (vercel.json); these static pages cover other hosts.
+  redirects: {
+    '/practice': '/invest',
+    '/es/practice': '/es/invest',
+    '/grow': '/save#calculator',
+    '/es/grow': '/es/save#calculator',
+  },
   build: {
     // CSP forbids inline <style> and <script>; always emit files.
     inlineStylesheets: 'never',

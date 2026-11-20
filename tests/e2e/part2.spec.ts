@@ -1,4 +1,4 @@
-// Part 2 interaction tests: /learn, /practice, /your-path, /help (+ Spanish spot checks).
+// Part 2 interaction tests: /learn, /your-path, /help (+ Spanish spot checks).
 import { test, expect } from './fixtures';
 
 test.describe('/learn explorer', () => {
@@ -22,56 +22,6 @@ test.describe('/learn explorer', () => {
   });
 });
 
-test.describe('/practice crash simulator', () => {
-  test('drops $1,000 → $700, coaches in 4 steps, recovers, resets', async ({ page, problems }) => {
-    await page.goto('/practice');
-    const value = page.locator('[data-value]');
-    await expect(value).toHaveText('$1,000');
-    await expect(page.locator('[data-coach]')).toBeHidden();
-    await expect(page.locator('[data-recover]')).toBeHidden();
-
-    await page.getByRole('button', { name: 'Simulate a 30% market drop' }).click();
-    await expect(value).toHaveText('$700', { timeout: 5000 });
-    await expect(page.locator('[data-status]')).toContainText('30% drop');
-    await expect(page.locator('[data-coach]')).toBeVisible();
-    await expect(page.getByText('Step 1 of 4')).toBeVisible();
-    await expect(page.locator('[data-step="0"] .step-title')).toBeFocused();
-
-    const next = page.getByRole('button', { name: 'Next' });
-    await next.click();
-    await expect(page.getByText('Step 2 of 4')).toBeVisible();
-    await page.getByRole('button', { name: 'Back' }).click();
-    await expect(page.getByText('Step 1 of 4')).toBeVisible();
-    for (let i = 0; i < 3; i++) await next.click();
-    await expect(page.getByText('Step 4 of 4')).toBeVisible();
-    await expect(next).toBeHidden();
-    await expect(page.locator('[data-done]')).toBeVisible();
-
-    await page.getByRole('button', { name: 'Show a recovery' }).click();
-    await expect(page.locator('[data-projection]')).toContainText('Example, not a promise.');
-    await expect(value).toHaveText('$1,050', { timeout: 5000 });
-
-    await page.getByRole('button', { name: 'Reset practice portfolio' }).click();
-    await expect(value).toHaveText('$1,000');
-    await expect(page.locator('[data-coach]')).toBeHidden();
-    await expect(page.getByRole('button', { name: 'Simulate a 30% market drop' })).toBeFocused();
-    expect(problems).toEqual([]);
-  });
-
-  test('reduced motion jumps straight to $700', async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/practice');
-    await page.getByRole('button', { name: 'Simulate a 30% market drop' }).click();
-    await expect(page.locator('[data-value]')).toHaveText('$700', { timeout: 300 });
-  });
-
-  test('Spanish simulator works', async ({ page }) => {
-    await page.goto('/es/practice');
-    await page.getByRole('button', { name: 'Simula una caída del 30%' }).click();
-    await expect(page.getByText('Paso 1 de 4')).toBeVisible({ timeout: 5000 });
-  });
-});
-
 test.describe('/your-path life stages', () => {
   test('hash deep link opens the tab; arrow keys move; links lead to tools', async ({ page, problems }) => {
     await page.goto('/your-path#gig');
@@ -88,7 +38,7 @@ test.describe('/your-path life stages', () => {
     const panel = page.getByRole('tabpanel');
     await expect(panel).toContainText('$8,000');
     await expect(panel).toContainText('$1,100');
-    await expect(panel.getByRole('link', { name: 'See how steady saving grows' })).toHaveAttribute('href', '/grow');
+    await expect(panel.getByRole('link', { name: 'See how steady saving grows' })).toHaveAttribute('href', '/save#calculator');
 
     const box = panel.getByRole('checkbox').first();
     await box.check();
@@ -148,12 +98,11 @@ test.describe('/help resources', () => {
   });
 });
 
-test('using every Part 2 tool stores nothing', async ({ page, problems }) => {
+test('visiting and using the non-trading tools stores nothing', async ({ page, problems }) => {
   await page.goto('/learn');
   await page.getByRole('button', { name: '$100', exact: true }).click();
-  await page.goto('/practice');
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.getByRole('button', { name: 'Simulate a 30% market drop' }).click();
+  await page.goto('/invest');
+  await page.getByRole('button', { name: 'Search', exact: true }).waitFor();
   await page.goto('/your-path#banked');
   await page.getByRole('tabpanel').getByRole('checkbox').first().check();
   await page.goto('/help');

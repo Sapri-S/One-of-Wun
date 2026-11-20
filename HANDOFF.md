@@ -202,3 +202,18 @@ All four have `/es/` versions through the existing route files.
 
 ### Prop requests
 - **`Button` and `hidden`:** `Button` sets `display: inline-flex` globally, which overrides the `hidden` attribute. Suggest adding `.btn[hidden] { display: none; }` to `Button.astro`. Workaround in place: `CrashSimulator.astro` has a scoped `[hidden] { display: none !important; }`.
+
+### Update (Nov 20 2026): mock market + Save page — branch `feature/invest-save`
+**Why:** the product owner wants a mock market with real prices and play money (like a trading app, no real money yet), not a scripted crash simulation, plus a demo bank / high-yield savings page.
+
+| Route | What | Files |
+|---|---|---|
+| `/invest` (was `/practice`) | Mock market: live U.S. prices, $10,000 play money, buy/sell by $ or shares, holdings, P/L, history, watchlist, reset | `src/features/market/{MarketView,MockMarket}.astro`, `portfolio.ts`, `storage.ts`, `api.ts` |
+| `/save` (was `/grow`) | Demo bank (mock data in fixed random ranges), high-yield savings comparison + demo "move money", Kaizen calculator | `src/features/save/{SaveView,DemoBank,HighYield}.astro`, `mockBank.ts`, `hys.ts`, `bankStore.ts` |
+| `/api/quote`, `/api/search` | Vercel functions that call Finnhub with `FINNHUB_API_KEY` (server-side only), 15s CDN cache, 503 when unavailable | `api/{quote,search,_lib}.ts` |
+
+- **Nav** (`src/i18n/utils.ts` `PAGES`): Home, Save, Learn, Invest, Your path, Help. `/practice` → `/invest` and `/grow` → `/save#calculator` redirect (`vercel.json` + `astro.config.mjs` `redirects`).
+- **Part 1 files touched** (owner-approved): `utils.ts` PAGES, `HomeView.astro` tiles, `ReadinessCheck.astro` "wait" link, `KaizenCalculator.astro` (input card no longer `position: sticky`), `common.nav` + `home.start.tiles` strings, `SHARED.md` rules 1 and 4, site map, click budget, F7/F10.
+- **Storage:** only `localStorage['wywtb.mockMarket.v1']` (play portfolio). The demo bank is in memory only.
+- **Setup needed:** add `FINNHUB_API_KEY` in Vercel (Project → Settings → Environment Variables, Production + Preview). Without it, `/invest` shows "Live prices are unavailable" and trading pauses; everything else works. Local: `vercel dev` (the plain `astro dev` server doesn't run `/api`).
+- **Free-tier limits:** Finnhub free has no historical candles, so there is no price-history chart; 60 calls/min shared by all visitors (the 15s cache covers this for normal traffic).

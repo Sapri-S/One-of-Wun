@@ -21,8 +21,8 @@ export interface Stage {
 }
 
 export const STAGES: Stage[] = [
-  { id: 'catch-up', key: 'catchUp', badge: 'talk-to-pro', terms: ['secure-2', 'catch-up-contribution', 'social-security', '401k', 'ira'], tool: '/grow' },
-  { id: 'gig', key: 'gig', badge: 'education', terms: ['1099', 'emergency-fund', 'kaizen'], tool: '/grow' },
+  { id: 'catch-up', key: 'catchUp', badge: 'talk-to-pro', terms: ['secure-2', 'catch-up-contribution', 'social-security', '401k', 'ira'], tool: '/save#calculator' },
+  { id: 'gig', key: 'gig', badge: 'education', terms: ['1099', 'emergency-fund', 'kaizen'], tool: '/save#calculator' },
   { id: 'first-gen', key: 'firstGen', badge: 'your-choice', terms: ['401k-match', 'apr', 'emergency-fund'], tool: '/#readiness' },
   { id: 'banked', key: 'banked', badge: 'education', terms: ['fdic', 'credit-union', 'check-casher'], tool: '/help' },
 ];

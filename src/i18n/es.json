@@ -7,9 +7,9 @@
     "navLabel": "Principal",
     "nav": {
       "home": "Inicio",
-      "grow": "Crecer",
+      "save": "Ahorrar",
       "learn": "Aprender",
-      "practice": "Practicar",
+      "invest": "Invertir",
       "path": "Tu camino",
       "help": "Ayuda"
     },
@@ -123,7 +123,7 @@
         "stopBills": "Empieza por lo básico. Cuando tus cuentas estén cubiertas cada mes, todos los demás pasos serán más fáciles. Ayuda gratis: un consejero de crédito sin fines de lucro o las guías de la CFPB en la página de Ayuda.",
         "stopDebt": "Paga las deudas de más de 15% APR antes de invertir. Cada dólar que pagas en una tarjeta al 24.9% te ahorra unos 25 centavos al año. Eso supera lo que normalmente gana una inversión.",
         "wait": "Ya casi. Primero crea un colchón de $1,000 para que una cuenta inesperada no te regrese a las deudas. Incluso $5 o $10 a la semana suman.",
-        "go": "Tu base es segura. Estás listo para aprender cómo funciona invertir. Empieza en la página Aprender y luego prueba una cuenta de práctica antes de usar dinero real."
+        "go": "Tu base es segura. Estás listo para aprender cómo funciona invertir. Empieza en la página Aprender y luego prueba el mercado de práctica con dinero de juego antes de usar dinero real."
       },
       "nextLinks": {
         "stop": "Ver ayuda gratis",
@@ -149,9 +149,9 @@
       "title": "¿A dónde quieres ir ahora?",
       "tiles": {
         "readiness": { "title": "Revisa si estás listo", "body": "Tres preguntas de sí o no. Recibe una luz clara: roja, amarilla o verde." },
-        "grow": { "title": "Mira crecer los pasos pequeños", "body": "Mueve de $5 a $100 a la semana y mira lo que el tiempo puede hacer." },
+        "save": { "title": "Ahorra mejor", "body": "Conecta un banco de prueba, compara el ahorro de alto rendimiento y mira crecer $5 a la semana." },
         "learn": { "title": "Aprende lo básico", "body": "Fondos indexados, acciones y bonos en palabras sencillas, con costos reales." },
-        "practice": { "title": "Practica una caída del mercado", "body": "Mira cómo $1,000 de práctica bajan 30% y aprende qué hacer." },
+        "invest": { "title": "Prueba el mercado de práctica", "body": "Compra y vende acciones reales a precios reales con $10,000 de dinero de juego." },
         "path": { "title": "Encuentra tu camino", "body": "Historias para ponerse al día después de los 50, trabajo por app, primera generación y cuentas bancarias nuevas." },
         "help": { "title": "Consigue ayuda gratis", "body": "Recursos públicos confiables para impuestos, deudas y bancos." }
       }
@@ -307,7 +307,7 @@
       "¿Estoy repartiendo mi dinero, o apostando todo a una sola cosa?"
     ],
     "askReady": "Revisa si estás listo",
-    "askPractice": "Prueba una caída de práctica",
+    "askPractice": "Prueba el mercado de práctica",
     "checkTitle": "Revisa antes de empezar",
     "checkIntro": "Antes de confiarle tu dinero a alguien, búscalo. Estas revisiones son gratis.",
     "checkBroker": "Busca a un corredor o asesor",
@@ -317,76 +317,6 @@
     "checkBasicsOrg": "Investor.gov",
     "checkBasicsBody": "Guías gratis y sencillas de la Comisión de Bolsa y Valores de EE. UU. (SEC). Algunas están en español.",
     "checkPro": "Un asesor con licencia que cobra solo por su asesoría puede ayudarte a ver todo tu panorama. Pregunta cómo le pagan antes de empezar."
-  },
-  "practice": {
-    "meta": {
-      "title": "Practica una caída del mercado",
-      "description": "Mira cómo $1,000 de práctica bajan 30% y aprende pasos tranquilos para cuando pase de verdad. Sin dinero real."
-    },
-    "title": "Practica una caída del mercado, con dinero de práctica",
-    "lead": "A veces el mercado baja. Verlo primero con dinero de práctica hace que una caída real dé menos miedo.",
-    "otp": {
-      "what": "¿Qué es invertir de práctica?",
-      "before": "Antes de usar dinero real"
-    },
-    "cardTitle": "Tu cartera de práctica",
-    "pretend": "Dinero de práctica",
-    "valueLabel": "Valor",
-    "startValue": "Valor inicial: {amount}",
-    "chartLabel": "Gráfica de línea del valor de la cartera de práctica con el tiempo.",
-    "simulate": "Simula una caída del 30%",
-    "recovery": "Muestra una recuperación",
-    "reset": "Reinicia la cartera de práctica",
-    "status": {
-      "ready": "Tu cartera de práctica vale $1,000. Toca el botón para ver una caída del 30%.",
-      "dropping": "Los precios están bajando…",
-      "dropped": "Tu cartera de práctica ahora vale $700. Es una caída del 30%. Es dinero de práctica.",
-      "recovering": "Los precios están subiendo otra vez…",
-      "recovered": "En este ejemplo, la cartera subió de nuevo a unos $1,050 con el tiempo. Es un ejemplo, no una promesa."
-    },
-    "stepperTitle": "Qué saber cuando baja",
-    "stepOf": "Paso {n} de {total}",
-    "next": "Siguiente",
-    "back": "Atrás",
-    "steps": [
-      {
-        "title": "Esto ya ha pasado antes",
-        "body": "Caídas así han pasado muchas veces. Con el tiempo los mercados se han recuperado, aunque no siempre rápido. Algunas recuperaciones tomaron años.",
-            "term": {"id":"market-drop","label":"Caída del mercado"}
-      },
-      {
-        "title": "Vender ahora vuelve real la caída",
-        "body": "Mientras no vendas, la caída es solo en papel. Si vendes ahora, la caída se vuelve real. Mucha gente se arrepiente de vender por pánico."
-      },
-      {
-        "title": "Repartir el dinero suaviza los golpes",
-        "body": "Tener muchas cosas distintas, como un fondo indexado y algunos bonos, hace que un mal día duela menos.",
-            "term": {"id":"diversification","label":"Diversificación"}
-      },
-      {
-        "title": "Invierte solo dinero que no necesitarás en 5 años o más",
-        "body": "La renta, las cuentas y tu colchón de emergencia nunca se deben invertir. Así, una caída no te obliga a vender."
-      }
-    ],
-    "doneNote": "Ya viste los cuatro pasos. Puedes ver un ejemplo de recuperación, o reiniciar y probar otra vez.",
-    "wordToKnow": "Palabra clave:",
-    "whatTerm": "inversión de práctica",
-    "whatTitle": "¿Qué es invertir de práctica?",
-    "what": [
-      "Invertir de práctica significa comprar y vender con dinero de mentira. No se compra ni se vende nada real.",
-      "Muchas aplicaciones de inversión ofrecen una cuenta de práctica gratis. Es una forma segura de aprender cómo se mueven los precios y cómo te sientes cuando pasa.",
-      "Cuidado: una cuenta de práctica la maneja una empresa que tal vez quiera que abras una cuenta real. Nunca estás obligado a hacerlo."
-    ],
-    "beforeTitle": "Antes de usar dinero real",
-    "before": [
-      "Tus cuentas básicas están cubiertas cada mes.",
-      "No tienes deudas de más de 15% APR.",
-      "Tienes al menos $1,000 ahorrados para emergencias.",
-      "No vas a necesitar el dinero que inviertas en 5 años o más.",
-      "Sabes cuánto cuesta al año."
-    ],
-    "beforeReady": "Revisa si estás listo",
-    "beforeLearn": "Compara formas de invertir"
   },
   "path": {
     "meta": {
@@ -516,5 +446,186 @@
     "clear": "Borra la búsqueda",
     "faqTitle": "Preguntas comunes",
     "faqIntro": "Respuestas cortas y honestas."
+  },
+  "invest": {
+    "meta": {
+      "title": "Mercado de práctica: precios reales, dinero de juego",
+      "description": "Compra y vende acciones y ETF reales a precios reales con $10,000 de dinero de juego. Sin dinero real y sin registrarte."
+    },
+    "title": "Mercado de práctica",
+    "lead": "Invierte $10,000 de dinero de juego a precios reales del mercado. Busca cualquier acción o ETF de EE. UU., compra, vende y mira cómo le va a tu cartera.",
+    "banner": "Dinero de juego. Precios reales. No hay operaciones reales. Tu cartera se guarda solo en este navegador.",
+    "ui": {
+      "total": "Valor total",
+      "cash": "Efectivo",
+      "invested": "Invertido",
+      "pl": "Ganancia o pérdida",
+      "findTitle": "Busca una acción o ETF",
+      "searchLabel": "Nombre de la empresa o símbolo",
+      "searchPlaceholder": "Prueba \"Apple\" o \"VTI\"",
+      "searchButton": "Buscar",
+      "searching": "Buscando…",
+      "results": "{n} resultados. Elige uno para ver su precio.",
+      "noResults": "Ninguna acción o ETF de EE. UU. coincide. Prueba otro nombre.",
+      "searchUnavailable": "La búsqueda no está disponible ahora. Elige de tu lista.",
+      "open": "Apertura",
+      "high": "Máximo del día",
+      "low": "Mínimo del día",
+      "prevClose": "Cierre anterior",
+      "youOwn": "Tienes",
+      "sharesUnit": "acciones",
+      "today": "hoy",
+      "watching": "En tu lista",
+      "addWatch": "Agregar a tu lista",
+      "side": "Comprar o vender",
+      "buy": "Comprar",
+      "sell": "Vender",
+      "mode": "Ordenar en",
+      "dollars": "Dólares",
+      "shares": "Acciones",
+      "amountDollars": "¿Cuántos dólares?",
+      "amountShares": "¿Cuántas acciones?",
+      "confirm": "Hacer la orden con dinero de juego",
+      "previewBuy": "Comprar {shares} acciones de {symbol} a {price} = {total}",
+      "previewSell": "Vender {shares} acciones de {symbol} a {price} = {total}",
+      "tradePaused": "Las operaciones están en pausa hasta que vuelvan los precios en vivo.",
+      "doneBuy": "Listo. Compraste {shares} acciones de {symbol} por {total} (dinero de juego).",
+      "doneSell": "Listo. Vendiste {shares} acciones de {symbol} por {total} (dinero de juego).",
+      "error_amount": "Escribe una cantidad mayor que cero.",
+      "error_price": "Todavía no hay precio para {symbol}. Inténtalo en un momento.",
+      "error_cash": "No tienes suficiente efectivo de juego para esa orden.",
+      "error_shares": "No tienes tantas acciones de {symbol}.",
+      "holdingsTitle": "Lo que tienes",
+      "holdingsEmpty": "Todavía no tienes nada. Busca una acción o elige una de tu lista.",
+      "colSymbol": "Símbolo",
+      "colShares": "Acciones",
+      "colAvg": "Costo prom.",
+      "colValue": "Valor",
+      "colPl": "Ganancia o pérdida",
+      "historyTitle": "Historial de operaciones",
+      "historyEmpty": "Tus operaciones aparecerán aquí.",
+      "historyLine": "{shares} {symbol} a {price}",
+      "bought": "Compra",
+      "sold": "Venta",
+      "watchTitle": "Tu lista",
+      "watchNote": "Ejemplos populares para empezar, no recomendaciones. Agrega o quita los que quieras.",
+      "watchEmpty": "Tu lista está vacía. Busca para agregar uno.",
+      "removeSymbol": "Quitar {symbol} de tu lista",
+      "reset": "Reiniciar el dinero de juego",
+      "resetConfirm": "Esto borra lo que tienes y tu historial, y empiezas de nuevo con $10,000. ¿Estás seguro?",
+      "resetYes": "Sí, empezar de nuevo",
+      "resetNo": "Conservar mi cartera",
+      "statusOpen": "Mercado abierto. Los precios se actualizan cada 30 segundos.",
+      "statusClosed": "Mercado cerrado. Las órdenes se hacen al último precio.",
+      "statusUnavailable": "Los precios en vivo no están disponibles ahora. Tu cartera está a salvo; las operaciones están en pausa hasta que vuelvan."
+    },
+    "dropsTitle": "Si los precios bajan",
+    "dropsIntro": "Los precios reales bajan a veces, aunque sea con dinero de juego. Así puedes pensarlo.",
+    "drops": [
+      {
+        "title": "Esto ya ha pasado antes",
+        "body": "Ha habido caídas grandes muchas veces. Con el tiempo los mercados se han recuperado, aunque no siempre rápido."
+      },
+      {
+        "title": "Vender vuelve real la caída",
+        "body": "Mientras no vendas, la caída es solo en papel. Vender por pánico la vuelve real."
+      },
+      {
+        "title": "Repartir el dinero suaviza los golpes",
+        "body": "Tener muchas empresas, por ejemplo con un ETF amplio, hace que un mal día duela menos."
+      },
+      {
+        "title": "Invierte solo dinero que no necesitarás en 5 años o más",
+        "body": "La renta, las cuentas y tu colchón de emergencia nunca se deben invertir."
+      }
+    ],
+    "wordToKnow": "Palabras clave:",
+    "diversification": "diversificación",
+    "marketDrop": "caída del mercado",
+    "howTitle": "Cómo funciona el mercado de práctica",
+    "how": [
+      "Los precios son precios reales del mercado de EE. UU., de Finnhub. Pueden tener un poco de retraso.",
+      "Tu dinero es de juego. Nunca se envía ninguna orden real.",
+      "Las órdenes se hacen al instante al precio actual, como una orden de mercado. Puedes comprar parte de una acción.",
+      "Tu cartera se guarda solo en este navegador. Nadie más la ve y nosotros no la recopilamos.",
+      "Nada aquí es una recomendación. Es un lugar seguro para aprender cómo se siente invertir."
+    ],
+    "toLearn": "Aprende lo básico primero",
+    "toReady": "Revisa si estás listo"
+  },
+  "save": {
+    "meta": {
+      "title": "Ahorrar: banco de prueba y ahorro de alto rendimiento",
+      "description": "Conecta un banco de prueba, mira a dónde va tu dinero, compara una cuenta de ahorro de alto rendimiento y mira crecer los pasos pequeños."
+    },
+    "title": "Ahorrar",
+    "lead": "Conecta un banco de prueba para ver tus saldos y gastos, y luego mira cuánto más podría ganar una cuenta de ahorro de alto rendimiento.",
+    "calcNav": "Calculadora de pasos pequeños",
+    "bank": {
+      "banner": "Solo de prueba. Son bancos inventados y números al azar. No se conecta ningún banco real y no se guarda nada.",
+      "pick": "Elige un banco de prueba",
+      "connect": "Conectar banco de prueba",
+      "regenerate": "Nuevos datos al azar",
+      "disconnect": "Desconectar",
+      "spendingTitle": "Gastos de los últimos 30 días",
+      "txTitle": "Movimientos recientes",
+      "showAll": "Ver los {n}",
+      "ui": {
+        "connectedTo": "Conectado a {bank} (prueba)",
+        "checking": "Cuenta de cheques",
+        "savings": "Ahorros",
+        "checkingNote": "Para cuentas y gastos del día a día",
+        "apyNote": "Gana {apy} APY",
+        "hysAccount": "Ahorro de alto rendimiento (prueba)",
+        "hysNote": "Unos {monthly} de interés este mes",
+        "monthIncome": "Entró: {n}",
+        "monthSpent": "Salió: {n}",
+        "monthLeft": "Sobró: {n}",
+        "showAll": "Ver los {n}",
+        "showFewer": "Ver menos",
+        "categories": {
+          "income": "Pago",
+          "rent": "Renta",
+          "groceries": "Supermercado",
+          "gas": "Gasolina",
+          "utilities": "Servicios",
+          "dining": "Comer fuera",
+          "phone": "Teléfono",
+          "transit": "Autobús y viajes"
+        }
+      }
+    },
+    "hys": {
+      "title": "Ahorro de alto rendimiento",
+      "intro": "Muchos bancos en línea y cooperativas de crédito pagan mucho más interés en los ahorros que una cuenta normal. La misma seguridad, más crecimiento.",
+      "insured": "Busca una cuenta asegurada para que tu dinero esté protegido:",
+      "creditUnion": "cooperativa de crédito (NCUA)",
+      "ui": {
+        "balance": "Saldo de ahorros",
+        "balanceNote": "Escribe cualquier cantidad, o conecta un banco de prueba arriba para llenarlo.",
+        "fromBank": "Tomado de {bank}. Puedes cambiarlo.",
+        "current": "Tu tasa actual (APY %)",
+        "rate": "Tasa de alto rendimiento (ejemplo)",
+        "monthly": "Este mes: unos {now} de interés ahora vs {hys} con ahorro de alto rendimiento.",
+        "tableCaption": "Interés ganado sin nuevos depósitos",
+        "colYears": "Después de",
+        "colNow": "Tasa actual",
+        "colHys": "Alto rendimiento",
+        "colExtra": "Lo extra que ganarías",
+        "yearsN": "{n} año(s)",
+        "moveTitle": "Pruébalo: pasa dinero a un ahorro de alto rendimiento (prueba)",
+        "from": "Pasar desde",
+        "amount": "Cantidad",
+        "moveButton": "Pasar a alto rendimiento",
+        "moveAmount": "Escribe una cantidad mayor que cero.",
+        "moveTooMuch": "No hay tanto dinero en esa cuenta.",
+        "moveDone": "Pasaste {amount} de {from} a tu cuenta de alto rendimiento de prueba.",
+        "fromChecking": "cheques",
+        "fromSavings": "ahorros",
+        "connectHint": "Conecta un banco de prueba arriba para probar pasar dinero a una cuenta de alto rendimiento.",
+        "checking": "Cuenta de cheques",
+        "savings": "Ahorros"
+      }
+    }
   }
 }

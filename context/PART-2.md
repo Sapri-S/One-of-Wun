@@ -1,3 +1,5 @@
+> **Update Nov 20 2026:** `/practice` is replaced by `/invest` (mock market, real prices, play money) and `/grow` is merged into `/save` (demo bank + high-yield savings + Kaizen calculator). See SHARED.md §7 F7/F10 and HANDOFF.md "Part 2 notes". The crash-simulator brief below is historical.
+
 # PART 2 brief: Learn, Practice, Your Path, Help
 
 > Read `SHARED.md` in full first, then `/HANDOFF.md` (written by Part 1). This brief only says what is **yours**.

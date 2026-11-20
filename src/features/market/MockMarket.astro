@@ -1,0 +1,643 @@
+---
+/**
+ * Mock market island: real prices (via same-origin /api/*), play money, market orders.
+ * The portfolio lives in this browser only (storage.ts). Data from the API is always inserted as text.
+ */
+import Icon from '../../components/Icon.astro';
+import Button from '../../components/Button.astro';
+import Term from '../../components/Term.astro';
+import { t, tv, LOCALE, type Lang } from '../../i18n/utils';
+import { START_CASH } from './portfolio';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const i18n = {
+  locale: LOCALE[lang],
+  ...tv<Record<string, unknown>>(lang, 'invest.ui'),
+};
+const money = new Intl.NumberFormat(LOCALE[lang], { style: 'currency', currency: 'USD' });
+---
+<div class="mm" data-mm data-i18n={JSON.stringify(i18n)}>
+  <p class="banner">
+    <Icon name="info" size={20} />
+    <span>{t(lang, 'invest.banner')}</span>
+  </p>
+
+  <dl class="summary" aria-live="polite">
+    <div class="stat stat--total">
+      <dt>{t(lang, 'invest.ui.total')}</dt>
+      <dd class="num" data-out="total">{money.format(START_CASH)}</dd>
+    </div>
+    <div class="stat">
+      <dt>{t(lang, 'invest.ui.cash')}</dt>
+      <dd class="num" data-out="cash">{money.format(START_CASH)}</dd>
+    </div>
+    <div class="stat">
+      <dt>{t(lang, 'invest.ui.invested')}</dt>
+      <dd class="num" data-out="invested">{money.format(0)}</dd>
+    </div>
+    <div class="stat">
+      <dt><Term id="profit-loss">{t(lang, 'invest.ui.pl')}</Term></dt>
+      <dd class="num" data-out="pl" data-sign="0">{money.format(0)}</dd>
+    </div>
+  </dl>
+  <p class="price-status" data-price-status aria-live="polite"></p>
+
+  <div class="grid">
+    <div class="main">
+      <section class="panel" aria-labelledby="mm-find">
+        <h2 id="mm-find">{t(lang, 'invest.ui.findTitle')}</h2>
+        <form class="search" data-search-form role="search">
+          <label for="mm-q">{t(lang, 'invest.ui.searchLabel')}</label>
+          <div class="search-row">
+            <input id="mm-q" type="search" autocomplete="off" spellcheck="false" maxlength="40"
+              placeholder={t(lang, 'invest.ui.searchPlaceholder')} data-q />
+            <Button type="submit">{t(lang, 'invest.ui.searchButton')}</Button>
+          </div>
+        </form>
+        <p class="hint" data-search-msg aria-live="polite"></p>
+        <ul class="hits" data-hits></ul>
+      </section>
+
+      <section class="panel quote" aria-labelledby="mm-quote-title" data-quote hidden>
+        <div class="quote-head">
+          <div>
+            <h2 id="mm-quote-title"><span data-q-symbol></span> <span class="q-name" data-q-name></span></h2>
+            <p class="q-price num"><span data-q-price></span> <span class="q-change" data-q-change data-sign="0"></span></p>
+          </div>
+          <button type="button" class="watch-toggle" data-watch-toggle aria-pressed="false"></button>
+        </div>
+        <dl class="q-stats num">
+          <div><dt>{t(lang, 'invest.ui.open')}</dt><dd data-q-open></dd></div>
+          <div><dt>{t(lang, 'invest.ui.high')}</dt><dd data-q-high></dd></div>
+          <div><dt>{t(lang, 'invest.ui.low')}</dt><dd data-q-low></dd></div>
+          <div><dt>{t(lang, 'invest.ui.prevClose')}</dt><dd data-q-pc></dd></div>
+          <div><dt>{t(lang, 'invest.ui.youOwn')}</dt><dd data-q-own></dd></div>
+        </dl>
+
+        <form class="trade" data-trade-form novalidate>
+          <fieldset class="seg">
+            <legend>{t(lang, 'invest.ui.side')}</legend>
+            <button type="button" class="seg-btn" data-side="buy" aria-pressed="true">{t(lang, 'invest.ui.buy')}</button>
+            <button type="button" class="seg-btn" data-side="sell" aria-pressed="false">{t(lang, 'invest.ui.sell')}</button>
+          </fieldset>
+          <fieldset class="seg">
+            <legend>{t(lang, 'invest.ui.mode')}</legend>
+            <button type="button" class="seg-btn" data-mode="dollars" aria-pressed="true">{t(lang, 'invest.ui.dollars')}</button>
+            <button type="button" class="seg-btn" data-mode="shares" aria-pressed="false">{t(lang, 'invest.ui.shares')}</button>
+          </fieldset>
+          <div class="amount">
+            <label for="mm-amount" data-amount-label>{t(lang, 'invest.ui.amountDollars')}</label>
+            <input id="mm-amount" type="number" inputmode="decimal" min="0" step="any" data-amount aria-describedby="mm-preview" />
+          </div>
+          <p class="preview num" id="mm-preview" data-preview></p>
+          <Button type="submit" data-confirm>{t(lang, 'invest.ui.confirm')}</Button>
+          <p class="trade-msg" data-trade-msg role="status"></p>
+        </form>
+      </section>
+
+      <section class="panel" aria-labelledby="mm-holdings">
+        <h2 id="mm-holdings">{t(lang, 'invest.ui.holdingsTitle')}</h2>
+        <p class="hint" data-holdings-empty>{t(lang, 'invest.ui.holdingsEmpty')}</p>
+        <div class="table-wrap" tabindex="0" role="region" aria-labelledby="mm-holdings">
+          <table class="num" data-holdings-table hidden>
+            <caption class="visually-hidden">{t(lang, 'invest.ui.holdingsTitle')}</caption>
+            <thead>
+              <tr>
+                <th scope="col">{t(lang, 'invest.ui.colSymbol')}</th>
+                <th scope="col">{t(lang, 'invest.ui.colShares')}</th>
+                <th scope="col">{t(lang, 'invest.ui.colAvg')}</th>
+                <th scope="col">{t(lang, 'invest.ui.colValue')}</th>
+                <th scope="col">{t(lang, 'invest.ui.colPl')}</th>
+              </tr>
+            </thead>
+            <tbody data-holdings></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="mm-history">
+        <h2 id="mm-history">{t(lang, 'invest.ui.historyTitle')}</h2>
+        <p class="hint" data-history-empty>{t(lang, 'invest.ui.historyEmpty')}</p>
+        <ol class="history num" data-history></ol>
+      </section>
+    </div>
+
+    <aside class="side" aria-labelledby="mm-watch">
+      <section class="panel">
+        <h2 id="mm-watch">{t(lang, 'invest.ui.watchTitle')}</h2>
+        <p class="hint">{t(lang, 'invest.ui.watchNote')}</p>
+        <ul class="watch" data-watch></ul>
+      </section>
+      <section class="panel reset">
+        <Button variant="quiet" data-reset>
+          <Icon name="reset" size={20} />
+          {t(lang, 'invest.ui.reset')}
+        </Button>
+        <div class="reset-confirm" data-reset-confirm hidden>
+          <p>{t(lang, 'invest.ui.resetConfirm')}</p>
+          <div class="row">
+            <Button data-reset-yes>{t(lang, 'invest.ui.resetYes')}</Button>
+            <Button variant="quiet" data-reset-no>{t(lang, 'invest.ui.resetNo')}</Button>
+          </div>
+        </div>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<script>
+  import {
+    buy, sell, valuation, initialState, addToWatchlist, removeFromWatchlist, sharesFor,
+    type PortfolioState, type OrderSize,
+  } from './portfolio';
+  import { load, save, clear } from './storage';
+  import { fetchQuotes, searchSymbols, marketOpen, poll, type Quote } from './api';
+
+  const KNOWN_NAMES: Record<string, string> = {
+    AAPL: 'Apple', MSFT: 'Microsoft', AMZN: 'Amazon', NVDA: 'NVIDIA', TSLA: 'Tesla',
+    SPY: 'SPDR S&P 500 ETF', VTI: 'Vanguard Total Stock Market ETF',
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-mm]').forEach((root) => {
+    const T = JSON.parse(root.dataset.i18n || '{}') as Record<string, string> & { locale: string };
+    const fmt = (key: string, vars: Record<string, string | number> = {}) =>
+      (T[key] ?? key).replace(/\{(\w+)\}/g, (_, k: string) => String(vars[k] ?? `{${k}}`));
+    const money = new Intl.NumberFormat(T.locale, { style: 'currency', currency: 'USD' });
+    const signed = new Intl.NumberFormat(T.locale, { style: 'currency', currency: 'USD', signDisplay: 'exceptZero' });
+    const pct = new Intl.NumberFormat(T.locale, { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2, signDisplay: 'exceptZero' });
+    const shareFmt = new Intl.NumberFormat(T.locale, { maximumFractionDigits: 4 });
+    const when = new Intl.DateTimeFormat(T.locale, { dateStyle: 'medium', timeStyle: 'short' });
+
+    const $ = <E extends HTMLElement>(sel: string) => root.querySelector<E>(sel)!;
+    const out = (name: string) => $(`[data-out="${name}"]`);
+    const setSign = (el: HTMLElement, n: number) => (el.dataset.sign = n > 0 ? '1' : n < 0 ? '-1' : '0');
+
+    let state: PortfolioState = load();
+    const quotes: Record<string, Quote> = {};
+    const names: Record<string, string> = { ...KNOWN_NAMES };
+    let selected: string | null = null;
+    let side: 'buy' | 'sell' = 'buy';
+    let mode: 'dollars' | 'shares' = 'dollars';
+    let available = true;
+
+    const commit = (next: PortfolioState) => {
+      state = next;
+      save(state);
+      render();
+    };
+    const priceOf = (s: string) => quotes[s]?.price;
+
+    // ---------- prices ----------
+    const statusEl = $('[data-price-status]');
+    async function refresh(extra: string[] = []) {
+      const symbols = [...new Set([...state.watchlist, ...Object.keys(state.holdings), ...(selected ? [selected] : []), ...extra])];
+      try {
+        const list = await fetchQuotes(symbols);
+        for (const q of list) quotes[q.symbol] = q;
+        available = true;
+        statusEl.textContent = fmt(marketOpen() ? 'statusOpen' : 'statusClosed');
+        statusEl.dataset.state = 'ok';
+      } catch {
+        available = false;
+        statusEl.textContent = fmt('statusUnavailable');
+        statusEl.dataset.state = 'down';
+      }
+      render();
+    }
+
+    // ---------- rendering ----------
+    function el<K extends keyof HTMLElementTagNameMap>(tag: K, cls?: string, text?: string) {
+      const e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (text !== undefined) e.textContent = text;
+      return e;
+    }
+
+    function renderSummary() {
+      const prices = Object.fromEntries(Object.keys(quotes).map((s) => [s, priceOf(s)]));
+      const v = valuation(state, prices);
+      out('total').textContent = money.format(v.total);
+      out('cash').textContent = money.format(state.cash);
+      out('invested').textContent = money.format(v.invested);
+      const plEl = out('pl');
+      plEl.textContent = `${signed.format(v.pl)} (${pct.format(v.plPct / 100)})`;
+      setSign(plEl, v.pl);
+      return v;
+    }
+
+    function renderHoldings(rows: ReturnType<typeof valuation>['rows']) {
+      const body = $('[data-holdings]');
+      body.replaceChildren();
+      $('[data-holdings-empty]').hidden = rows.length > 0;
+      $('[data-holdings-table]').hidden = rows.length === 0;
+      for (const r of rows) {
+        const tr = el('tr');
+        const th = el('th');
+        th.scope = 'row';
+        const pick = el('button', 'sym-btn', r.symbol);
+        pick.type = 'button';
+        pick.addEventListener('click', () => select(r.symbol));
+        th.append(pick);
+        const plCell = el('td', 'pl', `${signed.format(r.pl)} (${pct.format(r.plPct / 100)})`);
+        setSign(plCell, r.pl);
+        tr.append(th, el('td', '', shareFmt.format(r.shares)), el('td', '', money.format(r.avgCost)), el('td', '', money.format(r.value)), plCell);
+        body.append(tr);
+      }
+    }
+
+    function renderHistory() {
+      const list = $('[data-history]');
+      list.replaceChildren();
+      $('[data-history-empty]').hidden = state.trades.length > 0;
+      for (const tr of state.trades.slice(0, 25)) {
+        const li = el('li');
+        li.append(
+          el('span', `tag tag--${tr.side}`, fmt(tr.side === 'buy' ? 'bought' : 'sold')),
+          el('span', 'h-main', fmt('historyLine', { shares: shareFmt.format(tr.shares), symbol: tr.symbol, price: money.format(tr.price) })),
+          el('span', 'h-total', money.format(tr.total)),
+          el('span', 'h-time', when.format(tr.time)),
+        );
+        list.append(li);
+      }
+    }
+
+    function renderWatch() {
+      const list = $('[data-watch]');
+      list.replaceChildren();
+      if (state.watchlist.length === 0) list.append(el('li', 'hint', fmt('watchEmpty')));
+      for (const s of state.watchlist) {
+        const q = quotes[s];
+        const li = el('li');
+        const pick = el('button', 'watch-pick');
+        pick.type = 'button';
+        pick.append(el('span', 'w-sym', s), ' ', el('span', 'w-name', names[s] ?? ''));
+        pick.addEventListener('click', () => select(s));
+        const price = el('span', 'w-price num', q ? money.format(q.price) : '—');
+        const chg = el('span', 'w-chg num', q ? pct.format(q.changePct / 100) : '');
+        if (q) setSign(chg, q.changePct);
+        const rm = el('button', 'w-remove');
+        rm.type = 'button';
+        rm.setAttribute('aria-label', fmt('removeSymbol', { symbol: s }));
+        rm.textContent = '×';
+        rm.addEventListener('click', () => commit(removeFromWatchlist(state, s)));
+        li.append(pick, price, chg, rm);
+        list.append(li);
+      }
+    }
+
+    function renderQuote() {
+      const card = $('[data-quote]');
+      if (!selected) {
+        card.hidden = true;
+        return;
+      }
+      card.hidden = false;
+      const q = quotes[selected];
+      $('[data-q-symbol]').textContent = selected;
+      $('[data-q-name]').textContent = names[selected] ?? '';
+      $('[data-q-price]').textContent = q ? money.format(q.price) : '—';
+      const chg = $('[data-q-change]');
+      chg.textContent = q ? `${signed.format(q.change)} (${pct.format(q.changePct / 100)}) ${fmt('today')}` : '';
+      setSign(chg, q?.change ?? 0);
+      $('[data-q-open]').textContent = q ? money.format(q.open) : '—';
+      $('[data-q-high]').textContent = q ? money.format(q.high) : '—';
+      $('[data-q-low]').textContent = q ? money.format(q.low) : '—';
+      $('[data-q-pc]').textContent = q ? money.format(q.prevClose) : '—';
+      $('[data-q-own]').textContent = `${shareFmt.format(state.holdings[selected]?.shares ?? 0)} ${fmt('sharesUnit')}`;
+      const watching = state.watchlist.includes(selected);
+      const wt = $('[data-watch-toggle]');
+      wt.setAttribute('aria-pressed', String(watching));
+      wt.textContent = fmt(watching ? 'watching' : 'addWatch');
+      renderPreview();
+    }
+
+    const amountEl = $<HTMLInputElement>('[data-amount]');
+    const previewEl = $('[data-preview]');
+    const confirmBtn = $<HTMLButtonElement>('[data-confirm]');
+
+    function currentSize(): OrderSize | null {
+      const n = Number(amountEl.value);
+      if (!amountEl.value || !Number.isFinite(n) || n <= 0) return null;
+      return mode === 'dollars' ? { dollars: n } : { shares: n };
+    }
+
+    function renderPreview() {
+      const price = selected ? priceOf(selected) : undefined;
+      const size = currentSize();
+      confirmBtn.disabled = !available || !price || !size;
+      if (!price || !size) {
+        previewEl.textContent = !available ? fmt('tradePaused') : '';
+        return;
+      }
+      const shares = sharesFor(size, price);
+      previewEl.textContent = fmt(side === 'buy' ? 'previewBuy' : 'previewSell', {
+        shares: shareFmt.format(shares),
+        symbol: selected!,
+        total: money.format(Math.round(shares * price * 100) / 100),
+        price: money.format(price),
+      });
+    }
+
+    function render() {
+      const v = renderSummary();
+      renderHoldings(v.rows);
+      renderHistory();
+      renderWatch();
+      renderQuote();
+    }
+
+    // ---------- selecting & trading ----------
+    async function select(symbol: string, name?: string) {
+      selected = symbol;
+      if (name) names[symbol] = name;
+      $('[data-trade-msg]').textContent = '';
+      render();
+      if (!quotes[symbol]) await refresh([symbol]);
+      $('[data-quote]').scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      $<HTMLElement>('#mm-quote-title').focus({ preventScroll: true });
+    }
+    $('#mm-quote-title').tabIndex = -1;
+
+    root.querySelectorAll<HTMLButtonElement>('[data-side]').forEach((b) =>
+      b.addEventListener('click', () => {
+        side = b.dataset.side as 'buy' | 'sell';
+        root.querySelectorAll('[data-side]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        renderPreview();
+      }),
+    );
+    root.querySelectorAll<HTMLButtonElement>('[data-mode]').forEach((b) =>
+      b.addEventListener('click', () => {
+        mode = b.dataset.mode as 'dollars' | 'shares';
+        root.querySelectorAll('[data-mode]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        $('[data-amount-label]').textContent = fmt(mode === 'dollars' ? 'amountDollars' : 'amountShares');
+        renderPreview();
+      }),
+    );
+    amountEl.addEventListener('input', renderPreview);
+
+    $('[data-trade-form]').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const msg = $('[data-trade-msg]');
+      const price = selected ? priceOf(selected) : undefined;
+      const size = currentSize();
+      if (!selected || !price || !size || !available) return;
+      const result = (side === 'buy' ? buy : sell)(state, selected, price, size);
+      if (!result.ok) {
+        msg.dataset.state = 'error';
+        msg.textContent = fmt(`error_${result.reason}`, { symbol: selected });
+        return;
+      }
+      msg.dataset.state = 'ok';
+      msg.textContent = fmt(side === 'buy' ? 'doneBuy' : 'doneSell', {
+        shares: shareFmt.format(result.trade.shares),
+        symbol: selected,
+        total: money.format(result.trade.total),
+      });
+      amountEl.value = '';
+      commit(result.state);
+    });
+
+    $('[data-watch-toggle]').addEventListener('click', () => {
+      if (!selected) return;
+      commit(state.watchlist.includes(selected) ? removeFromWatchlist(state, selected) : addToWatchlist(state, selected));
+    });
+
+    // ---------- search ----------
+    const searchMsg = $('[data-search-msg]');
+    const hitsEl = $('[data-hits]');
+    $('[data-search-form]').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const q = $<HTMLInputElement>('[data-q]').value.trim();
+      hitsEl.replaceChildren();
+      if (!q) return;
+      searchMsg.textContent = fmt('searching');
+      try {
+        const hits = await searchSymbols(q);
+        searchMsg.textContent = hits.length ? fmt('results', { n: hits.length }) : fmt('noResults');
+        for (const h of hits) {
+          const li = el('li');
+          const b = el('button', 'hit');
+          b.type = 'button';
+          b.append(el('span', 'hit-sym', h.symbol), ' ', el('span', 'hit-name', h.name), ' ', el('span', 'hit-type', h.type));
+          b.addEventListener('click', () => {
+            hitsEl.replaceChildren();
+            searchMsg.textContent = '';
+            select(h.symbol, h.name);
+          });
+          li.append(b);
+          hitsEl.append(li);
+        }
+      } catch {
+        searchMsg.textContent = fmt('searchUnavailable');
+      }
+    });
+
+    // ---------- reset ----------
+    const confirmBox = $('[data-reset-confirm]');
+    $('[data-reset]').addEventListener('click', () => {
+      confirmBox.hidden = false;
+      $<HTMLButtonElement>('[data-reset-yes]').focus();
+    });
+    $('[data-reset-no]').addEventListener('click', () => {
+      confirmBox.hidden = true;
+      $<HTMLButtonElement>('[data-reset]').focus();
+    });
+    $('[data-reset-yes]').addEventListener('click', () => {
+      clear();
+      state = initialState();
+      selected = null;
+      confirmBox.hidden = true;
+      $('[data-trade-msg]').textContent = '';
+      render();
+      $<HTMLButtonElement>('[data-reset]').focus();
+    });
+
+    render();
+    poll(() => void refresh(), 30_000);
+  });
+</script>
+
+<style is:global>
+  /* Global so script-built elements are styled too; every rule is scoped under .mm. */
+  .mm [hidden] { display: none !important; }
+  .mm .banner {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-sm);
+    background: var(--wait-bg);
+    color: var(--wait-ink);
+    font-weight: 700;
+    max-width: none;
+  }
+  .mm .summary {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+  }
+  @media (min-width: 768px) { .mm .summary { grid-template-columns: repeat(4, 1fr); } }
+  .mm .stat {
+    padding: var(--space-4);
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    min-width: 0;
+  }
+  .mm .stat dt { color: var(--ink-soft); font-size: var(--fs-small); }
+  .mm .stat dd { margin: 0; font-size: var(--fs-h3); font-weight: 700; overflow-wrap: anywhere; }
+  .mm .stat--total dd { color: var(--primary); }
+  .mm [data-sign='1'] { color: var(--go-ink); }
+  .mm [data-sign='-1'] { color: var(--stop-ink); }
+  .mm .price-status { margin-top: var(--space-3); color: var(--ink-soft); font-size: var(--fs-small); min-height: 1.6em; max-width: none; }
+  .mm .price-status[data-state='down'] { color: var(--stop-ink); font-weight: 700; }
+
+  .mm .grid { display: grid; gap: var(--space-5); margin-top: var(--space-4); align-items: start; }
+  @media (min-width: 1000px) { .mm .grid { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); } }
+  .mm .main, .mm .side { display: grid; gap: var(--space-5); min-width: 0; }
+  .mm .panel {
+    padding: var(--space-5);
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    min-width: 0;
+  }
+  .mm .panel h2 { font-size: var(--fs-h3); }
+  .mm .hint { color: var(--ink-muted); font-size: var(--fs-small); margin-top: var(--space-2); }
+
+  .mm .search { margin-top: var(--space-3); }
+  .mm .search label, .mm .amount label { display: block; font-weight: 700; margin-bottom: var(--space-2); }
+  .mm .search-row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .mm .search-row input { flex: 1 1 200px; }
+  .mm input[type='search'], .mm input[type='number'] {
+    min-height: var(--tap);
+    width: 100%;
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--border);
+    background: var(--bg);
+  }
+  .mm input:focus-visible { border-color: var(--focus); }
+  .mm .hits { list-style: none; padding: 0; display: grid; gap: var(--space-2); margin-top: var(--space-2); }
+  .mm .hits li { max-width: none; }
+  .mm .hit {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: var(--space-3);
+    align-items: center;
+    width: 100%;
+    min-height: var(--tap);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--bg);
+    text-align: left;
+  }
+  .mm .hit:hover { border-color: var(--primary); }
+  .mm .hit-sym { font-weight: 700; }
+  .mm .hit-name { color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mm .hit-type { font-size: var(--fs-small); color: var(--ink-muted); }
+
+  .mm .quote-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-3); align-items: flex-start; }
+  .mm .quote-head h2:focus { outline: none; }
+  .mm .q-name { font-weight: 400; color: var(--ink-soft); font-size: var(--fs-body); }
+  .mm .q-price { font-size: var(--fs-h2); font-weight: 700; line-height: 1.2; margin-top: var(--space-1); }
+  .mm .q-change { font-size: var(--fs-body); }
+  .mm .watch-toggle {
+    min-height: var(--tap);
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--border);
+    background: var(--surface);
+    font-weight: 700;
+    font-size: var(--fs-small);
+  }
+  .mm .watch-toggle[aria-pressed='true'] { border-color: var(--primary); color: var(--primary); }
+  .mm .q-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: var(--space-3); margin-top: var(--space-4); }
+  .mm .q-stats dt { color: var(--ink-muted); font-size: var(--fs-small); }
+  .mm .q-stats dd { margin: 0; font-weight: 700; }
+
+  .mm .trade { display: grid; gap: var(--space-4); margin-top: var(--space-5); padding-top: var(--space-5); border-top: 1px solid var(--border); }
+  .mm .seg { border: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+  .mm .seg legend { font-weight: 700; margin-bottom: var(--space-2); width: 100%; }
+  .mm .seg-btn {
+    min-height: var(--tap);
+    min-width: 96px;
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--border);
+    background: var(--surface);
+    font-weight: 700;
+  }
+  .mm .seg-btn[aria-pressed='true'] { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+  .mm .amount input { max-width: 260px; }
+  .mm .preview { font-weight: 700; min-height: 1.6em; max-width: none; }
+  .mm .trade-msg { min-height: 1.6em; font-weight: 700; max-width: none; }
+  .mm .trade-msg[data-state='ok'] { color: var(--go-ink); }
+  .mm .trade-msg[data-state='error'] { color: var(--stop-ink); }
+
+  .mm .table-wrap { overflow-x: auto; margin-top: var(--space-3); }
+  .mm table { width: 100%; border-collapse: collapse; font-size: var(--fs-small); }
+  .mm th, .mm td { padding: var(--space-2) var(--space-3); text-align: right; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  .mm th:first-child { text-align: left; }
+  .mm thead th { color: var(--ink-soft); font-weight: 700; }
+  .mm .sym-btn { border: 0; background: none; padding: 0; min-height: 44px; font-weight: 700; color: var(--accent); text-decoration: underline; }
+
+  .mm .history { list-style: none; padding: 0; margin-top: var(--space-3); display: grid; gap: var(--space-2); }
+  .mm .history li {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: var(--space-1) var(--space-3);
+    align-items: center;
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid var(--border);
+    max-width: none;
+    font-size: var(--fs-small);
+  }
+  .mm .h-time { grid-column: 2 / -1; color: var(--ink-muted); }
+  .mm .h-total { font-weight: 700; }
+  .mm .tag { padding: 2px 10px; border-radius: var(--radius-pill); font-weight: 700; }
+  .mm .tag--buy { background: var(--go-bg); color: var(--go-ink); }
+  .mm .tag--sell { background: var(--surface-mist); color: var(--accent); }
+
+  .mm .watch { list-style: none; padding: 0; margin-top: var(--space-3); display: grid; gap: var(--space-1); }
+  .mm .watch li {
+    display: grid;
+    grid-template-columns: 1fr auto auto 44px;
+    gap: var(--space-2);
+    align-items: center;
+    max-width: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .mm .watch-pick {
+    display: grid;
+    min-height: var(--tap);
+    padding: var(--space-1) 0;
+    border: 0;
+    background: none;
+    text-align: left;
+    min-width: 0;
+  }
+  .mm .w-sym { font-weight: 700; color: var(--accent); }
+  .mm .w-name { font-size: var(--fs-small); color: var(--ink-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mm .w-price { font-weight: 700; }
+  .mm .w-chg { font-size: var(--fs-small); }
+  .mm .w-remove {
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    color: var(--ink-muted);
+    font-size: 1.4rem;
+  }
+  .mm .w-remove:hover { background: var(--surface-sage); color: var(--ink); }
+
+  .mm .reset { display: grid; gap: var(--space-3); }
+  .mm .reset-confirm { padding: var(--space-4); border-radius: var(--radius-sm); background: var(--stop-bg); color: var(--stop-ink); }
+  .mm .reset-confirm p { font-weight: 700; }
+  .mm .reset-confirm .row { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+</style>

@@ -1,6 +1,6 @@
 /**
  * i18n helpers. Used by every page and component.
- * Part 2: you may add keys under learn.*, practice.*, path.*, help.* in en.json / es.json.
+ * Part 2: you may add keys under learn.*, invest.*, save.*, path.*, help.* in en.json / es.json.
  */
 import en from './en.json';
 import es from './es.json';
@@ -44,7 +44,7 @@ export function t(lang: Lang, key: string, vars: Record<string, string | number>
   return v.replace(/\{(\w+)\}/g, (_, k: string) => (k in vars ? String(vars[k]) : `{${k}}`));
 }
 
-/** Path in the given language. localizePath('/grow', 'es') → '/es/grow'. Hashes are kept. */
+/** Path in the given language. localizePath('/save', 'es') → '/es/save'. Hashes are kept. */
 export function localizePath(path: string, lang: Lang): string {
   const [p, hash] = path.split('#');
   const clean = stripLang(p || '/');
@@ -83,9 +83,9 @@ export function formatMoney(n: number, lang: Lang): string {
 /** The six main pages, in nav order. Single source for nav, tiles and the 404 page. */
 export const PAGES = [
   { key: 'home', path: '/', icon: 'home' },
-  { key: 'grow', path: '/grow', icon: 'sprout' },
+  { key: 'save', path: '/save', icon: 'sprout' },
   { key: 'learn', path: '/learn', icon: 'book' },
-  { key: 'practice', path: '/practice', icon: 'practice' },
+  { key: 'invest', path: '/invest', icon: 'practice' },
   { key: 'path', path: '/your-path', icon: 'route' },
   { key: 'help', path: '/help', icon: 'lifebuoy' },
 ] as const;

@@ -2,6 +2,12 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "redirects": [
+    { "source": "/practice", "destination": "/invest", "permanent": true },
+    { "source": "/es/practice", "destination": "/es/invest", "permanent": true },
+    { "source": "/grow", "destination": "/save#calculator", "permanent": true },
+    { "source": "/es/grow", "destination": "/es/save#calculator", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/(.*)",

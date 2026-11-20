@@ -1,8 +1,12 @@
 ---
+/** /save — demo bank connection, high-yield savings, and the Kaizen calculator (replaces /grow). */
 import BaseLayout from '../../components/BaseLayout.astro';
 import Section from '../../components/Section.astro';
 import OnThisPage from '../../components/OnThisPage.astro';
 import Button from '../../components/Button.astro';
+import Term from '../../components/Term.astro';
+import DemoBank from './DemoBank.astro';
+import HighYield from './HighYield.astro';
 import KaizenCalculator from '../kaizen/KaizenCalculator.astro';
 import { t, tv, localizePath, type Lang } from '../../i18n/utils';
 
@@ -10,19 +14,30 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const why = tv<string[]>(lang, 'grow.why');
 ---
-<BaseLayout title={t(lang, 'grow.meta.title')} description={t(lang, 'grow.meta.description')} lang={lang}>
-  <Section id="calculator" level={1} title={t(lang, 'grow.title')} badge="education" intro={t(lang, 'grow.lead')}>
+<BaseLayout title={t(lang, 'save.meta.title')} description={t(lang, 'save.meta.description')} lang={lang}>
+  <Section id="bank" level={1} title={t(lang, 'save.title')} badge="your-choice" intro={t(lang, 'save.lead')}>
     <div class="otp-wrap">
       <OnThisPage items={[
-        { id: 'generations', label: t(lang, 'grow.gensTitle') },
+        { id: 'high-yield', label: t(lang, 'save.hys.title') },
+        { id: 'calculator', label: t(lang, 'save.calcNav') },
         { id: 'why', label: t(lang, 'grow.whyTitle') },
-        { id: 'how', label: t(lang, 'grow.howTitle') },
       ]} />
     </div>
+    <DemoBank lang={lang} />
+  </Section>
+
+  <Section id="high-yield" tone="sage" title={t(lang, 'save.hys.title')} badge="education" intro={t(lang, 'save.hys.intro')}>
+    <HighYield lang={lang} />
+    <p class="insured">
+      {t(lang, 'save.hys.insured')} <Term id="fdic">FDIC</Term> · <Term id="credit-union">{t(lang, 'save.hys.creditUnion')}</Term>
+    </p>
+  </Section>
+
+  <Section id="calculator" title={t(lang, 'grow.title')} badge="education" intro={t(lang, 'grow.lead')}>
     <KaizenCalculator lang={lang} />
   </Section>
 
-  <Section id="why" tone="sage" title={t(lang, 'grow.whyTitle')} badge="your-choice">
+  <Section id="why" tone="mist" title={t(lang, 'grow.whyTitle')} badge="your-choice">
     <ul class="why">
       {why.map((w) => <li>{w}</li>)}
     </ul>
@@ -40,6 +55,7 @@ const why = tv<string[]>(lang, 'grow.why');
 
 <style>
   .otp-wrap { margin-bottom: var(--space-5); }
+  .insured { margin-top: var(--space-5); color: var(--ink-soft); }
   .why { display: grid; gap: var(--space-3); padding-left: 1.25em; }
   .why li::marker { color: var(--primary); }
   .ready {

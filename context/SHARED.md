@@ -10,7 +10,7 @@
 
 A **calm, free, educational marketing website** for the *Where You Want to Be* financial-empowerment program. It helps first-generation, gig, unbanked and late-career earners see **what to do next with their money, in what order, without shame**.
 
-- It is **not** a fintech app. No accounts, no logins, no real money, no bank links, no product recommendations.
+- It is **not** a fintech app. No accounts, no logins, no real money, no real bank links, no product recommendations. (Change, Nov 20 2026: `/invest` is a **mock market** with real prices and play money, and `/save` has a **demo** bank connection with made-up data. See §7 F7 and F10.)
 - Everything interactive runs **in the browser only** with **synthetic/demo numbers**. Nothing a visitor types is saved or sent anywhere.
 - Guiding ideas (Toyota Way, explained in plain words on the site):
   - **Kaizen** — tiny steps add up ($5/week counts).
@@ -28,10 +28,10 @@ A **calm, free, educational marketing website** for the *Where You Want to Be* f
 
 ### Hard rules (from the PRD — never break these)
 
-1. **Non-advisory.** No ticker symbols, no named funds/brokers as recommendations, no affiliate links, no sponsored ranking.
+1. **Non-advisory.** No named funds/brokers as recommendations, no affiliate links, no sponsored ranking. Ticker symbols and real prices are allowed **only in the mock market** (`/invest`), where the default watchlist is labelled "examples, not recommendations".
 2. **Every content section and every interactive module shows a safety badge** (see §6.6) and the line *"Education only — not financial advice."*
 3. **Every projection shows "Example, not a promise."**
-4. **Zero tracking.** No analytics scripts, no cookies, no pixels, no third-party fonts/CDNs at runtime, no `localStorage`/`sessionStorage` for user numbers.
+4. **Zero tracking.** No analytics scripts, no cookies, no pixels, no third-party fonts/CDNs at runtime, no `localStorage`/`sessionStorage` for user numbers — **one exception:** the mock market saves the play-money portfolio in `localStorage` (`wywtb.mockMarket.v1`), on that device only. The browser only talks to this site: live prices come through same-origin Vercel functions (`/api/quote`, `/api/search`) that hold the Finnhub key server-side.
 5. **Plain language: 6th–8th grade reading level.** Every financial term on first use is a tap-to-define term (§6.4).
 6. **No shame framing.** Never show "missed years," "you're behind," "lost money." Always frame forward ("from Day 1").
 7. **No gamification.** No streaks, points, confetti, leaderboards, badges-as-rewards, countdown urgency.
@@ -57,9 +57,10 @@ How we guarantee it:
 |---|---|---|
 | Roadmap + demo toggle | Home hero (already visible) → toggle | 1 |
 | Readiness check | Home → "Check your readiness" (scrolls inline) → answer | 1–2 |
-| Kaizen calculator | Nav "Grow" → slider | 2 |
+| Kaizen calculator | Nav "Save" → "Small steps calculator" chip (or `/save#calculator`) | 2 |
+| Demo bank + high-yield savings | Nav "Save" → "Connect demo bank" | 2 |
 | Investment explorer | Nav "Learn" → card | 2 |
-| Crash simulator | Nav "Practice" → "Simulate 30% drop" | 2 |
+| Mock market (buy/sell) | Nav "Invest" → watchlist symbol → Buy | 3 |
 | Persona / life stage | Nav "Your path" → persona tab | 2 |
 | Catch-Up Sprint | Nav "Your path" → "50+ Catch-Up" tab | 2 |
 | A specific public resource | Nav "Help" → category chip → link | 3 |
@@ -75,9 +76,9 @@ All routes have an English and Spanish version: `/…` and `/es/…`.
 | # | Route | Nav label (EN / ES) | Contains | Owner |
 |---|---|---|---|---|
 | 1 | `/` | Home / Inicio | Hero, 8-milestone roadmap with demo toggle, Readiness card, Toyota-Way trio (Kaizen/Jidoka/Andon), "Start here" tiles | **Part 1** |
-| 2 | `/grow` | Grow / Crecer | Kaizen Generational Calculator | **Part 1** |
+| 2 | `/save` | Save / Ahorrar | Demo bank connection (mock data), high-yield savings comparison, Kaizen Generational Calculator (moved from `/grow`, which now redirects here) | **Part 2** (calculator component: Part 1) |
 | 3 | `/learn` | Learn / Aprender | Plain-Language Investment Explorer (Index funds, Single stocks, Bonds) | **Part 2** |
-| 4 | `/practice` | Practice / Practicar | Paper-trading preview + 30% Crash Simulator | **Part 2** |
+| 4 | `/invest` | Invest / Invertir | Mock market: real prices, $10,000 play money, buy/sell, holdings, history (replaces `/practice`, which now redirects here) | **Part 2** |
 | 5 | `/your-path` | Your path / Tu camino | Life Stages hub: tabs for Catch-Up Sprint (50+), Gig Kaizen, First-Gen, Unbanked→Banked | **Part 2** |
 | 6 | `/help` | Help / Ayuda | Trusted public resources directory + FAQ | **Part 2** |
 | — | `/glossary` | (footer link) | Full jargon lexicon list, A–Z | **Part 1** |
@@ -261,13 +262,15 @@ All live in `src/components/`. Part 2 **imports** these and **must not fork or r
 - Toggle "Show cost for $___" with preset chips ($100 / $1,000 / $10,000) — no free-text input needed.
 - Jargon terms wrapped in `<Term>`. **No tickers, no fund names, no brokers.**
 
-**F7 — Paper Trading & Crash Simulator (FR-05, US-05, P1)** — `/practice`
-- Practice portfolio card: starts at **$1,000** (synthetic).
-- Primary button **"Simulate a 30% market drop"** → scripted animation (≈ 1.5s, number counts down $1,000 → $700, SVG line dips). Reduced-motion: jump instantly.
-- Then a calm 3–4 step coaching stepper ("Next" buttons): (1) "Drops like this have happened before — and markets have recovered over time, though not always quickly." (2) "Selling now locks in the drop." (3) "Diversification spreads risk." (4) "Only invest money you won't need for 5+ years."
-- Optional "Show a recovery" button (scripted, illustrative only, with "Example, not a promise").
-- **"Reset practice portfolio"** always visible.
-- Do **not** name a paper-trading provider unless §11 Q6 says so.
+**F7 — Mock Market (replaces the crash simulator, Nov 20 2026)** — `/invest`
+- Real U.S. stock/ETF prices from **Finnhub** via same-origin functions `api/quote.ts` and `api/search.ts` (key in the `FINNHUB_API_KEY` env var, cached 15s). No key or a Finnhub error → 503 → calm "prices unavailable" state; trading pauses.
+- **$10,000 play money**, market orders at the current price, by dollars or shares (fractional to 4 decimals). Holdings with average cost and profit/loss, trade history, watchlist, "Reset play money" with a confirm step. Saved only in this browser.
+- Banner: "Play money. Real prices. No real trades." Default watchlist is labelled as examples, not recommendations. A calm "If prices drop" section keeps the old coaching points.
+
+**F10 — Save: demo bank + high-yield savings** — `/save`
+- "Connect a demo bank" (made-up banks) generates random-but-bounded checking ($400–$4,500), savings ($0–$3,000 at 0.01–0.50% APY) and 30 days of transactions; spending by category. Demo only, in memory, nothing saved, no Plaid.
+- High-yield comparison: example APY slider 3–5% vs the current rate, interest after 1/5/10 years, "Example, not a promise.", and a demo "move money to high-yield" action.
+- The Kaizen calculator (F4) lives here now; `/grow` redirects to `/save#calculator`.
 
 **F8 — Life Stages & Persona Explorer (FR-06, US-04, P1)** — `/your-path`
 - `Tabs` with 4 tabs; each deep-linkable by hash:
@@ -339,7 +342,7 @@ Part 1 writes `HANDOFF.md` with: how to run, component usage examples, glossary 
 ---
 
 ## 10. Out of scope (do not build)
-Live broker integration or real trades · user accounts / login · storing any personal data · bank credential aggregation (Plaid etc.) · paid advice · affiliate links · analytics/trackers (unless §11 Q4 changes this) · newsletter signup · chatbots.
+Live broker integration or real trades · user accounts / login · storing any personal data (the play-money portfolio in the visitor's own browser is the only exception) · real bank credential aggregation (Plaid etc.; the Save page uses mock data only) · paid advice · affiliate links · analytics/trackers (unless §11 Q4 changes this) · newsletter signup · chatbots.
 
 ---
 

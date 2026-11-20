@@ -1,0 +1,227 @@
+---
+/**
+ * High-yield savings comparison. Uses the demo bank's savings when connected, otherwise a typed-in balance.
+ * Example rates only. Nothing is stored.
+ */
+import Disclaimer from '../../components/Disclaimer.astro';
+import Button from '../../components/Button.astro';
+import Term from '../../components/Term.astro';
+import { t, tv, LOCALE, type Lang } from '../../i18n/utils';
+import { HYS_APY, compare, monthlyInterest } from './hys';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const i18n = { locale: LOCALE[lang], ...tv<Record<string, unknown>>(lang, 'save.hys.ui') };
+const money = new Intl.NumberFormat(LOCALE[lang], { style: 'currency', currency: 'USD' });
+const startBalance = 1000;
+const startCurrent = 0.0001;
+const rows = compare(startBalance, startCurrent, HYS_APY.initial / 100);
+---
+<div class="hys" data-hys data-i18n={JSON.stringify(i18n)}>
+  <div class="inputs">
+    <div class="field">
+      <label for="hys-balance">{t(lang, 'save.hys.ui.balance')}</label>
+      <input id="hys-balance" type="number" inputmode="decimal" min="0" max="10000000" step="any" value={startBalance} data-balance />
+      <p class="note" data-balance-note>{t(lang, 'save.hys.ui.balanceNote')}</p>
+    </div>
+    <div class="field">
+      <label for="hys-current">{t(lang, 'save.hys.ui.current')}</label>
+      <input id="hys-current" type="number" inputmode="decimal" min="0" max="10" step="0.01" value={startCurrent * 100} data-current />
+    </div>
+    <div class="field field--wide">
+      <label for="hys-rate">{t(lang, 'save.hys.ui.rate')}</label>
+      <p class="rate num"><span data-rate-out>{HYS_APY.initial.toFixed(2)}%</span> <span class="unit"><Term id="apy">APY</Term></span></p>
+      <input id="hys-rate" type="range" min={HYS_APY.min} max={HYS_APY.max} step={HYS_APY.step} value={HYS_APY.initial}
+        aria-valuetext={`${HYS_APY.initial.toFixed(2)}%`} data-rate />
+      <p class="ends num" aria-hidden="true"><span>{HYS_APY.min}%</span><span>{HYS_APY.max}%</span></p>
+    </div>
+  </div>
+
+  <div class="results" aria-live="polite">
+    <p class="monthly num" data-monthly>
+      {t(lang, 'save.hys.ui.monthly', { now: money.format(monthlyInterest(startBalance, startCurrent)), hys: money.format(monthlyInterest(startBalance, HYS_APY.initial / 100)) })}
+    </p>
+    <div class="table-wrap" tabindex="0" role="region" aria-labelledby="hys-caption">
+      <table class="num">
+        <caption id="hys-caption">{t(lang, 'save.hys.ui.tableCaption')}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{t(lang, 'save.hys.ui.colYears')}</th>
+            <th scope="col">{t(lang, 'save.hys.ui.colNow')}</th>
+            <th scope="col">{t(lang, 'save.hys.ui.colHys')}</th>
+            <th scope="col">{t(lang, 'save.hys.ui.colExtra')}</th>
+          </tr>
+        </thead>
+        <tbody data-rows>
+          {rows.map((r) => (
+            <tr>
+              <th scope="row">{t(lang, 'save.hys.ui.yearsN', { n: r.years })}</th>
+              <td>{money.format(r.now)}</td>
+              <td>{money.format(r.hys)}</td>
+              <td class="extra">{money.format(r.extra)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <Disclaimer variant="projection" />
+  </div>
+
+  <form class="move" data-move hidden novalidate>
+    <h3>{t(lang, 'save.hys.ui.moveTitle')}</h3>
+    <div class="move-row">
+      <div class="field">
+        <label for="hys-from">{t(lang, 'save.hys.ui.from')}</label>
+        <select id="hys-from" data-from>
+          <option value="checking">{t(lang, 'save.bank.ui.checking')}</option>
+          <option value="savings">{t(lang, 'save.bank.ui.savings')}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="hys-amount">{t(lang, 'save.hys.ui.amount')}</label>
+        <input id="hys-amount" type="number" inputmode="decimal" min="0" step="any" data-move-amount />
+      </div>
+      <Button type="submit">{t(lang, 'save.hys.ui.moveButton')}</Button>
+    </div>
+    <p class="move-msg" data-move-msg role="status"></p>
+  </form>
+  <p class="connect-hint" data-connect-hint>{t(lang, 'save.hys.ui.connectHint')}</p>
+</div>
+
+<script>
+  import { compare, monthlyInterest } from './hys';
+  import { getBank, onBank, moveToHys, type BankState } from './bankStore';
+
+  document.querySelectorAll<HTMLElement>('[data-hys]').forEach((root) => {
+    const T = JSON.parse(root.dataset.i18n || '{}') as Record<string, string> & { locale: string };
+    const S = (k: string, vars: Record<string, string | number> = {}) =>
+      String(T[k] ?? k).replace(/\{(\w+)\}/g, (_, v: string) => String(vars[v] ?? `{${v}}`));
+    const money = new Intl.NumberFormat(T.locale, { style: 'currency', currency: 'USD' });
+    const $ = <E extends HTMLElement>(s: string) => root.querySelector<E>(s)!;
+    const balanceEl = $<HTMLInputElement>('[data-balance]');
+    const currentEl = $<HTMLInputElement>('[data-current]');
+    const rateEl = $<HTMLInputElement>('[data-rate]');
+    let lastBankKey = '';
+
+    const num = (el: HTMLInputElement, fallback: number) => {
+      const n = Number(el.value);
+      return el.value !== '' && Number.isFinite(n) && n >= 0 ? n : fallback;
+    };
+
+    function update() {
+      const balance = Math.min(num(balanceEl, 0), 10_000_000);
+      const current = num(currentEl, 0) / 100;
+      const rate = Number(rateEl.value) / 100;
+      $('[data-rate-out]').textContent = `${(rate * 100).toFixed(2)}%`;
+      rateEl.setAttribute('aria-valuetext', `${(rate * 100).toFixed(2)}%`);
+      $('[data-monthly]').textContent = S('monthly', { now: money.format(monthlyInterest(balance, current)), hys: money.format(monthlyInterest(balance, rate)) });
+      const body = $('[data-rows]');
+      body.replaceChildren(
+        ...compare(balance, current, rate).map((r) => {
+          const tr = document.createElement('tr');
+          const th = document.createElement('th');
+          th.scope = 'row';
+          th.textContent = S('yearsN', { n: r.years });
+          const cells = [r.now, r.hys, r.extra].map((v, i) => {
+            const td = document.createElement('td');
+            td.textContent = money.format(v);
+            if (i === 2) td.className = 'extra';
+            return td;
+          });
+          tr.append(th, ...cells);
+          return tr;
+        }),
+      );
+      document.dispatchEvent(new CustomEvent('hys-rate', { detail: rate }));
+    }
+
+    function onBankChange({ bank }: BankState) {
+      $('[data-move]').hidden = !bank;
+      $('[data-connect-hint]').hidden = !!bank;
+      const key = bank ? `${bank.bankId}:${bank.transactions.length}:${bank.savingsApy}` : '';
+      // Prefill from a newly connected (or regenerated) bank, but don't overwrite what the visitor typed afterwards.
+      if (bank && key !== lastBankKey) {
+        balanceEl.value = String(bank.savings);
+        currentEl.value = String(Math.round(bank.savingsApy * 10000) / 100);
+        $('[data-balance-note]').textContent = S('fromBank', { bank: bank.bankName });
+        update();
+      }
+      if (!bank && lastBankKey) $('[data-balance-note]').textContent = S('balanceNote');
+      lastBankKey = key;
+    }
+
+    for (const el of [balanceEl, currentEl, rateEl]) el.addEventListener('input', update);
+
+    $('[data-move]').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const msg = $('[data-move-msg]');
+      const from = $<HTMLSelectElement>('[data-from]').value as 'checking' | 'savings';
+      const amount = Number($<HTMLInputElement>('[data-move-amount]').value);
+      if (!(amount > 0)) {
+        msg.dataset.state = 'error';
+        msg.textContent = S('moveAmount');
+        return;
+      }
+      if (!moveToHys(from, Math.round(amount * 100) / 100)) {
+        msg.dataset.state = 'error';
+        msg.textContent = S('moveTooMuch');
+        return;
+      }
+      msg.dataset.state = 'ok';
+      msg.textContent = S('moveDone', { amount: money.format(amount), from: S(from === 'checking' ? 'fromChecking' : 'fromSavings') });
+      $<HTMLInputElement>('[data-move-amount]').value = '';
+    });
+
+    onBank(onBankChange);
+    onBankChange(getBank());
+    update();
+  });
+</script>
+
+<style is:global>
+  /* Global so script-built elements are styled too; every rule is scoped under .hys. */
+  .hys [hidden] { display: none !important; }
+  .hys .inputs {
+    display: grid;
+    gap: var(--space-5);
+    padding: var(--space-5);
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  @media (min-width: 768px) { .hys .inputs { grid-template-columns: 1fr 1fr; } .hys .field--wide { grid-column: 1 / -1; } }
+  .hys .field label { display: block; font-weight: 700; margin-bottom: var(--space-2); }
+  .hys .field input[type='number'], .hys .field select {
+    width: 100%;
+    max-width: 280px;
+    min-height: var(--tap);
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--border);
+    background: var(--bg);
+  }
+  .hys .note { margin-top: var(--space-1); font-size: var(--fs-small); color: var(--ink-muted); }
+  .hys .rate { font-size: var(--fs-num); font-weight: 700; color: var(--primary); line-height: 1.2; }
+  .hys .unit { font-size: var(--fs-body); color: var(--ink-soft); font-weight: 400; }
+  .hys input[type='range'] { width: 100%; min-height: var(--tap); accent-color: var(--primary); }
+  .hys .ends { max-width: none; display: flex; justify-content: space-between; font-size: var(--fs-small); color: var(--ink-muted); }
+
+  .hys .results { display: grid; gap: var(--space-4); margin-top: var(--space-5); }
+  .hys .monthly { font-weight: 700; font-size: 1.1875rem; max-width: none; }
+  .hys .table-wrap { overflow-x: auto; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); }
+  .hys table { width: 100%; border-collapse: collapse; }
+  .hys caption { text-align: left; padding: var(--space-4) var(--space-4) 0; font-weight: 700; }
+  .hys th, .hys td { padding: var(--space-3) var(--space-4); text-align: right; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  .hys th:first-child { text-align: left; }
+  .hys thead th { color: var(--ink-soft); font-size: var(--fs-small); }
+  .hys tbody tr:last-child > * { border-bottom: 0; }
+  .hys .extra, .hys td.extra { color: var(--go-ink); font-weight: 700; }
+
+  .hys .move { margin-top: var(--space-6); padding: var(--space-5); border-radius: var(--radius); background: var(--surface); border: 2px solid var(--primary); }
+  .hys .move h3 { font-size: var(--fs-h3); }
+  .hys .move-row { display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: flex-end; margin-top: var(--space-4); }
+  .hys .move-msg { margin-top: var(--space-3); min-height: 1.6em; font-weight: 700; max-width: none; }
+  .hys .move-msg[data-state='ok'] { color: var(--go-ink); }
+  .hys .move-msg[data-state='error'] { color: var(--stop-ink); }
+  .hys .connect-hint { margin-top: var(--space-5); color: var(--ink-soft); }
+</style>

@@ -1,0 +1,254 @@
+---
+/**
+ * "Connect a demo bank": generates made-up accounts and 30 days of transactions within fixed ranges.
+ * No real bank, no network, nothing saved.
+ */
+import Icon from '../../components/Icon.astro';
+import Button from '../../components/Button.astro';
+import { t, tv, LOCALE, type Lang } from '../../i18n/utils';
+import { DEMO_BANKS } from './mockBank';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const i18n = { locale: LOCALE[lang], ...tv<Record<string, unknown>>(lang, 'save.bank.ui') };
+---
+<div class="bank" data-bank data-i18n={JSON.stringify(i18n)}>
+  <p class="banner"><Icon name="info" size={20} /><span>{t(lang, 'save.bank.banner')}</span></p>
+
+  <form class="connect" data-connect>
+    <fieldset>
+      <legend>{t(lang, 'save.bank.pick')}</legend>
+      <div class="choices">
+        {DEMO_BANKS.map((b, i) => (
+          <label class="choice">
+            <input type="radio" name="demo-bank" value={b.id} checked={i === 0} />
+            <span class="choice-name">{b.name}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+    <Button type="submit">
+      <Icon name="lock" size={20} />
+      {t(lang, 'save.bank.connect')}
+    </Button>
+  </form>
+
+  <div class="connected" data-connected hidden>
+    <div class="conn-head">
+      <h3 class="conn-title" tabindex="-1"><Icon name="check" size={22} /><span data-bank-name></span></h3>
+      <div class="conn-actions">
+        <Button variant="quiet" data-regenerate><Icon name="reset" size={20} />{t(lang, 'save.bank.regenerate')}</Button>
+        <Button variant="quiet" data-disconnect>{t(lang, 'save.bank.disconnect')}</Button>
+      </div>
+    </div>
+
+    <ul class="accounts num" data-accounts></ul>
+
+    <div class="month num" data-month></div>
+
+    <div class="two">
+      <section aria-labelledby="bank-spend">
+        <h4 id="bank-spend">{t(lang, 'save.bank.spendingTitle')}</h4>
+        <ul class="bars" data-bars></ul>
+      </section>
+      <section aria-labelledby="bank-tx">
+        <h4 id="bank-tx">{t(lang, 'save.bank.txTitle')}</h4>
+        <ul class="tx num" data-tx></ul>
+        <Button variant="quiet" data-tx-more>{t(lang, 'save.bank.showAll')}</Button>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { generateBank, spendingByCategory, monthTotals, type BankId } from './mockBank';
+  import { getBank, setBank, onBank, type BankState } from './bankStore';
+  import { monthlyInterest } from './hys';
+
+  document.querySelectorAll<HTMLElement>('[data-bank]').forEach((root) => {
+    const T = JSON.parse(root.dataset.i18n || '{}') as Record<string, unknown> & { locale: string; categories: Record<string, string> };
+    const S = (k: string, vars: Record<string, string | number> = {}) =>
+      String(T[k] ?? k).replace(/\{(\w+)\}/g, (_, v: string) => String(vars[v] ?? `{${v}}`));
+    const money = new Intl.NumberFormat(T.locale, { style: 'currency', currency: 'USD' });
+    const signed = new Intl.NumberFormat(T.locale, { style: 'currency', currency: 'USD', signDisplay: 'always' });
+    const pct = new Intl.NumberFormat(T.locale, { style: 'percent', maximumFractionDigits: 2 });
+    const day = new Intl.DateTimeFormat(T.locale, { month: 'short', day: 'numeric' });
+    const $ = <E extends HTMLElement>(s: string) => root.querySelector<E>(s)!;
+    const el = <K extends keyof HTMLElementTagNameMap>(tag: K, cls = '', text?: string) => {
+      const e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (text !== undefined) e.textContent = text;
+      return e;
+    };
+
+    let bankId: BankId = 'maple';
+    let showAll = false;
+    const newSeed = () => Math.floor(Math.random() * 2 ** 31);
+
+    function render({ bank, hys }: BankState) {
+      $('[data-connect]').hidden = !!bank;
+      $('[data-connected]').hidden = !bank;
+      if (!bank) return;
+      $('[data-bank-name]').textContent = S('connectedTo', { bank: bank.bankName });
+
+      const accounts = $('[data-accounts]');
+      accounts.replaceChildren();
+      const card = (name: string, balance: number, note: string, cls = '') => {
+        const li = el('li', `acct ${cls}`);
+        li.append(el('span', 'acct-name', name), el('span', 'acct-bal', money.format(balance)), el('span', 'acct-note', note));
+        accounts.append(li);
+      };
+      card(S('checking'), bank.checking, S('checkingNote'));
+      card(S('savings'), bank.savings, S('apyNote', { apy: pct.format(bank.savingsApy) }));
+      if (hys > 0) card(S('hysAccount'), hys, S('hysNote', { monthly: money.format(monthlyInterest(hys, Number(root.dataset.hysApy ?? 0.04))) }), 'acct--hys');
+
+      const m = monthTotals(bank.transactions);
+      const month = $('[data-month]');
+      month.replaceChildren(
+        el('span', '', S('monthIncome', { n: money.format(m.income) })),
+        el('span', '', S('monthSpent', { n: money.format(m.spent) })),
+        el('span', 'left', S('monthLeft', { n: money.format(m.left) })),
+      );
+
+      const bars = $('[data-bars]');
+      bars.replaceChildren();
+      const spend = spendingByCategory(bank.transactions);
+      const max = Math.max(...spend.map((s) => s.total), 1);
+      for (const s of spend) {
+        const li = el('li');
+        const fill = el('span', 'bar-fill');
+        fill.style.width = `${Math.max(4, (s.total / max) * 100)}%`;
+        const track = el('span', 'bar-track');
+        track.setAttribute('aria-hidden', 'true');
+        track.append(fill);
+        li.append(el('span', 'bar-label', T.categories[s.category] ?? s.category), el('span', 'bar-val', money.format(s.total)), track);
+        bars.append(li);
+      }
+
+      const tx = $('[data-tx]');
+      tx.replaceChildren();
+      const today = new Date();
+      const list = showAll ? bank.transactions : bank.transactions.slice(0, 8);
+      for (const t of list) {
+        const d = new Date(today);
+        d.setDate(today.getDate() - t.daysAgo);
+        const li = el('li');
+        const amt = el('span', 'tx-amt', signed.format(t.amount));
+        amt.dataset.sign = t.amount > 0 ? '1' : '-1';
+        li.append(el('span', 'tx-date', day.format(d)), el('span', 'tx-cat', T.categories[t.category] ?? t.category), amt);
+        tx.append(li);
+      }
+      const more = $<HTMLButtonElement>('[data-tx-more]');
+      more.hidden = bank.transactions.length <= 8;
+      more.textContent = S(showAll ? 'showFewer' : 'showAll', { n: bank.transactions.length });
+    }
+
+    $('[data-connect]').addEventListener('submit', (e) => {
+      e.preventDefault();
+      bankId = (root.querySelector<HTMLInputElement>('input[name="demo-bank"]:checked')?.value ?? 'maple') as BankId;
+      showAll = false;
+      setBank({ bank: generateBank(bankId, newSeed()), hys: 0 });
+      $<HTMLElement>('.conn-title').focus();
+    });
+    $('[data-regenerate]').addEventListener('click', () => setBank({ bank: generateBank(bankId, newSeed()), hys: 0 }));
+    $('[data-disconnect]').addEventListener('click', () => {
+      setBank({ bank: null, hys: 0 });
+      root.querySelector<HTMLInputElement>('input[name="demo-bank"]:checked')?.focus();
+    });
+    $('[data-tx-more]').addEventListener('click', () => {
+      showAll = !showAll;
+      render(getBank());
+    });
+    document.addEventListener('hys-rate', (e) => {
+      root.dataset.hysApy = String((e as CustomEvent<number>).detail);
+      render(getBank());
+    });
+
+    onBank(render);
+    render(getBank());
+  });
+</script>
+
+<style is:global>
+  /* Global so script-built elements are styled too; every rule is scoped under .bank. */
+  .bank [hidden] { display: none !important; }
+  .bank .banner {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-sm);
+    background: var(--wait-bg);
+    color: var(--wait-ink);
+    font-weight: 700;
+    max-width: none;
+  }
+  .bank .connect {
+    display: grid;
+    gap: var(--space-4);
+    justify-items: start;
+    margin-top: var(--space-5);
+    padding: var(--space-5);
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .bank fieldset { border: 0; padding: 0; margin: 0; }
+  .bank legend { font-weight: 700; margin-bottom: var(--space-3); }
+  .bank .choices { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .bank .choice {
+    display: inline-flex;
+    gap: var(--space-2);
+    align-items: center;
+    min-height: var(--tap);
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--border);
+    cursor: pointer;
+  }
+  .bank .choice:has(input:checked) { border-color: var(--primary); background: var(--surface-sage); }
+  .bank .choice input { width: 20px; height: 20px; accent-color: var(--primary); }
+  .bank .choice-name { font-weight: 700; }
+
+  .bank .connected { margin-top: var(--space-5); display: grid; gap: var(--space-5); }
+  .bank .conn-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-3); align-items: center; }
+  .bank .conn-title { display: flex; gap: var(--space-2); align-items: center; color: var(--go-ink); font-size: var(--fs-h3); }
+  .bank .conn-title:focus { outline: none; }
+  .bank .conn-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+  .bank .accounts { list-style: none; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .bank .acct {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-5);
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    max-width: none;
+  }
+  .bank .acct--hys { border: 2px solid var(--primary); background: var(--go-bg); }
+  .bank .acct-name { font-weight: 700; color: var(--ink-soft); }
+  .bank .acct-bal { font-size: var(--fs-h2); font-weight: 700; line-height: 1.2; }
+  .bank .acct-note { font-size: var(--fs-small); color: var(--ink-muted); }
+
+  .bank .month { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); padding: var(--space-4) var(--space-5); border-radius: var(--radius-sm); background: var(--surface); font-weight: 700; }
+  .bank .month .left { color: var(--primary); }
+
+  .bank .two { display: grid; gap: var(--space-5); }
+  @media (min-width: 900px) { .bank .two { grid-template-columns: 1fr 1fr; } }
+  .bank .two section { padding: var(--space-5); border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); min-width: 0; }
+  .bank h4 { font-size: var(--fs-body); margin-bottom: var(--space-3); }
+
+  .bank .bars { list-style: none; padding: 0; display: grid; gap: var(--space-3); }
+  .bank .bars li { display: grid; grid-template-columns: 1fr auto; gap: 4px var(--space-3); max-width: none; font-size: var(--fs-small); }
+  .bank .bar-label { font-weight: 700; }
+  .bank .bar-val { font-variant-numeric: tabular-nums; }
+  .bank .bar-track { grid-column: 1 / -1; height: 10px; border-radius: 5px; background: var(--surface-sage); overflow: hidden; }
+  .bank .bar-fill { display: block; height: 100%; border-radius: 5px; background: var(--accent); transition: width var(--dur) var(--ease); }
+
+  .bank .tx { list-style: none; padding: 0; margin-bottom: var(--space-3); }
+  .bank .tx li { display: grid; grid-template-columns: 64px 1fr auto; gap: var(--space-3); padding: var(--space-2) 0; border-bottom: 1px solid var(--border); max-width: none; font-size: var(--fs-small); }
+  .bank .tx-date { color: var(--ink-muted); }
+  .bank .tx-amt { font-weight: 700; }
+  .bank .tx-amt[data-sign='1'] { color: var(--go-ink); }
+</style>

@@ -7,9 +7,9 @@
     "navLabel": "Main",
     "nav": {
       "home": "Home",
-      "grow": "Grow",
+      "save": "Save",
       "learn": "Learn",
-      "practice": "Practice",
+      "invest": "Invest",
       "path": "Your path",
       "help": "Help"
     },
@@ -123,7 +123,7 @@
         "stopBills": "Start with the basics. When your bills are covered each month, every other step gets easier. Free help: a nonprofit credit counselor or the CFPB guides on the Help page.",
         "stopDebt": "Pay down debt over 15% APR before investing. Every dollar you pay on a 24.9% card saves you about 25 cents a year. That beats what investing usually earns.",
         "wait": "You're close. Build a $1,000 cushion first so a surprise bill doesn't send you back into debt. Even $5 or $10 a week adds up.",
-        "go": "Your base is safe. You're ready to learn how investing works. Start with the Learn page, then try a practice account before using real money."
+        "go": "Your base is safe. You're ready to learn how investing works. Start with the Learn page, then try the mock market with play money before using real money."
       },
       "nextLinks": {
         "stop": "See free help",
@@ -149,9 +149,9 @@
       "title": "Where would you like to go next?",
       "tiles": {
         "readiness": { "title": "Check your readiness", "body": "Three yes-or-no questions. Get a clear red, yellow or green light." },
-        "grow": { "title": "See small steps grow", "body": "Slide from $5 to $100 a week and watch what time can do." },
+        "save": { "title": "Save smarter", "body": "Connect a demo bank, compare high-yield savings, and watch $5 a week grow." },
         "learn": { "title": "Learn the basics", "body": "Index funds, stocks and bonds in plain words, with real costs." },
-        "practice": { "title": "Practice a market drop", "body": "Watch a pretend $1,000 drop 30% and learn what to do." },
+        "invest": { "title": "Try the mock market", "body": "Buy and sell real stocks at real prices with $10,000 of play money." },
         "path": { "title": "Find your path", "body": "Stories for 50+ catch-up, gig work, first-gen and new bank accounts." },
         "help": { "title": "Get free help", "body": "Trusted public resources for taxes, debt and banking." }
       }
@@ -307,7 +307,7 @@
       "Am I spreading my money out, or betting on one thing?"
     ],
     "askReady": "Check your readiness",
-    "askPractice": "Try a pretend market drop",
+    "askPractice": "Try the mock market",
     "checkTitle": "Check before you start",
     "checkIntro": "Before you trust anyone with your money, look them up. These checks are free.",
     "checkBroker": "Look up a broker or adviser",
@@ -317,76 +317,6 @@
     "checkBasicsOrg": "Investor.gov",
     "checkBasicsBody": "Free, plain guides from the U.S. Securities and Exchange Commission (SEC).",
     "checkPro": "A licensed, fee-only adviser can help with your full picture. Ask how they are paid before you start."
-  },
-  "practice": {
-    "meta": {
-      "title": "Practice a market drop",
-      "description": "Watch a pretend $1,000 drop 30%, then learn calm steps for when it happens for real. No real money."
-    },
-    "title": "Practice a market drop, with pretend money",
-    "lead": "Markets go down sometimes. Seeing it happen with pretend money first makes a real drop less scary.",
-    "otp": {
-      "what": "What is practice investing?",
-      "before": "Before real money"
-    },
-    "cardTitle": "Your practice portfolio",
-    "pretend": "Pretend money",
-    "valueLabel": "Value",
-    "startValue": "Starting value: {amount}",
-    "chartLabel": "Line chart of the practice portfolio's value over time.",
-    "simulate": "Simulate a 30% market drop",
-    "recovery": "Show a recovery",
-    "reset": "Reset practice portfolio",
-    "status": {
-      "ready": "Your pretend portfolio is worth $1,000. Press the button to see a 30% drop.",
-      "dropping": "Prices are falling…",
-      "dropped": "Your pretend portfolio is now worth $700. That's a 30% drop. This is pretend money.",
-      "recovering": "Prices are rising again…",
-      "recovered": "In this example, the portfolio climbed back to about $1,050 over time. Example, not a promise."
-    },
-    "stepperTitle": "What to know when it drops",
-    "stepOf": "Step {n} of {total}",
-    "next": "Next",
-    "back": "Back",
-    "steps": [
-      {
-        "title": "This has happened before",
-        "body": "Drops like this have happened many times. Markets have recovered over time, though not always quickly. Some recoveries took years.",
-            "term": {"id":"market-drop","label":"Market drop"}
-      },
-      {
-        "title": "Selling now locks in the drop",
-        "body": "While you hold, the drop is only on paper. If you sell now, the drop becomes real. Many people regret selling in a panic."
-      },
-      {
-        "title": "Spreading out softens the bumps",
-        "body": "Owning many different things, like an index fund plus some bonds, means one bad day hurts less.",
-            "term": {"id":"diversification","label":"Diversification"}
-      },
-      {
-        "title": "Only invest money you won't need for 5+ years",
-        "body": "Rent, bills and your emergency cushion should never be invested. Then a drop can't force you to sell."
-      }
-    ],
-    "doneNote": "You've seen all four steps. You can watch an example recovery, or reset and try again.",
-    "wordToKnow": "Word to know:",
-    "whatTerm": "paper trading",
-    "whatTitle": "What is practice investing?",
-    "what": [
-      "Practice investing, or paper trading, means buying and selling with pretend money. Nothing real is bought or sold.",
-      "Many investing apps offer a free practice account. It's a safe way to learn how prices move and how you feel when they do.",
-      "Watch out: a practice account is still run by a company that may want you to open a real account. You never have to."
-    ],
-    "beforeTitle": "Before using real money",
-    "before": [
-      "Your bills are covered each month.",
-      "You have no debt over 15% APR.",
-      "You have at least $1,000 saved for emergencies.",
-      "The money you invest won't be needed for 5 years or more.",
-      "You know what it costs each year."
-    ],
-    "beforeReady": "Check your readiness",
-    "beforeLearn": "Compare ways to invest"
   },
   "path": {
     "meta": {
@@ -516,5 +446,186 @@
     "clear": "Clear search",
     "faqTitle": "Common questions",
     "faqIntro": "Short, honest answers."
+  },
+  "invest": {
+    "meta": {
+      "title": "Mock market: real prices, play money",
+      "description": "Buy and sell real stocks and ETFs at real prices with $10,000 of play money. No real money, no sign-up."
+    },
+    "title": "Mock market",
+    "lead": "Invest $10,000 of play money at real market prices. Search any U.S. stock or ETF, buy and sell, and watch how your portfolio does.",
+    "banner": "Play money. Real prices. No real trades. Your portfolio is saved only in this browser.",
+    "ui": {
+      "total": "Total value",
+      "cash": "Cash",
+      "invested": "Invested",
+      "pl": "Profit or loss",
+      "findTitle": "Find a stock or ETF",
+      "searchLabel": "Company name or ticker",
+      "searchPlaceholder": "Try \"Apple\" or \"VTI\"",
+      "searchButton": "Search",
+      "searching": "Searching…",
+      "results": "{n} results. Pick one to see its price.",
+      "noResults": "No U.S. stocks or ETFs match that. Try another name.",
+      "searchUnavailable": "Search isn't available right now. Pick from the watchlist instead.",
+      "open": "Open",
+      "high": "Day high",
+      "low": "Day low",
+      "prevClose": "Previous close",
+      "youOwn": "You own",
+      "sharesUnit": "shares",
+      "today": "today",
+      "watching": "On your watchlist",
+      "addWatch": "Add to watchlist",
+      "side": "Buy or sell",
+      "buy": "Buy",
+      "sell": "Sell",
+      "mode": "Order in",
+      "dollars": "Dollars",
+      "shares": "Shares",
+      "amountDollars": "How many dollars?",
+      "amountShares": "How many shares?",
+      "confirm": "Place play-money order",
+      "previewBuy": "Buy {shares} shares of {symbol} at {price} = {total}",
+      "previewSell": "Sell {shares} shares of {symbol} at {price} = {total}",
+      "tradePaused": "Trading is paused until live prices come back.",
+      "doneBuy": "Done. You bought {shares} shares of {symbol} for {total} (play money).",
+      "doneSell": "Done. You sold {shares} shares of {symbol} for {total} (play money).",
+      "error_amount": "Enter an amount above zero.",
+      "error_price": "No price for {symbol} yet. Try again in a moment.",
+      "error_cash": "Not enough play cash for that order.",
+      "error_shares": "You don't own that many shares of {symbol}.",
+      "holdingsTitle": "Your holdings",
+      "holdingsEmpty": "You don't own anything yet. Search for a stock or pick one from the watchlist.",
+      "colSymbol": "Ticker",
+      "colShares": "Shares",
+      "colAvg": "Avg. cost",
+      "colValue": "Value",
+      "colPl": "Profit or loss",
+      "historyTitle": "Trade history",
+      "historyEmpty": "Your trades will show up here.",
+      "historyLine": "{shares} {symbol} at {price}",
+      "bought": "Bought",
+      "sold": "Sold",
+      "watchTitle": "Watchlist",
+      "watchNote": "Popular examples to start with, not recommendations. Add or remove any.",
+      "watchEmpty": "Your watchlist is empty. Search to add one.",
+      "removeSymbol": "Remove {symbol} from watchlist",
+      "reset": "Reset play money",
+      "resetConfirm": "This clears your holdings and trade history and starts you over with $10,000. Are you sure?",
+      "resetYes": "Yes, start over",
+      "resetNo": "Keep my portfolio",
+      "statusOpen": "Market open. Prices update every 30 seconds.",
+      "statusClosed": "Market closed. Orders fill at the last price.",
+      "statusUnavailable": "Live prices are unavailable right now. Your portfolio is safe; trading is paused until they're back."
+    },
+    "dropsTitle": "If prices drop",
+    "dropsIntro": "Real prices go down sometimes, even with play money. Here's how to think about it.",
+    "drops": [
+      {
+        "title": "This has happened before",
+        "body": "Big drops have happened many times. Markets have recovered over time, though not always quickly."
+      },
+      {
+        "title": "Selling locks in the drop",
+        "body": "While you hold, a drop is only on paper. Selling in a panic makes it real."
+      },
+      {
+        "title": "Spreading out softens the bumps",
+        "body": "Owning many companies, like through a broad ETF, means one bad day hurts less."
+      },
+      {
+        "title": "Only invest money you won't need for 5+ years",
+        "body": "Rent, bills and your emergency cushion should never be invested."
+      }
+    ],
+    "wordToKnow": "Words to know:",
+    "diversification": "diversification",
+    "marketDrop": "market drop",
+    "howTitle": "How the mock market works",
+    "how": [
+      "Prices are real U.S. market prices from Finnhub. They may be a little delayed.",
+      "Your money is play money. No real orders are ever sent anywhere.",
+      "Orders fill right away at the current price, like a market order. You can buy part of a share.",
+      "Your portfolio is saved only in this browser. Nobody else can see it, and we don't collect it.",
+      "Nothing here is a recommendation. It's a safe place to learn how investing feels."
+    ],
+    "toLearn": "Learn the basics first",
+    "toReady": "Check your readiness"
+  },
+  "save": {
+    "meta": {
+      "title": "Save: demo bank and high-yield savings",
+      "description": "Connect a demo bank, see where money goes, compare a high-yield savings account, and watch small weekly steps grow."
+    },
+    "title": "Save",
+    "lead": "Connect a demo bank to see your balances and spending, then see how much more a high-yield savings account could earn.",
+    "calcNav": "Small steps calculator",
+    "bank": {
+      "banner": "Demo only. These are made-up banks and random numbers. No real bank is connected and nothing is saved.",
+      "pick": "Pick a demo bank",
+      "connect": "Connect demo bank",
+      "regenerate": "New random data",
+      "disconnect": "Disconnect",
+      "spendingTitle": "Spending in the last 30 days",
+      "txTitle": "Recent transactions",
+      "showAll": "Show all {n}",
+      "ui": {
+        "connectedTo": "Connected to {bank} (demo)",
+        "checking": "Checking",
+        "savings": "Savings",
+        "checkingNote": "For bills and everyday spending",
+        "apyNote": "Earning {apy} APY",
+        "hysAccount": "High-yield savings (demo)",
+        "hysNote": "About {monthly} interest this month",
+        "monthIncome": "Money in: {n}",
+        "monthSpent": "Money out: {n}",
+        "monthLeft": "Left over: {n}",
+        "showAll": "Show all {n}",
+        "showFewer": "Show fewer",
+        "categories": {
+          "income": "Paycheck",
+          "rent": "Rent",
+          "groceries": "Groceries",
+          "gas": "Gas",
+          "utilities": "Utilities",
+          "dining": "Eating out",
+          "phone": "Phone",
+          "transit": "Bus and rides"
+        }
+      }
+    },
+    "hys": {
+      "title": "High-yield savings",
+      "intro": "Many online banks and credit unions pay much more interest on savings than a regular account. Same safety, more growth.",
+      "insured": "Look for an account that's insured, so your money is protected:",
+      "creditUnion": "credit union (NCUA)",
+      "ui": {
+        "balance": "Savings balance",
+        "balanceNote": "Type any amount, or connect a demo bank above to fill this in.",
+        "fromBank": "Filled in from {bank}. You can change it.",
+        "current": "Your current rate (APY %)",
+        "rate": "High-yield rate (example)",
+        "monthly": "This month: about {now} in interest now vs {hys} in high-yield savings.",
+        "tableCaption": "Interest earned with no new deposits",
+        "colYears": "After",
+        "colNow": "Current rate",
+        "colHys": "High-yield",
+        "colExtra": "Extra you'd earn",
+        "yearsN": "{n} yr",
+        "moveTitle": "Try it: move money into high-yield savings (demo)",
+        "from": "Move from",
+        "amount": "Amount",
+        "moveButton": "Move to high-yield",
+        "moveAmount": "Enter an amount above zero.",
+        "moveTooMuch": "There isn't that much in that account.",
+        "moveDone": "Moved {amount} from {from} into your demo high-yield account.",
+        "fromChecking": "checking",
+        "fromSavings": "savings",
+        "connectHint": "Connect a demo bank above to try moving money into a high-yield account.",
+        "checking": "Checking",
+        "savings": "Savings"
+      }
+    }
   }
 }

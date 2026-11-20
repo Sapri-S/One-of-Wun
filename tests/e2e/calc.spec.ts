@@ -1,7 +1,7 @@
 import { test, expect } from './fixtures';
 
 test('calculator defaults, steppers, slider and generations', async ({ page, problems }) => {
-  await page.goto('/grow');
+  await page.goto('/save');
   await expect(page.locator('[data-out="fv-0.06"]')).toHaveText('$20,555');
   await expect(page.locator('[data-out="put"]')).toHaveText('$7,800');
 

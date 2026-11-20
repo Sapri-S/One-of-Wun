@@ -61,16 +61,16 @@ test('jargon term opens, closes with Escape and returns focus', async ({ page })
 
 test('3-click rule: every main page linked from home', async ({ page }) => {
   await page.goto('/');
-  for (const href of ['/grow', '/learn', '/practice', '/your-path', '/help']) {
+  for (const href of ['/save', '/learn', '/invest', '/your-path', '/help']) {
     await expect(page.locator(`#start a[href="${href}"]`)).toHaveCount(1);
   }
   await expect(page.locator('#start a[href="#readiness"]')).toHaveCount(1);
 });
 
 test('language switch keeps the same page', async ({ page }) => {
-  await page.goto('/grow');
+  await page.goto('/save');
   await page.getByRole('link', { name: 'Ver esta página en español' }).click();
-  await expect(page).toHaveURL(/\/es\/grow\/?$/);
+  await expect(page).toHaveURL(/\/es\/save\/?$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'es');
-  await expect(page.locator('h1')).toHaveText('Pasos pequeños, gran futuro');
+  await expect(page.locator('h1')).toHaveText('Ahorrar');
 });

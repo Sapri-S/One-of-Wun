@@ -22,5 +22,11 @@
   "roth-ira": { "term": "Roth IRA", "def": "A type of IRA where you pay taxes on the money now. Later, in retirement, you can usually take it out tax-free." },
   "secure-2": { "term": "SECURE 2.0", "def": "A 2022 U.S. law that changed retirement rules. One change: people 50 and older can save extra each year in 401(k)s and IRAs." },
   "single-stock": { "term": "Single stock", "def": "A small piece of one company. If that one company does badly, your money can drop a lot. That's why it's riskier than a fund." },
-  "social-security": { "term": "Social Security", "def": "Monthly money from the U.S. government after you retire, based on your work history. Waiting longer to start it usually means a bigger monthly check." }
+  "social-security": { "term": "Social Security", "def": "Monthly money from the U.S. government after you retire, based on your work history. Waiting longer to start it usually means a bigger monthly check." },
+  "share": { "term": "Share", "def": "One small piece of a company or fund. If you own 2 shares and the price goes up $1, your shares are worth $2 more." },
+  "ticker": { "term": "Ticker", "def": "A short code for a stock or fund, like AAPL for Apple. You use it to look up the price." },
+  "market-order": { "term": "Market order", "def": "An order to buy or sell right away at the current price, whatever it is at that moment." },
+  "apy": { "term": "APY", "def": "Annual Percentage Yield: how much a savings account pays in a year, as a percent. 4% APY on $1,000 is about $40 a year." },
+  "high-yield-savings": { "term": "High-yield savings", "def": "A savings account that pays much more interest than a regular one, often at an online bank or credit union. Look for FDIC or NCUA insurance." },
+  "profit-loss": { "term": "Profit or loss", "def": "How much more (profit) or less (loss) your investments are worth than what you paid. It is only real when you sell." }
 }

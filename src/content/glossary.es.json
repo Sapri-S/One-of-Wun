@@ -22,5 +22,11 @@
   "roth-ira": { "term": "Roth IRA", "def": "Un tipo de IRA en el que pagas impuestos sobre el dinero ahora. Después, en el retiro, normalmente puedes sacarlo sin pagar impuestos." },
   "secure-2": { "term": "SECURE 2.0", "def": "Una ley de EE. UU. de 2022 que cambió las reglas del retiro. Un cambio: las personas de 50 años o más pueden ahorrar más cada año en 401(k) e IRA." },
   "single-stock": { "term": "Acción individual", "def": "Un pedacito de una sola empresa. Si a esa empresa le va mal, tu dinero puede bajar mucho. Por eso es más arriesgado que un fondo." },
-  "social-security": { "term": "Seguro Social", "def": "Dinero mensual del gobierno de EE. UU. después de que te jubilas, según tu historial de trabajo. Esperar más para empezar a cobrarlo suele dar un cheque mensual más grande." }
+  "social-security": { "term": "Seguro Social", "def": "Dinero mensual del gobierno de EE. UU. después de que te jubilas, según tu historial de trabajo. Esperar más para empezar a cobrarlo suele dar un cheque mensual más grande." },
+  "share": { "term": "Acción", "def": "Un pedacito de una empresa o fondo. Si tienes 2 acciones y el precio sube $1, valen $2 más." },
+  "ticker": { "term": "Símbolo bursátil", "def": "Un código corto para una acción o fondo, como AAPL para Apple. Lo usas para buscar el precio." },
+  "market-order": { "term": "Orden de mercado", "def": "Una orden para comprar o vender en este momento al precio actual, sea cual sea." },
+  "apy": { "term": "APY (rendimiento anual)", "def": "Cuánto paga una cuenta de ahorro en un año, como porcentaje. Un 4% APY sobre $1,000 son unos $40 al año." },
+  "high-yield-savings": { "term": "Ahorro de alto rendimiento", "def": "Una cuenta de ahorro que paga mucho más interés que una normal, muchas veces en un banco en línea o cooperativa. Busca el seguro de la FDIC o la NCUA." },
+  "profit-loss": { "term": "Ganancia o pérdida", "def": "Cuánto más (ganancia) o menos (pérdida) valen tus inversiones que lo que pagaste. Solo es real cuando vendes." }
 }

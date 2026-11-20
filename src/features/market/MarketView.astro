@@ -1,0 +1,94 @@
+---
+/** /invest — mock market: real prices, play money (replaces /practice). */
+import BaseLayout from '../../components/BaseLayout.astro';
+import Section from '../../components/Section.astro';
+import OnThisPage from '../../components/OnThisPage.astro';
+import Button from '../../components/Button.astro';
+import Icon from '../../components/Icon.astro';
+import Term from '../../components/Term.astro';
+import MockMarket from './MockMarket.astro';
+import { t, tv, localizePath, type Lang } from '../../i18n/utils';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const drops = tv<{ title: string; body: string }[]>(lang, 'invest.drops');
+const how = tv<string[]>(lang, 'invest.how');
+---
+<BaseLayout title={t(lang, 'invest.meta.title')} description={t(lang, 'invest.meta.description')} lang={lang}>
+  <Section id="market" level={1} title={t(lang, 'invest.title')} badge="your-choice" intro={t(lang, 'invest.lead')}>
+    <div class="otp-wrap">
+      <OnThisPage items={[
+        { id: 'drops', label: t(lang, 'invest.dropsTitle') },
+        { id: 'how', label: t(lang, 'invest.howTitle') },
+      ]} />
+    </div>
+    <MockMarket lang={lang} />
+  </Section>
+
+  <Section id="drops" tone="sage" title={t(lang, 'invest.dropsTitle')} badge="education" intro={t(lang, 'invest.dropsIntro')}>
+    <ol class="drops">
+      {drops.map((d, i) => (
+        <li>
+          <span class="n" aria-hidden="true">{i + 1}</span>
+          <div>
+            <h3>{d.title}</h3>
+            <p>{d.body}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+    <p class="word">{t(lang, 'invest.wordToKnow')} <Term id="diversification">{t(lang, 'invest.diversification')}</Term>, <Term id="market-drop">{t(lang, 'invest.marketDrop')}</Term></p>
+  </Section>
+
+  <Section id="how" title={t(lang, 'invest.howTitle')} badge="education">
+    <ul class="how">
+      {how.map((h) => <li><span class="tick"><Icon name="check" size={18} /></span>{h}</li>)}
+    </ul>
+    <div class="actions">
+      <Button href={localizePath('/learn', lang)}>{t(lang, 'invest.toLearn')}</Button>
+      <Button href={localizePath('/#readiness', lang)} variant="quiet">{t(lang, 'invest.toReady')}</Button>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .otp-wrap { margin-bottom: var(--space-5); }
+  .drops { list-style: none; padding: 0; display: grid; gap: var(--space-4); }
+  @media (min-width: 900px) { .drops { grid-template-columns: 1fr 1fr; } }
+  .drops li {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+    max-width: none;
+    padding: var(--space-5);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  .n {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--surface-sage);
+    color: var(--primary);
+    font-weight: 700;
+  }
+  .drops h3 { font-size: var(--fs-body); }
+  .drops p { color: var(--ink-soft); margin-top: var(--space-1); }
+  .word { margin-top: var(--space-5); font-weight: 700; }
+  .how { list-style: none; padding: 0; display: grid; gap: var(--space-3); }
+  .how li { display: flex; gap: var(--space-3); align-items: flex-start; }
+  .tick {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--go-bg);
+    color: var(--go-ink);
+  }
+  .actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-6); }
+</style>

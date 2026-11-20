@@ -17,7 +17,10 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const req = event.request;
-  if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return;
+  const url = new URL(req.url);
+  if (req.method !== 'GET' || url.origin !== self.location.origin) return;
+  // Live prices (/api/*) always go straight to the network: never cached, never served offline.
+  if (url.pathname.startsWith('/api/')) return;
 
   // Pages: network first so content stays fresh, cache when offline.
   if (req.mode === 'navigate') {
