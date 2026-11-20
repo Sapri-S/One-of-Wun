@@ -46,7 +46,7 @@ function serviceWorker() {
 }
 
 export default defineConfig({
-  site: 'https://whereyouwanttobe.example',
+  site: 'https://one-of-wun-nu.vercel.app',
   output: 'static',
   trailingSlash: 'ignore',
   build: {

@@ -161,7 +161,7 @@ Motion: use `var(--dur)` and `var(--ease)`. `prefers-reduced-motion` is already 
 
 - Spanish copy needs native-speaker review.
 - The wealth-gap figures on `/about` ($332,000 vs $37,000, "2025") come from the PRD and **need a cited source** before launch.
-- `astro.config.mjs` → `site` is a placeholder (`whereyouwanttobe.example`). Set the real domain before deploying.
+- `astro.config.mjs` → `site` is now `https://one-of-wun-nu.vercel.app` (Vercel project `one-of-wun`, team `aggie-connect`, production branch `main`). Change it if a custom domain is added.
 - The Atkinson Hyperlegible font draws zero with a slash (`0`→`Ø`-like). That's deliberate for legibility; flag it if it reads oddly in money amounts.
 
 ---
