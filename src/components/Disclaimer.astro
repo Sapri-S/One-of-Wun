@@ -1,0 +1,29 @@
+---
+/**
+ * <Disclaimer variant="education" />   → "Education only — not financial advice."
+ * <Disclaimer variant="projection" />  → "Example, not a promise."  (required next to every projection)
+ */
+import Icon from './Icon.astro';
+import { getLang, t } from '../i18n/utils';
+interface Props { variant: 'education' | 'projection' }
+const { variant } = Astro.props;
+const lang = getLang(Astro.url);
+---
+<p class:list={['disclaimer', `disclaimer--${variant}`]}>
+  <Icon name="info" size={18} />
+  <span>{t(lang, `common.disclaimer.${variant}`)}</span>
+</p>
+
+<style>
+  .disclaimer {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    background: var(--surface-mist);
+    color: var(--ink);
+    font-size: var(--fs-small);
+    font-weight: 700;
+  }
+</style>

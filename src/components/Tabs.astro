@@ -1,0 +1,119 @@
+---
+/**
+ * Accessible tabs (WAI-ARIA, automatic activation). One named slot per tab id.
+ * The URL hash is the tab id, so "/your-path#catch-up" opens that tab in 1 click.
+ *
+ * <Tabs idPrefix="path" label="Life stages" tabs={[{ id: 'catch-up', label: '50+ Catch-up' }, { id: 'gig', label: 'Gig work' }]}>
+ *   <div slot="catch-up">…</div>
+ *   <div slot="gig">…</div>
+ * </Tabs>
+ */
+interface Props {
+  tabs: { id: string; label: string }[];
+  idPrefix: string;
+  /** Accessible name for the tab list. */
+  label?: string;
+}
+const { tabs, idPrefix, label } = Astro.props;
+const panels = await Promise.all(tabs.map((tab) => Astro.slots.render(tab.id)));
+---
+<div class="tabs" data-tabs>
+  <div class="tablist" role="tablist" aria-label={label}>
+    {tabs.map((tab, i) => (
+      <button
+        type="button"
+        role="tab"
+        class="tab"
+        id={`${idPrefix}-tab-${tab.id}`}
+        aria-controls={`${idPrefix}-panel-${tab.id}`}
+        aria-selected={i === 0 ? 'true' : 'false'}
+        tabindex={i === 0 ? 0 : -1}
+        data-tab-id={tab.id}
+      >{tab.label}</button>
+    ))}
+  </div>
+  {tabs.map((tab, i) => (
+    <div
+      role="tabpanel"
+      class="tabpanel"
+      id={`${idPrefix}-panel-${tab.id}`}
+      aria-labelledby={`${idPrefix}-tab-${tab.id}`}
+      tabindex="0"
+      hidden={i !== 0}
+      set:html={panels[i]}
+    />
+  ))}
+</div>
+
+<script>
+  function setup(root: HTMLElement) {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const select = (tab: HTMLButtonElement, focus = false, updateHash = false) => {
+      for (const t of tabs) {
+        const on = t === tab;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+        const panel = document.getElementById(t.getAttribute('aria-controls') || '');
+        if (panel) panel.hidden = !on;
+      }
+      if (focus) tab.focus();
+      if (updateHash) history.replaceState(null, '', `#${tab.dataset.tabId}`);
+    };
+    const fromHash = () => {
+      const id = decodeURIComponent(location.hash.slice(1));
+      const match = tabs.find((t) => t.dataset.tabId === id);
+      if (match) {
+        select(match);
+        root.scrollIntoView({ block: 'start' });
+      }
+    };
+    root.querySelector('[role="tablist"]')?.addEventListener('click', (e) => {
+      const tab = (e.target as HTMLElement).closest<HTMLButtonElement>('[role="tab"]');
+      if (tab) select(tab, false, true);
+    });
+    root.querySelector('[role="tablist"]')?.addEventListener('keydown', (e) => {
+      const ev = e as KeyboardEvent;
+      const i = tabs.indexOf(document.activeElement as HTMLButtonElement);
+      if (i < 0) return;
+      let next = -1;
+      if (ev.key === 'ArrowRight') next = (i + 1) % tabs.length;
+      else if (ev.key === 'ArrowLeft') next = (i - 1 + tabs.length) % tabs.length;
+      else if (ev.key === 'Home') next = 0;
+      else if (ev.key === 'End') next = tabs.length - 1;
+      if (next >= 0) {
+        ev.preventDefault();
+        select(tabs[next], true, true);
+      }
+    });
+    window.addEventListener('hashchange', fromHash);
+    fromHash();
+  }
+  document.querySelectorAll<HTMLElement>('[data-tabs]').forEach(setup);
+</script>
+
+<style is:global>
+  .tablist {
+    display: flex;
+    gap: var(--space-2);
+    overflow-x: auto;
+    padding: var(--space-1);
+    margin: calc(-1 * var(--space-1));
+    scrollbar-width: thin;
+  }
+  .tab {
+    flex: 0 0 auto;
+    min-height: var(--tap);
+    padding: 0 var(--space-5);
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink-soft);
+    font-weight: 700;
+    font-size: var(--fs-small);
+    transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  }
+  .tab:hover { border-color: var(--primary); color: var(--ink); }
+  .tab[aria-selected='true'] { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+  .tabpanel { margin-top: var(--space-5); }
+  .tabpanel:focus-visible { outline-offset: 6px; }
+</style>

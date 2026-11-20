@@ -1,0 +1,57 @@
+---
+/** Footer: all pages, glossary, about, privacy promise. Internal to BaseLayout. */
+import { t, localizePath, PAGES, type Lang } from '../i18n/utils';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+<footer class="site-footer">
+  <div class="container grid">
+    <div class="about">
+      <p class="name">{t(lang, 'common.siteName')}</p>
+      <p>{t(lang, 'common.footer.privacy')}</p>
+      <p>{t(lang, 'common.footer.nonCommercial')}</p>
+      <p class="disclaimer">{t(lang, 'common.disclaimer.education')}</p>
+    </div>
+    <nav aria-label={t(lang, 'common.footer.explore')}>
+      <ul>
+        {PAGES.map((p) => <li><a href={localizePath(p.path, lang)}>{t(lang, `common.nav.${p.key}`)}</a></li>)}
+        <li><a href={localizePath('/glossary', lang)}>{t(lang, 'common.footer.glossary')}</a></li>
+        <li><a href={localizePath('/about', lang)}>{t(lang, 'common.footer.about')}</a></li>
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-8);
+    padding-block: var(--space-7);
+    background: var(--surface-sage);
+    border-top: 1px solid var(--border);
+    color: var(--ink-soft);
+    font-size: var(--fs-small);
+  }
+  .grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+  .about > * + * { margin-top: var(--space-3); }
+  .name { color: var(--ink); font-weight: 700; font-size: var(--fs-body); }
+  .disclaimer { font-weight: 700; color: var(--ink); }
+  ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-1) var(--space-4);
+  }
+  a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap);
+    color: var(--ink);
+  }
+  @media (min-width: 768px) {
+    .grid { grid-template-columns: 3fr 2fr; align-items: start; }
+  }
+</style>

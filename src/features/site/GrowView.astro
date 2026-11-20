@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../components/BaseLayout.astro';
+import Section from '../../components/Section.astro';
+import OnThisPage from '../../components/OnThisPage.astro';
+import Button from '../../components/Button.astro';
+import KaizenCalculator from '../kaizen/KaizenCalculator.astro';
+import { t, tv, localizePath, type Lang } from '../../i18n/utils';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const why = tv<string[]>(lang, 'grow.why');
+---
+<BaseLayout title={t(lang, 'grow.meta.title')} description={t(lang, 'grow.meta.description')} lang={lang}>
+  <Section id="calculator" level={1} title={t(lang, 'grow.title')} badge="education" intro={t(lang, 'grow.lead')}>
+    <div class="otp-wrap">
+      <OnThisPage items={[
+        { id: 'generations', label: t(lang, 'grow.gensTitle') },
+        { id: 'why', label: t(lang, 'grow.whyTitle') },
+        { id: 'how', label: t(lang, 'grow.howTitle') },
+      ]} />
+    </div>
+    <KaizenCalculator lang={lang} />
+  </Section>
+
+  <Section id="why" tone="sage" title={t(lang, 'grow.whyTitle')} badge="your-choice">
+    <ul class="why">
+      {why.map((w) => <li>{w}</li>)}
+    </ul>
+    <div class="ready">
+      <p>{t(lang, 'grow.readyCheck')}</p>
+      <Button href={localizePath('/#readiness', lang)} variant="quiet">{t(lang, 'grow.readyCheckLink')}</Button>
+    </div>
+  </Section>
+
+  <Section id="how" title={t(lang, 'grow.howTitle')} badge="education">
+    <p>{t(lang, 'grow.how')}</p>
+    <p class="formula num" aria-hidden="true">weekly × 52 × ((1 + r)<sup>years</sup> − 1) ÷ r</p>
+  </Section>
+</BaseLayout>
+
+<style>
+  .otp-wrap { margin-bottom: var(--space-5); }
+  .why { display: grid; gap: var(--space-3); padding-left: 1.25em; }
+  .why li::marker { color: var(--primary); }
+  .ready {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-4);
+    margin-top: var(--space-6);
+    padding: var(--space-5);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  .ready p { font-weight: 700; flex: 1 1 260px; }
+  .formula {
+    display: inline-block;
+    margin-top: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-sm);
+    background: var(--surface-mist);
+    font-weight: 700;
+  }
+</style>

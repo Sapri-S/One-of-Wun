@@ -1,0 +1,277 @@
+---
+/**
+ * F2 — Ready-to-Invest check (FR-02). Three yes/no questions → Stop / Wait / Go.
+ * Answers live only in the page; nothing is stored.
+ */
+import Icon from '../../components/Icon.astro';
+import Term from '../../components/Term.astro';
+import { t, tv, localizePath, type Lang } from '../../i18n/utils';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const qs = tv<{ q: string; hint: string }[]>(lang, 'home.readiness.questions');
+// Order matches logic.ts fields.
+const fields = ['highInterestDebt', 'hasThousandSaved', 'billsCovered'] as const;
+
+const i18n = {
+  status: tv<Record<string, string>>(lang, 'common.status'),
+  results: tv<Record<string, string>>(lang, 'home.readiness.results'),
+  next: tv<Record<string, string>>(lang, 'home.readiness.nextLinks'),
+  pending: t(lang, 'home.readiness.pending'),
+  links: {
+    stop: localizePath('/help', lang),
+    wait: localizePath('/grow', lang),
+    go: localizePath('/learn', lang),
+  },
+};
+---
+<div class="readiness" data-readiness data-i18n={JSON.stringify(i18n)}>
+  <form class="questions" novalidate>
+    {qs.map((q, i) => (
+      <fieldset class="q">
+        <legend class="q-text">
+          <span class="q-num" aria-hidden="true">{i + 1}</span>
+          <span>
+            {i === 0 ? (
+              <Fragment>{q.q.split('APR')[0]}<Term id="apr">APR</Term>{q.q.split('APR')[1]}</Fragment>
+            ) : q.q}
+          </span>
+        </legend>
+        <p class="q-hint" id={`rq-hint-${i}`}>{q.hint}</p>
+        <div class="choices">
+          {(['yes', 'no'] as const).map((v) => (
+            <label class="choice">
+              <input type="radio" name={fields[i]} value={v} aria-describedby={`rq-hint-${i}`} />
+              <span>{t(lang, `home.readiness.${v}`)}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+    ))}
+  </form>
+
+  <div class="result" data-result data-state="pending" aria-live="polite" aria-atomic="true">
+    <p class="result-label">{t(lang, 'home.readiness.resultLabel')}</p>
+    <div class="light" aria-hidden="true">
+      <span class="lamp lamp--stop"></span>
+      <span class="lamp lamp--wait"></span>
+      <span class="lamp lamp--go"></span>
+    </div>
+    <p class="result-title" data-result-title>{i18n.pending}</p>
+    <p class="result-body" data-result-body hidden></p>
+    <a class="result-link" data-result-link href="#" hidden></a>
+    <button type="button" class="start-over" data-reset>
+      <Icon name="reset" size={20} />
+      {t(lang, 'home.readiness.startOver')}
+    </button>
+  </div>
+</div>
+
+<aside class="andon" aria-labelledby="andon-title">
+  <span class="andon-icon"><Icon name="pause" size={28} /></span>
+  <div>
+    <h3 id="andon-title">{t(lang, 'home.readiness.andon.title')}</h3>
+    <p>{t(lang, 'home.readiness.andon.body')}</p>
+  </div>
+</aside>
+
+<script>
+  import { evaluate, type Answers } from './logic';
+
+  document.querySelectorAll<HTMLElement>('[data-readiness]').forEach((root) => {
+    const i18n = JSON.parse(root.dataset.i18n || '{}');
+    const form = root.querySelector('form')!;
+    const box = root.querySelector<HTMLElement>('[data-result]')!;
+    const title = root.querySelector<HTMLElement>('[data-result-title]')!;
+    const body = root.querySelector<HTMLElement>('[data-result-body]')!;
+    const link = root.querySelector<HTMLAnchorElement>('[data-result-link]')!;
+
+    const read = (name: string): boolean | null => {
+      const v = (form.elements.namedItem(name) as RadioNodeList | null)?.value;
+      return v === 'yes' ? true : v === 'no' ? false : null;
+    };
+
+    function render() {
+      const answers: Answers = {
+        highInterestDebt: read('highInterestDebt'),
+        hasThousandSaved: read('hasThousandSaved'),
+        billsCovered: read('billsCovered'),
+      };
+      const r = evaluate(answers);
+      if (!r) {
+        box.dataset.state = 'pending';
+        title.textContent = i18n.pending;
+        body.hidden = true;
+        link.hidden = true;
+        return;
+      }
+      box.dataset.state = r.status;
+      title.textContent = i18n.status[r.status];
+      const key = r.status === 'stop' ? (r.reason === 'bills' ? 'stopBills' : 'stopDebt') : r.status;
+      body.textContent = i18n.results[key];
+      body.hidden = false;
+      link.textContent = i18n.next[r.status];
+      link.href = i18n.links[r.status];
+      link.hidden = false;
+    }
+
+    form.addEventListener('change', render);
+    form.addEventListener('submit', (e) => e.preventDefault());
+    root.querySelector('[data-reset]')!.addEventListener('click', () => {
+      form.reset();
+      render();
+      form.querySelector<HTMLInputElement>('input')?.focus();
+    });
+    render();
+  });
+</script>
+
+<style>
+  .readiness {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .questions { display: grid; gap: var(--space-4); }
+  .q {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    padding: var(--space-4) var(--space-5) var(--space-5);
+  }
+  .q-text {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    font-weight: 700;
+    font-size: var(--fs-body);
+    line-height: 1.4;
+    padding: 0;
+    float: left; /* lets the legend sit inside the padded box */
+    width: 100%;
+  }
+  .q-num {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--surface-sage);
+    color: var(--primary);
+    font-size: var(--fs-small);
+  }
+  .q-hint { clear: both; padding-top: var(--space-1); padding-left: 42px; color: var(--ink-muted); font-size: var(--fs-small); }
+  .choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+  }
+  .choice { position: relative; }
+  .choice input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+  }
+  .choice span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--border);
+    background: var(--bg);
+    font-weight: 700;
+    transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+  .choice:hover span { border-color: var(--primary); }
+  .choice input:checked + span { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+  .choice input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+  .result {
+    position: relative;
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    transition: background-color var(--dur) var(--ease);
+  }
+  .result[data-state='stop'] { background: var(--stop-bg); border-color: transparent; }
+  .result[data-state='wait'] { background: var(--wait-bg); border-color: transparent; }
+  .result[data-state='go'] { background: var(--go-bg); border-color: transparent; }
+  .result-label { font-size: var(--fs-small); color: var(--ink-muted); font-weight: 700; }
+  .result:not([data-state='pending']) .result-label { color: var(--ink); }
+
+  .light {
+    display: inline-flex;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    margin-block: var(--space-3);
+    border-radius: var(--radius-pill);
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .lamp {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: background-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  }
+  [data-state='stop'] .lamp--stop { background: var(--stop-ink); box-shadow: 0 0 0 4px color-mix(in srgb, var(--stop-ink) 20%, transparent); }
+  [data-state='wait'] .lamp--wait { background: var(--wait-ink); box-shadow: 0 0 0 4px color-mix(in srgb, var(--wait-ink) 20%, transparent); }
+  [data-state='go'] .lamp--go { background: var(--go-ink); box-shadow: 0 0 0 4px color-mix(in srgb, var(--go-ink) 20%, transparent); }
+
+  .result-title { font-size: var(--fs-h3); font-weight: 700; line-height: 1.25; }
+  .result[data-state='pending'] .result-title { font-size: var(--fs-body); font-weight: 400; color: var(--ink-soft); }
+  [data-state='stop'] .result-title { color: var(--stop-ink); }
+  [data-state='wait'] .result-title { color: var(--wait-ink); }
+  [data-state='go'] .result-title { color: var(--go-ink); }
+  .result-body { margin-top: var(--space-2); color: var(--ink); }
+  .result-link { display: inline-flex; align-items: center; min-height: var(--tap); margin-top: var(--space-2); font-weight: 700; }
+  .result-link[hidden] { display: none; }
+  .start-over {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--tap);
+    margin-top: var(--space-4);
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-weight: 700;
+    display: flex;
+  }
+
+  .andon {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+    margin-top: var(--space-5);
+    padding: var(--space-5);
+    border-radius: var(--radius);
+    background: var(--surface-mist);
+  }
+  .andon-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--accent);
+  }
+  .andon h3 { font-size: var(--fs-body); }
+  .andon p { margin-top: var(--space-1); color: var(--ink-soft); }
+
+  @media (min-width: 900px) {
+    .readiness { grid-template-columns: 3fr 2fr; align-items: start; }
+    .result { position: sticky; top: 96px; }
+  }
+</style>

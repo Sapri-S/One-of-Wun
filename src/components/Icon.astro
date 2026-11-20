@@ -1,0 +1,62 @@
+---
+/**
+ * Simple line icons (24×24, stroke = currentColor). Decorative by default (aria-hidden).
+ * Usage: <Icon name="check" size={20} />
+ */
+export type IconName =
+  | 'home' | 'sprout' | 'book' | 'practice' | 'route' | 'lifebuoy'
+  | 'external' | 'check' | 'pause' | 'hourglass' | 'info' | 'close' | 'flag'
+  | 'chevron-left' | 'chevron-right' | 'minus' | 'plus' | 'reset' | 'lock' | 'arrow-down'
+  | 'steps' | 'gate' | 'hand';
+
+interface Props {
+  name: IconName;
+  size?: number;
+  class?: string;
+}
+const { name, size = 24, class: cls } = Astro.props;
+
+const paths: Record<IconName, string> = {
+  home: '<path d="M4 11.5 12 5l8 6.5"/><path d="M6 10v9h12v-9"/><path d="M10 19v-5h4v5"/>',
+  sprout: '<path d="M12 20v-8"/><path d="M12 12c0-4 3-6 7-6 0 4-3 6-7 6Z"/><path d="M12 14c0-3-2.5-5-6-5 0 3 2.5 5 6 5Z"/>',
+  book: '<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v15H5.5A1.5 1.5 0 0 0 4 20.5Z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v15h5.5a1.5 1.5 0 0 1 1.5 1.5Z"/>',
+  practice: '<path d="M4 19h16"/><path d="m5 15 4-5 3 3 3-5 4 6"/>',
+  route: '<circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M8 18h7a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h7"/>',
+  lifebuoy: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.5"/><path d="m6.5 6.5 3 3M14.5 14.5l3 3M17.5 6.5l-3 3M9.5 14.5l-3 3"/>',
+  external: '<path d="M14 5h5v5"/><path d="M19 5 11 13"/><path d="M17 14v4a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h4"/>',
+  check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  pause: '<rect x="7" y="5" width="3.5" height="14" rx="1"/><rect x="13.5" y="5" width="3.5" height="14" rx="1"/>',
+  hourglass: '<path d="M7 4h10M7 20h10"/><path d="M8 4c0 4 8 4 8 8s-8 4-8 8"/><path d="M16 4c0 4-8 4-8 8s8 4 8 8"/>',
+  info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5"/><path d="M12 8h.01"/>',
+  close: '<path d="M6 6l12 12M18 6 6 18"/>',
+  flag: '<path d="M6 21V4"/><path d="M6 5h11l-2 3.5L17 12H6"/>',
+  'chevron-left': '<path d="m14.5 6-6 6 6 6"/>',
+  'chevron-right': '<path d="m9.5 6 6 6-6 6"/>',
+  minus: '<path d="M6 12h12"/>',
+  plus: '<path d="M12 6v12M6 12h12"/>',
+  reset: '<path d="M5 12a7 7 0 1 0 2-4.9"/><path d="M5 4v4h4"/>',
+  lock: '<rect x="6" y="11" width="12" height="9" rx="2"/><path d="M9 11V8a3 3 0 0 1 6 0v3"/>',
+  'arrow-down': '<path d="M12 5v14M6 13l6 6 6-6"/>',
+  steps: '<path d="M4 19h5v-5h5V9h6"/>',
+  gate: '<path d="M5 20V6M19 20V6"/><path d="M5 9h14M5 14h14"/>',
+  hand: '<path d="M8 13V6.5a1.5 1.5 0 0 1 3 0V12"/><path d="M11 11V5.5a1.5 1.5 0 0 1 3 0V12"/><path d="M14 11.5V7a1.5 1.5 0 0 1 3 0v7a6 6 0 0 1-6 6h-.5a5 5 0 0 1-4-2l-2.3-3a1.5 1.5 0 0 1 2.3-2L8 14"/>',
+};
+---
+<svg
+  class:list={['icon', cls]}
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+  set:html={paths[name]}
+/>
+
+<style>
+  .icon { flex-shrink: 0; }
+</style>

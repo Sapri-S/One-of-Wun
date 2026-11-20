@@ -1,0 +1,45 @@
+---
+/**
+ * Every content section uses this. `badge` is required (hard rule #2).
+ * <Section id="explorer" tone="sage" title="Three ways to invest" badge="education" intro="…">…</Section>
+ * Slot "aside" (optional) renders next to the heading on wide screens.
+ */
+import SafetyBadge, { type BadgeKind } from './SafetyBadge.astro';
+
+interface Props {
+  id: string;
+  tone?: 'bg' | 'sage' | 'mist';
+  title: string;
+  badge: BadgeKind;
+  intro?: string;
+  /** Heading level. Default 2. Use 1 only for the first section of a page that has no hero. */
+  level?: 1 | 2;
+}
+const { id, tone = 'bg', title, badge, intro, level = 2 } = Astro.props;
+const H = level === 1 ? 'h1' : 'h2';
+---
+<section id={id} class:list={['section', `tone-${tone}`]} aria-labelledby={`${id}-title`}>
+  <div class="container">
+    <header class="head">
+      <SafetyBadge kind={badge} />
+      <H id={`${id}-title`} class="title">{title}</H>
+      {intro && <p class="intro">{intro}</p>}
+    </header>
+    <div class="body">
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .section { padding-block: var(--space-7); }
+  .tone-sage { background: var(--surface-sage); }
+  .tone-mist { background: var(--surface-mist); }
+  .head { margin-bottom: var(--space-6); }
+  .head > * + * { margin-top: var(--space-3); }
+  .title { max-width: 28ch; }
+  .intro { color: var(--ink-soft); font-size: 1.1875rem; }
+  @media (min-width: 768px) {
+    .section { padding-block: var(--space-8); }
+  }
+</style>

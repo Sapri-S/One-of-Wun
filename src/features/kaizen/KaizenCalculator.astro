@@ -1,0 +1,329 @@
+---
+/**
+ * F4 — Kaizen Generational Calculator (FR-04, US-02). Client-side only; nothing stored.
+ * Server-renders the default state (works before JS), then updates live.
+ */
+import Icon from '../../components/Icon.astro';
+import Disclaimer from '../../components/Disclaimer.astro';
+import Term from '../../components/Term.astro';
+import { t, formatMoney, LOCALE, type Lang } from '../../i18n/utils';
+import { RATES, WEEKLY, YEARS, futureValue, totalContributed, generations } from './calc';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const w = WEEKLY.initial;
+const y = YEARS.initial;
+const put = totalContributed(w, y);
+const genRate = 0.06;
+const gens = generations(w, y, genRate);
+const i18n = {
+  locale: LOCALE[lang],
+  perWeek: t(lang, 'grow.perWeek'),
+  yearsUnit: t(lang, 'grow.yearsUnit'),
+  youWhen: t(lang, 'grow.gensWhen.you'),
+  chartPutIn: t(lang, 'grow.chartPutIn'),
+};
+---
+<div class="kaizen" data-kaizen data-i18n={JSON.stringify(i18n)}>
+  <div class="inputs">
+    <div class="field">
+      <label for="kz-weekly" class="field-label">{t(lang, 'grow.weekly')}</label>
+      <p class="field-value num" aria-hidden="true"><span data-out="weekly">{formatMoney(w, lang)}</span> <span class="unit">{t(lang, 'grow.perWeek')}</span></p>
+      <div class="slider-row">
+        <button type="button" class="step-btn" data-step="weekly" data-dir="-1" aria-label={`${t(lang, 'grow.less')}: ${t(lang, 'grow.weekly')}`}><Icon name="minus" /></button>
+        <input id="kz-weekly" type="range" min={WEEKLY.min} max={WEEKLY.max} step={WEEKLY.step} value={w}
+          aria-valuetext={`${formatMoney(w, lang)} ${t(lang, 'grow.perWeek')}`} data-input="weekly" />
+        <button type="button" class="step-btn" data-step="weekly" data-dir="1" aria-label={`${t(lang, 'grow.more')}: ${t(lang, 'grow.weekly')}`}><Icon name="plus" /></button>
+      </div>
+      <p class="range-ends num" aria-hidden="true"><span>{formatMoney(WEEKLY.min, lang)}</span><span>{formatMoney(WEEKLY.max, lang)}</span></p>
+    </div>
+
+    <div class="field">
+      <label for="kz-years" class="field-label">{t(lang, 'grow.years')}</label>
+      <p class="field-value num" aria-hidden="true"><span data-out="years">{y}</span> <span class="unit">{t(lang, 'grow.yearsUnit')}</span></p>
+      <div class="slider-row">
+        <button type="button" class="step-btn" data-step="years" data-dir="-1" aria-label={`${t(lang, 'grow.less')}: ${t(lang, 'grow.years')}`}><Icon name="minus" /></button>
+        <input id="kz-years" type="range" min={YEARS.min} max={YEARS.max} step={YEARS.step} value={y}
+          aria-valuetext={`${y} ${t(lang, 'grow.yearsUnit')}`} data-input="years" />
+        <button type="button" class="step-btn" data-step="years" data-dir="1" aria-label={`${t(lang, 'grow.more')}: ${t(lang, 'grow.years')}`}><Icon name="plus" /></button>
+      </div>
+      <p class="range-ends num" aria-hidden="true"><span>{YEARS.min}</span><span>{YEARS.max}</span></p>
+    </div>
+  </div>
+
+  <div class="results" aria-live="polite">
+    <h2 class="results-title">{t(lang, 'grow.resultsTitle')}</h2>
+    <ul class="rate-cards">
+      {RATES.map((r) => (
+        <li class:list={['rate-card', { 'is-mid': r === 0.06 }]}>
+          <p class="rate-label">{t(lang, 'grow.rateCard', { rate: Math.round(r * 100) })}</p>
+          <p class="rate-value num" data-out={`fv-${r}`}>{formatMoney(futureValue(w, y, r), lang)}</p>
+        </li>
+      ))}
+    </ul>
+    <p class="put-in">
+      <span>{t(lang, 'grow.putIn')}:</span> <strong class="num" data-out="put">{formatMoney(put, lang)}</strong>
+    </p>
+    <Disclaimer variant="projection" />
+  </div>
+
+  <figure class="chart">
+    <figcaption>
+      <span class="chart-title">{t(lang, 'grow.chartTitle')}</span>
+      <span class="legend" aria-hidden="true">
+        <span class="lg lg-8">8%</span><span class="lg lg-6">6%</span><span class="lg lg-4">4%</span><span class="lg lg-put">{t(lang, 'grow.chartPutIn')}</span>
+      </span>
+    </figcaption>
+    <svg viewBox="0 0 640 260" role="img" aria-labelledby="kz-chart-desc" preserveAspectRatio="none" data-chart>
+      <desc id="kz-chart-desc">{t(lang, 'grow.chartDesc')}</desc>
+      <g class="grid" data-grid></g>
+      <path class="line line-put" data-line="put" d="" />
+      <path class="line line-4" data-line="0.04" d="" />
+      <path class="line line-6" data-line="0.06" d="" />
+      <path class="line line-8" data-line="0.08" d="" />
+    </svg>
+    <p class="axis num" aria-hidden="true"><span>0</span><span data-out="axis-end">{y} {t(lang, 'grow.yearsUnit')}</span></p>
+  </figure>
+
+  <div class="gens" id="generations">
+    <h2 class="gens-title">{t(lang, 'grow.gensTitle')}</h2>
+    <p class="gens-intro">{t(lang, 'grow.gensIntro')}</p>
+    <div class="gen-rate" role="group" aria-label={t(lang, 'grow.rateToggle')}>
+      <span class="gen-rate-label" aria-hidden="true">{t(lang, 'grow.rateToggle')}</span>
+      {RATES.map((r) => (
+        <button type="button" class="rate-btn" data-gen-rate={r} aria-pressed={r === genRate ? 'true' : 'false'}>{Math.round(r * 100)}%</button>
+      ))}
+    </div>
+    <ol class="gen-list">
+      {(['you', 'kids', 'grandkids'] as const).map((g) => (
+        <li class:list={['gen', `gen--${g}`]}>
+          <span class="gen-bar" aria-hidden="true"><span class="gen-fill" data-gen-fill={g}></span></span>
+          <span class="gen-who">{t(lang, `grow.gens.${g}`)}</span>
+          <span class="gen-when" data-out={g === 'you' ? 'you-when' : undefined}>{t(lang, `grow.gensWhen.${g}`, { years: y })}</span>
+          <span class="gen-value num" data-out={`gen-${g}`}>{formatMoney(gens[g], lang)}</span>
+        </li>
+      ))}
+    </ol>
+    <Disclaimer variant="projection" />
+    <p class="inflation"><Icon name="info" size={18} /> <span>{t(lang, 'grow.inflation')}</span></p>
+    <p class="terms-line">
+      <Term id="compound-growth">{lang === 'es' ? 'Crecimiento compuesto' : 'Compound growth'}</Term>
+      <Term id="kaizen">Kaizen</Term>
+    </p>
+  </div>
+</div>
+
+<script>
+  import { RATES, WEEKLY, YEARS, futureValue, totalContributed, yearlySeries, generations, clamp } from './calc';
+
+  document.querySelectorAll<HTMLElement>('[data-kaizen]').forEach((root) => {
+    const i18n = JSON.parse(root.dataset.i18n || '{}');
+    const money = new Intl.NumberFormat(i18n.locale, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+    const fmt = (n: number) => money.format(Math.round(n));
+    const $ = <T extends Element>(sel: string) => root.querySelector<T>(sel)!;
+    const weeklyIn = $<HTMLInputElement>('[data-input="weekly"]');
+    const yearsIn = $<HTMLInputElement>('[data-input="years"]');
+    const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`);
+    let genRate = 0.06;
+
+    const W = 640, H = 260, PAD = 8;
+
+    function drawChart(weekly: number, years: number) {
+      const series = RATES.map((r) => yearlySeries(weekly, years, r));
+      const max = Math.max(...series[2]);
+      const x = (i: number) => PAD + (i / years) * (W - PAD * 2);
+      const y = (v: number) => H - PAD - (v / max) * (H - PAD * 2);
+      const path = (vals: number[]) => vals.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join('');
+      RATES.forEach((r, k) => root.querySelector(`[data-line="${r}"]`)!.setAttribute('d', path(series[k])));
+      const put: number[] = [];
+      for (let i = 0; i <= years; i++) put.push(totalContributed(weekly, i));
+      root.querySelector('[data-line="put"]')!.setAttribute('d', path(put));
+      const grid = root.querySelector('[data-grid]')!;
+      grid.innerHTML = [0.25, 0.5, 0.75].map((f) => `<line x1="0" x2="${W}" y1="${(H * f).toFixed(1)}" y2="${(H * f).toFixed(1)}"/>`).join('');
+    }
+
+    function update() {
+      const weekly = clamp(Number(weeklyIn.value), WEEKLY.min, WEEKLY.max, WEEKLY.step);
+      const years = clamp(Number(yearsIn.value), YEARS.min, YEARS.max, YEARS.step);
+      weeklyIn.setAttribute('aria-valuetext', `${fmt(weekly)} ${i18n.perWeek}`);
+      yearsIn.setAttribute('aria-valuetext', `${years} ${i18n.yearsUnit}`);
+      out('weekly')!.textContent = fmt(weekly);
+      out('years')!.textContent = String(years);
+      out('axis-end')!.textContent = `${years} ${i18n.yearsUnit}`;
+      out('put')!.textContent = fmt(totalContributed(weekly, years));
+      for (const r of RATES) out(`fv-${r}`)!.textContent = fmt(futureValue(weekly, years, r));
+      out('you-when')!.textContent = i18n.youWhen.replace('{years}', String(years));
+      const g = generations(weekly, years, genRate);
+      out('gen-you')!.textContent = fmt(g.you);
+      out('gen-kids')!.textContent = fmt(g.kids);
+      out('gen-grandkids')!.textContent = fmt(g.grandkids);
+      // Honest linear bars (relative to grandkids), with a sliver minimum so "You" stays visible.
+      const scale = (v: number) => Math.max(2, (v / g.grandkids) * 100);
+      (['you', 'kids', 'grandkids'] as const).forEach((k) => {
+        root.querySelector<HTMLElement>(`[data-gen-fill="${k}"]`)!.style.width = `${scale(g[k]).toFixed(1)}%`;
+      });
+      drawChart(weekly, years);
+    }
+
+    root.addEventListener('input', (e) => {
+      if ((e.target as HTMLElement).matches('[data-input]')) update();
+    });
+    root.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const stepBtn = target.closest<HTMLButtonElement>('[data-step]');
+      if (stepBtn) {
+        const input = stepBtn.dataset.step === 'weekly' ? weeklyIn : yearsIn;
+        const cfg = stepBtn.dataset.step === 'weekly' ? WEEKLY : YEARS;
+        input.value = String(clamp(Number(input.value) + Number(stepBtn.dataset.dir) * cfg.step, cfg.min, cfg.max, cfg.step));
+        update();
+        return;
+      }
+      const rateBtn = target.closest<HTMLButtonElement>('[data-gen-rate]');
+      if (rateBtn) {
+        genRate = Number(rateBtn.dataset.genRate);
+        root.querySelectorAll('[data-gen-rate]').forEach((b) => b.setAttribute('aria-pressed', String(b === rateBtn)));
+        update();
+      }
+    });
+    update();
+  });
+</script>
+
+<style>
+  .kaizen {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .inputs, .results, .chart, .gens {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+  }
+  .inputs { display: grid; gap: var(--space-6); box-shadow: var(--shadow); }
+  .field-label { display: block; font-weight: 700; }
+  .field-value { font-size: var(--fs-num); font-weight: 700; color: var(--primary); line-height: 1.2; margin-top: var(--space-1); }
+  .unit { font-size: var(--fs-body); color: var(--ink-soft); font-weight: 400; }
+  .slider-row { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-3); }
+  .step-btn {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: var(--tap);
+    height: var(--tap);
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface-sage);
+    color: var(--ink);
+  }
+  .step-btn:hover { border-color: var(--primary); }
+  .range-ends { display: flex; justify-content: space-between; padding-inline: 60px; color: var(--ink-muted); font-size: var(--fs-small); }
+
+  input[type='range'] {
+    flex: 1;
+    min-width: 0;
+    height: var(--tap);
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+  }
+  input[type='range']::-webkit-slider-runnable-track { height: 8px; border-radius: 4px; background: var(--surface-sage); border: 1px solid var(--border); }
+  input[type='range']::-moz-range-track { height: 8px; border-radius: 4px; background: var(--surface-sage); border: 1px solid var(--border); }
+  input[type='range']::-webkit-slider-thumb {
+    appearance: none;
+    width: 28px; height: 28px;
+    margin-top: -11px;
+    border-radius: 50%;
+    background: var(--primary);
+    border: 3px solid var(--surface);
+    box-shadow: 0 1px 4px rgb(34 48 43 / 0.3);
+  }
+  input[type='range']::-moz-range-thumb {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--primary);
+    border: 3px solid var(--surface);
+    box-shadow: 0 1px 4px rgb(34 48 43 / 0.3);
+  }
+  input[type='range']:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 8px; }
+
+  .results-title { font-size: var(--fs-body); }
+  .rate-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--space-3);
+    list-style: none;
+    padding: 0;
+    margin-top: var(--space-3);
+  }
+  .rate-card {
+    padding: var(--space-4);
+    border-radius: var(--radius);
+    background: var(--bg);
+    border: 1px solid var(--border);
+  }
+  .rate-card.is-mid { background: var(--surface-sage); border-color: var(--primary); }
+  .rate-label { font-size: var(--fs-small); color: var(--ink-soft); }
+  .rate-value { font-size: var(--fs-num); font-weight: 700; line-height: 1.2; color: var(--ink); }
+  .put-in { margin-block: var(--space-4); color: var(--ink-soft); }
+  .put-in strong { color: var(--ink); }
+
+  .chart figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-2) var(--space-4); margin-bottom: var(--space-3); }
+  .chart-title { font-weight: 700; }
+  .legend { display: flex; flex-wrap: wrap; gap: var(--space-3); font-size: var(--fs-small); color: var(--ink-soft); }
+  .lg { display: inline-flex; align-items: center; gap: 6px; }
+  .lg::before { content: ''; width: 18px; height: 4px; border-radius: 2px; background: currentColor; }
+  .lg-8::before { background: var(--primary); }
+  .lg-6::before { background: var(--accent); }
+  .lg-4::before { background: var(--path); }
+  .lg-put::before { background: var(--ink-muted); height: 2px; }
+  svg { width: 100%; height: 220px; overflow: visible; }
+  .line { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+  .line-8 { stroke: var(--primary); }
+  .line-6 { stroke: var(--accent); }
+  .line-4 { stroke: var(--path); }
+  .line-put { stroke: var(--ink-muted); stroke-width: 2; stroke-dasharray: 6 6; }
+  .grid :global(line) { stroke: var(--border); stroke-width: 1; vector-effect: non-scaling-stroke; }
+  .axis { display: flex; justify-content: space-between; color: var(--ink-muted); font-size: var(--fs-small); margin-top: var(--space-2); }
+
+  .gens { background: var(--surface-sage); border-color: transparent; }
+  .gens > * + * { margin-top: var(--space-4); }
+  .gens-title { font-size: var(--fs-h3); }
+  .gens-intro { color: var(--ink-soft); }
+  .gen-rate { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+  .gen-rate-label { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 700; margin-right: var(--space-2); }
+  .rate-btn {
+    min-height: 44px;
+    min-width: 64px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-weight: 700;
+  }
+  .rate-btn[aria-pressed='true'] { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+  .gen-list { list-style: none; padding: 0; display: grid; gap: var(--space-3); }
+  .gen {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas: 'who value' 'when value' 'bar bar';
+    gap: 2px var(--space-3);
+    padding: var(--space-4);
+    background: var(--surface);
+    border-radius: var(--radius);
+    max-width: none;
+  }
+  .gen-who { grid-area: who; font-weight: 700; }
+  .gen-when { grid-area: when; font-size: var(--fs-small); color: var(--ink-muted); }
+  .gen-value { grid-area: value; align-self: center; font-size: var(--fs-h3); font-weight: 700; color: var(--primary); }
+  .gen-bar { grid-area: bar; height: 8px; margin-top: var(--space-2); border-radius: 4px; background: var(--surface-sage); overflow: hidden; }
+  .gen-fill { display: block; height: 100%; width: 10%; border-radius: 4px; background: var(--primary); transition: width var(--dur) var(--ease); }
+  .inflation { display: flex; gap: var(--space-2); align-items: flex-start; color: var(--ink-soft); font-size: var(--fs-small); }
+  .inflation :global(svg) { width: 18px; height: 18px; margin-top: 3px; }
+  .terms-line { display: flex; gap: var(--space-5); flex-wrap: wrap; font-size: var(--fs-small); }
+
+  @media (min-width: 900px) {
+    .kaizen { grid-template-columns: 5fr 7fr; align-items: start; }
+    .inputs { grid-row: span 2; position: sticky; top: 96px; }
+    .gens { grid-column: 1 / -1; }
+  }
+</style>

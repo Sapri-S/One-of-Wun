@@ -1,0 +1,359 @@
+---
+/**
+ * F1 — 8-milestone roadmap with "Not ready yet / Ready" demo switch (FR-01, US-01).
+ * All data is synthetic. Nothing is stored.
+ */
+import Icon from '../../components/Icon.astro';
+import StatusPill from '../../components/StatusPill.astro';
+import Term from '../../components/Term.astro';
+import { t, tv, type Lang } from '../../i18n/utils';
+import { PROFILES, stepState, type ProfileId } from './profiles';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const milestones = tv<{ title: string; body: string }[]>(lang, 'home.roadmap.milestones');
+const initial: ProfileId = 'notReady';
+const p = PROFILES[initial];
+const stateLabel = (s: string) => t(lang, `home.roadmap.stateLabels.${s}`);
+
+// Strings the script needs, passed as data (no inline scripts allowed by CSP).
+const i18n = {
+  states: tv<Record<string, string>>(lang, 'home.roadmap.stateLabels'),
+  status: tv<Record<string, string>>(lang, 'common.status'),
+  explain: tv<Record<string, string>>(lang, 'home.roadmap.explain'),
+  summary: {
+    notReady: t(lang, 'home.roadmap.profiles.notReady.summary'),
+    ready: t(lang, 'home.roadmap.profiles.ready.summary'),
+  },
+};
+---
+<div class="roadmap" data-roadmap data-i18n={JSON.stringify(i18n)} data-profiles={JSON.stringify(PROFILES)} data-profile={initial}>
+  <div class="controls">
+    <p class="toggle-label" id="rm-toggle-label">{t(lang, 'home.roadmap.toggleLabel')}</p>
+    <div class="segmented" role="group" aria-labelledby="rm-toggle-label">
+      {(['notReady', 'ready'] as const).map((id) => (
+        <button type="button" class="seg" data-profile-btn={id} aria-pressed={id === initial ? 'true' : 'false'}>
+          {t(lang, `home.roadmap.profiles.${id}.label`)}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div class="summary-row" aria-live="polite">
+    <StatusPill status={p.status} label={t(lang, `common.status.${p.status}`)} id="rm-status" />
+    <p class="summary" data-summary>{t(lang, `home.roadmap.profiles.${initial}.summary`)}</p>
+  </div>
+
+  <div class="path-wrap">
+    <button type="button" class="scroll-btn scroll-prev" data-scroll="-1" aria-label={t(lang, 'home.roadmap.scrollPrev')}>
+      <Icon name="chevron-left" />
+    </button>
+    <div class="path-scroller" data-scroller>
+      <ol class="path" aria-label={t(lang, 'home.roadmap.pathLabel')}>
+        {milestones.map((m, i) => {
+          const s = stepState(p, i);
+          return (
+            <li class:list={['stop', `is-${s}`]} data-step={i}>
+              <button type="button" class="stop-btn" data-step-btn={i} aria-controls="rm-detail" aria-current={s === 'current' ? 'step' : undefined}>
+                <span class="dot" aria-hidden="true">
+                  <span class="dot-num">{i + 1}</span>
+                  <span class="dot-icon dot-icon--done"><Icon name="check" size={20} /></span>
+                  <span class="dot-icon dot-icon--gated"><Icon name="lock" size={18} /></span>
+                </span>
+                <span class="stop-text">
+                  <span class="stop-title">{m.title}</span>
+                  <span class="stop-state" data-state-label>{stateLabel(s)}</span>
+                </span>
+              </button>
+            </li>
+          );
+        })}
+        <li class="stop is-finish" aria-hidden="true">
+          <span class="dot"><Icon name="flag" size={20} /></span>
+          <span class="stop-text"><span class="stop-title">{t(lang, 'home.roadmap.finish')}</span></span>
+        </li>
+      </ol>
+    </div>
+    <button type="button" class="scroll-btn scroll-next" data-scroll="1" aria-label={t(lang, 'home.roadmap.scrollNext')}>
+      <Icon name="chevron-right" />
+    </button>
+  </div>
+
+  <div class="detail" id="rm-detail" aria-live="polite">
+    <p class="detail-hint" data-detail-hint>{t(lang, 'home.roadmap.detailHint')}</p>
+    {milestones.map((m, i) => (
+      <div class="detail-item" data-detail={i} hidden={i !== p.current}>
+        <p class="detail-kicker">{t(lang, 'home.roadmap.stepWord')} {i + 1} {t(lang, 'home.roadmap.ofWord')} 8</p>
+        <h3 class="detail-title">{m.title}</h3>
+        <p>{m.body}</p>
+      </div>
+    ))}
+  </div>
+
+  <div class="explain" data-explain-box>
+    <p data-explain>{t(lang, `home.roadmap.explain.${initial}`)}</p>
+    <p class="explain-terms">
+      <Term id="apr">APR</Term>
+      <Term id="emergency-fund">{lang === 'es' ? 'Fondo de emergencia' : 'Emergency fund'}</Term>
+      <Term id="401k-match">{lang === 'es' ? 'Aportación 401(k)' : '401(k) match'}</Term>
+      <Term id="jidoka">Jidoka</Term>
+    </p>
+  </div>
+</div>
+
+<script>
+  import { PROFILES, stepState, type ProfileId } from './profiles';
+
+  document.querySelectorAll<HTMLElement>('[data-roadmap]').forEach((root) => {
+    const i18n = JSON.parse(root.dataset.i18n || '{}');
+    const stops = Array.from(root.querySelectorAll<HTMLLIElement>('li[data-step]'));
+    const details = Array.from(root.querySelectorAll<HTMLElement>('[data-detail]'));
+    const scroller = root.querySelector<HTMLElement>('[data-scroller]')!;
+    const status = root.querySelector<HTMLElement>('#rm-status')!;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function showDetail(i: number) {
+      details.forEach((d, j) => (d.hidden = j !== i));
+      stops.forEach((s, j) => s.classList.toggle('is-selected', j === i));
+    }
+
+    function centerStop(i: number) {
+      const el = stops[i];
+      if (!el) return;
+      const left = el.offsetLeft - scroller.clientWidth / 2 + el.clientWidth / 2;
+      scroller.scrollTo({ left: Math.max(0, left), behavior: reduce ? 'auto' : 'smooth' });
+    }
+
+    function setProfile(id: ProfileId, center = true) {
+      const p = PROFILES[id];
+      root.dataset.profile = id;
+      root.querySelectorAll<HTMLButtonElement>('[data-profile-btn]').forEach((b) =>
+        b.setAttribute('aria-pressed', String(b.dataset.profileBtn === id)),
+      );
+      stops.forEach((li, i) => {
+        const s = stepState(p, i);
+        li.className = `stop is-${s}`;
+        li.querySelector('[data-state-label]')!.textContent = i18n.states[s];
+        const btn = li.querySelector('button')!;
+        if (s === 'current') btn.setAttribute('aria-current', 'step');
+        else btn.removeAttribute('aria-current');
+      });
+      status.className = `status status--${p.status}`;
+      status.dataset.status = p.status;
+      status.querySelector('.status-label')!.textContent = i18n.status[p.status];
+      root.querySelector('[data-summary]')!.textContent = i18n.summary[id];
+      root.querySelector('[data-explain]')!.textContent = i18n.explain[id];
+      showDetail(p.current);
+      if (center) centerStop(p.current);
+    }
+
+    root.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const pb = target.closest<HTMLButtonElement>('[data-profile-btn]');
+      if (pb) return setProfile(pb.dataset.profileBtn as ProfileId);
+      const sb = target.closest<HTMLButtonElement>('[data-step-btn]');
+      if (sb) return showDetail(Number(sb.dataset.stepBtn));
+      const sc = target.closest<HTMLButtonElement>('[data-scroll]');
+      if (sc) scroller.scrollBy({ left: Number(sc.dataset.scroll) * scroller.clientWidth * 0.8, behavior: reduce ? 'auto' : 'smooth' });
+    });
+
+    // Arrow keys move between steps.
+    root.querySelector('.path')!.addEventListener('keydown', (e) => {
+      const ev = e as KeyboardEvent;
+      const btns = stops.map((s) => s.querySelector('button')!);
+      const i = btns.indexOf(document.activeElement as HTMLButtonElement);
+      if (i < 0) return;
+      const next = ev.key === 'ArrowRight' || ev.key === 'ArrowDown' ? i + 1 : ev.key === 'ArrowLeft' || ev.key === 'ArrowUp' ? i - 1 : -2;
+      if (next >= 0 && next < btns.length) {
+        ev.preventDefault();
+        btns[next].focus();
+        showDetail(next);
+      }
+    });
+
+    setProfile(root.dataset.profile as ProfileId, false);
+    // Start with "You are here" in view without animating the page.
+    requestAnimationFrame(() => {
+      const el = stops[PROFILES[root.dataset.profile as ProfileId].current];
+      if (el) scroller.scrollLeft = Math.max(0, el.offsetLeft - scroller.clientWidth / 2 + el.clientWidth / 2);
+    });
+  });
+</script>
+
+<style>
+  .roadmap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    padding: var(--space-5);
+  }
+  .controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-4); }
+  .toggle-label { font-weight: 700; color: var(--ink-soft); font-size: var(--fs-small); }
+  .segmented {
+    display: inline-grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    padding: 4px;
+    background: var(--surface-sage);
+    border-radius: var(--radius-pill);
+  }
+  .seg {
+    min-height: 44px;
+    padding: 0 var(--space-5);
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--ink-soft);
+    font-weight: 700;
+    transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  }
+  .seg[aria-pressed='true'] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgb(34 48 43 / 0.15); }
+
+  .summary-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-4);
+    margin-top: var(--space-5);
+  }
+  .summary { color: var(--ink-soft); font-size: var(--fs-small); flex: 1 1 260px; }
+
+  /* The path */
+  .path-wrap { position: relative; margin-top: var(--space-5); }
+  .path-scroller {
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    padding: var(--space-2) 0 var(--space-3);
+    mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  }
+  .path-scroller::-webkit-scrollbar { display: none; }
+  .path {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 148px;
+    list-style: none;
+    padding: 0 var(--space-5);
+    position: relative;
+  }
+  .stop { position: relative; scroll-snap-align: center; max-width: none; }
+  /* trail line between dots */
+  .stop::before {
+    content: '';
+    position: absolute;
+    top: 27px;
+    left: -50%;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: repeating-linear-gradient(to right, var(--path) 0 10px, transparent 10px 16px);
+    z-index: 0;
+  }
+  .stop:first-child::before { display: none; }
+  .stop.is-done::before, .stop.is-current::before { background: var(--primary); }
+
+  .stop-btn {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    width: 100%;
+    padding: 0 var(--space-2) var(--space-2);
+    border: 0;
+    background: none;
+    text-align: center;
+    border-radius: var(--radius);
+  }
+  .dot {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    border: 3px solid var(--path);
+    background: var(--surface);
+    color: var(--ink-soft);
+    font-weight: 700;
+    font-size: 1.125rem;
+    transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+  }
+  .dot-icon { display: none; }
+  .is-done .dot { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+  .is-done .dot-num, .is-gated .dot-num { display: none; }
+  .is-done .dot-icon--done, .is-gated .dot-icon--gated { display: block; }
+  .is-current .dot {
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: scale(1.12);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--primary) 18%, transparent);
+  }
+  .is-gated .dot { border-style: dashed; color: var(--ink-muted); background: var(--bg); }
+  .is-open .dot { border-color: var(--go-ink); color: var(--go-ink); }
+  .is-finish .dot { border-color: var(--primary); background: var(--surface-sage); color: var(--primary); margin-inline: auto; }
+  .is-finish { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); }
+
+  .stop-text { display: flex; flex-direction: column; gap: 2px; }
+  .stop-title { font-weight: 700; font-size: var(--fs-small); line-height: 1.3; color: var(--ink); }
+  .stop-state { font-size: 0.9375rem; color: var(--ink-muted); }
+  .is-current .stop-state { color: var(--primary); font-weight: 700; }
+  .is-gated .stop-state { color: var(--stop-ink); }
+  .is-finish .stop-title { color: var(--primary); }
+  .is-selected .stop-btn { background: var(--surface-sage); }
+  .stop-btn:hover .dot { border-color: var(--primary); }
+
+  .scroll-btn {
+    position: absolute;
+    top: 8px;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: var(--tap);
+    height: var(--tap);
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: var(--shadow);
+  }
+  .scroll-prev { left: -8px; }
+  .scroll-next { right: -8px; }
+
+  .detail {
+    margin-top: var(--space-4);
+    padding: var(--space-5);
+    border-radius: var(--radius);
+    background: var(--surface-sage);
+  }
+  .detail-hint { font-size: var(--fs-small); color: var(--ink-muted); margin-bottom: var(--space-2); }
+  .detail-kicker { font-size: var(--fs-small); color: var(--ink-muted); font-weight: 700; }
+  .detail-title { margin-block: var(--space-1) var(--space-2); }
+  .detail-item:not([hidden]) { animation: fade var(--dur) var(--ease); }
+
+  .explain {
+    margin-top: var(--space-4);
+    padding-left: var(--space-4);
+    border-left: 4px solid var(--path);
+  }
+  [data-profile='notReady'] .explain { border-left-color: var(--stop-ink); }
+  [data-profile='ready'] .explain { border-left-color: var(--go-ink); }
+  .explain-terms {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-5);
+    margin-top: var(--space-3);
+    font-size: var(--fs-small);
+  }
+  .explain-terms :global(.term) { min-height: 44px; }
+
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+  @media (min-width: 1100px) {
+    .path { grid-auto-columns: 1fr; padding: 0; }
+    .path-scroller { mask-image: none; overflow: visible; }
+    .scroll-btn { display: none; }
+  }
+</style>

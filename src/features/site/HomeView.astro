@@ -1,0 +1,156 @@
+---
+import BaseLayout from '../../components/BaseLayout.astro';
+import Section from '../../components/Section.astro';
+import Card from '../../components/Card.astro';
+import Button from '../../components/Button.astro';
+import Icon from '../../components/Icon.astro';
+import Term from '../../components/Term.astro';
+import Disclaimer from '../../components/Disclaimer.astro';
+import SafetyBadge from '../../components/SafetyBadge.astro';
+import Roadmap from '../roadmap/Roadmap.astro';
+import ReadinessCheck from '../readiness/ReadinessCheck.astro';
+import { t, tv, localizePath, type Lang } from '../../i18n/utils';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const toyota = tv<{ name: string; plain: string; body: string }[]>(lang, 'home.toyota.cards');
+const toyotaIcons = ['steps', 'gate', 'pause'] as const;
+const toyotaTerms = ['kaizen', 'jidoka', 'andon'];
+const tiles = [
+  { key: 'readiness', href: '#readiness', icon: 'gate' },
+  { key: 'grow', href: localizePath('/grow', lang), icon: 'sprout' },
+  { key: 'learn', href: localizePath('/learn', lang), icon: 'book' },
+  { key: 'practice', href: localizePath('/practice', lang), icon: 'practice' },
+  { key: 'path', href: localizePath('/your-path', lang), icon: 'route' },
+  { key: 'help', href: localizePath('/help', lang), icon: 'lifebuoy' },
+] as const;
+---
+<BaseLayout title={t(lang, 'home.meta.title')} description={t(lang, 'home.meta.description')} lang={lang}>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container">
+      <div class="hero-text">
+        <h1 id="hero-title">{t(lang, 'home.hero.title')}</h1>
+        <p class="lead">{t(lang, 'home.hero.lead')}</p>
+        <div class="hero-actions">
+          <Button href="#readiness">{t(lang, 'home.hero.ctaPrimary')}</Button>
+          <Button href="#start" variant="quiet">{t(lang, 'home.hero.ctaQuiet')}</Button>
+        </div>
+      </div>
+      <div class="hero-map" id="roadmap">
+        <div class="map-head">
+          <SafetyBadge kind="education" />
+          <h2>{t(lang, 'home.roadmap.title')}</h2>
+          <p>{t(lang, 'home.roadmap.intro')}</p>
+        </div>
+        <Roadmap lang={lang} />
+        <Disclaimer variant="education" />
+      </div>
+    </div>
+  </section>
+
+  <Section id="readiness" tone="sage" title={t(lang, 'home.readiness.title')} badge="education" intro={t(lang, 'home.readiness.intro')}>
+    <ReadinessCheck lang={lang} />
+  </Section>
+
+  <Section id="ideas" title={t(lang, 'home.toyota.title')} badge="education" intro={t(lang, 'home.toyota.intro')}>
+    <ul class="ideas">
+      {toyota.map((c, i) => (
+        <li>
+          <Card title={c.plain} tone="plain">
+            <span slot="top" class="idea-top">
+              <span class="idea-icon"><Icon name={toyotaIcons[i]} /></span>
+              <Term id={toyotaTerms[i]}>{c.name}</Term>
+            </span>
+            <p>{c.body}</p>
+          </Card>
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <Section id="start" tone="mist" title={t(lang, 'home.start.title')} badge="your-choice">
+    <ul class="tiles">
+      {tiles.map((tile) => (
+        <li>
+          <a class="tile" href={tile.href}>
+            <span class="tile-icon"><Icon name={tile.icon} size={26} /></span>
+            <span class="tile-text">
+              <span class="tile-title">{t(lang, `home.start.tiles.${tile.key}.title`)}</span>
+              <span class="tile-body">{t(lang, `home.start.tiles.${tile.key}.body`)}</span>
+            </span>
+            <Icon name="chevron-right" class="tile-chev" />
+          </a>
+        </li>
+      ))}
+    </ul>
+  </Section>
+</BaseLayout>
+
+<style>
+  .hero { padding-block: var(--space-7) var(--space-8); }
+  .hero-text { max-width: 760px; }
+  .hero-text > * + * { margin-top: var(--space-4); }
+  .lead { font-size: 1.25rem; color: var(--ink-soft); }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-5) !important; }
+  .hero-map { margin-top: var(--space-7); }
+  .hero-map > :global(* + *) { margin-top: var(--space-4); }
+  .map-head h2 { font-size: var(--fs-h3); margin-top: var(--space-3); }
+  .map-head p { color: var(--ink-soft); margin-top: var(--space-1); }
+
+  .ideas, .tiles {
+    display: grid;
+    gap: var(--space-4);
+    list-style: none;
+    padding: 0;
+  }
+  .ideas > li, .tiles > li { max-width: none; }
+  .idea-top { display: flex; align-items: center; gap: var(--space-3); font-weight: 700; color: var(--accent); }
+  .idea-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--surface-sage);
+    color: var(--primary);
+  }
+
+  .tile {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    height: 100%;
+    min-height: 96px;
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    text-decoration: none;
+    transition: border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+  }
+  .tile:hover { border-color: var(--primary); }
+  .tile-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--surface-sage);
+    color: var(--primary);
+  }
+  .tile-text { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+  .tile-title { font-weight: 700; font-size: 1.1875rem; }
+  .tile-body { color: var(--ink-soft); font-size: var(--fs-small); }
+  .tile :global(.tile-chev) { color: var(--ink-muted); }
+
+  @media (min-width: 768px) {
+    .hero { padding-top: var(--space-8); }
+    .ideas { grid-template-columns: repeat(3, 1fr); }
+    .tiles { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1100px) {
+    .tiles { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>

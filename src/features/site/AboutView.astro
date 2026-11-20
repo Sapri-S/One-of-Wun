@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../../components/BaseLayout.astro';
+import Section from '../../components/Section.astro';
+import Icon from '../../components/Icon.astro';
+import ExternalLink from '../../components/ExternalLink.astro';
+import { t, tv, type Lang } from '../../i18n/utils';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const privacy = tv<string[]>(lang, 'about.privacy');
+const disclosure = tv<string[]>(lang, 'about.disclosure');
+---
+<BaseLayout title={t(lang, 'about.meta.title')} description={t(lang, 'about.meta.description')} lang={lang}>
+  <Section id="about" level={1} title={t(lang, 'about.title')} badge="education" intro={t(lang, 'about.lead')}>
+    <h2 class="h">{t(lang, 'about.missionTitle')}</h2>
+    <p>{t(lang, 'about.mission')}</p>
+    <h2 class="h">{t(lang, 'about.ideasTitle')}</h2>
+    <p>{t(lang, 'about.ideas')}</p>
+  </Section>
+
+  <Section id="privacy" tone="sage" title={t(lang, 'about.privacyTitle')} badge="education">
+    <ul class="checks">
+      {privacy.map((p) => <li><Icon name="check" size={22} /><span>{p}</span></li>)}
+    </ul>
+  </Section>
+
+  <Section id="disclosure" title={t(lang, 'about.disclosureTitle')} badge="talk-to-pro">
+    <ul class="checks">
+      {disclosure.map((p) => <li><Icon name="info" size={22} /><span>{p}</span></li>)}
+    </ul>
+    <p class="bc">
+      <ExternalLink href="https://brokercheck.finra.org/" org="FINRA BrokerCheck">{t(lang, 'about.brokerCheck')}</ExternalLink>
+    </p>
+  </Section>
+</BaseLayout>
+
+<style>
+  .h { font-size: var(--fs-h3); margin-top: var(--space-6); margin-bottom: var(--space-2); }
+  .h:first-child { margin-top: 0; }
+  .checks { display: grid; gap: var(--space-3); list-style: none; padding: 0; }
+  .checks li { display: flex; gap: var(--space-3); align-items: flex-start; }
+  .checks :global(svg) { margin-top: 3px; color: var(--primary); }
+  .bc { margin-top: var(--space-5); }
+</style>

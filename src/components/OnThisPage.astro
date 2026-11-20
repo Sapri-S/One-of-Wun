@@ -1,0 +1,47 @@
+---
+/**
+ * Chip row of jump links to sections on the same page (click 2 of the 3-click rule).
+ * <OnThisPage items={[{ id: 'calc', label: 'Calculator' }, { id: 'how', label: 'How it works' }]} />
+ */
+import { getLang, t } from '../i18n/utils';
+interface Props { items: { id: string; label: string }[] }
+const { items } = Astro.props;
+const lang = getLang(Astro.url);
+---
+<nav class="otp" aria-label={t(lang, 'common.onThisPage')}>
+  <span class="otp-label">{t(lang, 'common.onThisPage')}</span>
+  <ul>
+    {items.map((i) => <li><a href={`#${i.id}`}>{i.label}</a></li>)}
+  </ul>
+</nav>
+
+<style>
+  .otp {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-3);
+  }
+  .otp-label { color: var(--ink-muted); font-size: var(--fs-small); }
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    padding: 0;
+  }
+  a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap);
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-pill);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    text-decoration: none;
+    font-size: var(--fs-small);
+    transition: border-color var(--dur) var(--ease);
+  }
+  a:hover { border-color: var(--primary); color: var(--primary); }
+</style>

@@ -1,0 +1,50 @@
+---
+/**
+ * Button or link that looks like a button. 48px min height.
+ * <Button href="/grow">See small steps grow</Button>
+ * <Button variant="quiet" type="button" id="reset">Start over</Button>
+ * Extra attributes (id, data-*, aria-*) pass through.
+ */
+interface Props {
+  variant?: 'primary' | 'quiet';
+  href?: string;
+  type?: 'button' | 'submit' | 'reset';
+  ariaPressed?: boolean;
+  class?: string;
+  /** Any other attribute (id, data-*, aria-*) is passed through. */
+  [attr: string]: unknown;
+}
+
+const { variant = 'primary', href, type = 'button', ariaPressed, class: cls, ...rest } = Astro.props;
+const classes = ['btn', `btn--${variant}`, cls];
+---
+{href ? (
+  <a href={href} class:list={classes} {...rest}><slot /></a>
+) : (
+  <button type={type} class:list={classes} aria-pressed={ariaPressed === undefined ? undefined : ariaPressed ? 'true' : 'false'} {...rest}><slot /></button>
+)}
+
+<style is:global>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: var(--tap);
+    padding: 10px 22px;
+    border-radius: var(--radius-pill);
+    border: 2px solid transparent;
+    font-size: var(--fs-body);
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+  .btn--primary { background: var(--primary); color: var(--on-primary); }
+  .btn--primary:hover { background: var(--primary-hover); }
+  .btn--quiet { background: var(--surface); color: var(--ink); border-color: var(--border); }
+  .btn--quiet:hover { border-color: var(--primary); color: var(--primary); }
+  .btn[aria-pressed='true'] { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+  .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+</style>

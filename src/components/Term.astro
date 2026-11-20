@@ -1,0 +1,141 @@
+---
+/**
+ * Tap-to-define jargon term (FR-03). Wrap the visible words:
+ *   <Term id="apr">APR</Term>
+ * The definition comes from src/content/glossary.{lang}.json. Missing ids fail the build.
+ * Popover: non-modal dialog, closes on Esc, outside tap or "Close"; focus returns to the term.
+ */
+import { getLang, glossaryEntry, localizePath, t } from '../i18n/utils';
+interface Props { id: string }
+const { id } = Astro.props;
+const lang = getLang(Astro.url);
+const entry = glossaryEntry(lang, id);
+const pid = `term-${id}-${Math.random().toString(36).slice(2, 8)}`;
+---
+<span class="term-wrap"><button
+    type="button"
+    class="term"
+    aria-expanded="false"
+    aria-controls={pid}
+    aria-haspopup="dialog"
+    title={t(lang, 'common.term.hint')}
+  ><slot /></button><span id={pid} class="term-pop" role="dialog" aria-labelledby={`${pid}-t`} aria-describedby={`${pid}-d`} hidden>
+    <span class="term-pop-title" id={`${pid}-t`}>{entry.term}</span>
+    <span class="term-pop-def" id={`${pid}-d`}>{entry.def}</span>
+    <span class="term-pop-actions">
+      <a href={localizePath(`/glossary#${id}`, lang)}>{t(lang, 'common.term.seeAll')}</a>
+      <button type="button" class="term-close">{t(lang, 'common.term.close')}</button>
+    </span>
+  </span></span>
+
+<script>
+  let open: { trigger: HTMLButtonElement; pop: HTMLElement } | null = null;
+
+  function place(trigger: HTMLElement, pop: HTMLElement) {
+    const r = trigger.getBoundingClientRect();
+    const vw = document.documentElement.clientWidth;
+    const vh = window.innerHeight;
+    const w = Math.min(340, vw - 24);
+    pop.style.width = `${w}px`;
+    const left = Math.max(12, Math.min(r.left, vw - w - 12));
+    pop.style.left = `${left}px`;
+    const h = pop.offsetHeight;
+    const below = r.bottom + 8;
+    const top = below + h > vh - 12 && r.top - h - 8 > 12 ? r.top - h - 8 : below;
+    pop.style.top = `${top}px`;
+  }
+
+  function close(returnFocus = true) {
+    if (!open) return;
+    const { trigger, pop } = open;
+    pop.hidden = true;
+    trigger.setAttribute('aria-expanded', 'false');
+    open = null;
+    if (returnFocus) trigger.focus();
+  }
+
+  function show(trigger: HTMLButtonElement) {
+    const pop = document.getElementById(trigger.getAttribute('aria-controls') || '');
+    if (!pop) return;
+    if (open && open.trigger === trigger) return close();
+    close(false);
+    pop.hidden = false;
+    trigger.setAttribute('aria-expanded', 'true');
+    place(trigger, pop);
+    open = { trigger, pop };
+    pop.querySelector<HTMLButtonElement>('.term-close')?.focus();
+  }
+
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    const trigger = target.closest<HTMLButtonElement>('button.term');
+    if (trigger) return show(trigger);
+    if (target.closest('.term-close')) return close();
+    if (open && !target.closest('.term-pop')) close(false);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && open) close();
+  });
+  const reposition = () => open && place(open.trigger, open.pop);
+  window.addEventListener('resize', reposition, { passive: true });
+  window.addEventListener('scroll', reposition, { passive: true });
+</script>
+
+<style is:global>
+  .term-wrap { display: inline; }
+  .term {
+    display: inline;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: inherit;
+    text-decoration: underline dotted var(--accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.25em;
+    cursor: help;
+  }
+  .term:hover, .term[aria-expanded='true'] {
+    color: var(--accent);
+    text-decoration-style: solid;
+  }
+  .term-pop {
+    position: fixed;
+    z-index: 80;
+    display: block;
+    padding: var(--space-4) var(--space-5);
+    background: var(--surface);
+    color: var(--ink);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 12px 40px rgb(34 48 43 / 0.18);
+    font-size: var(--fs-small);
+    font-weight: 400;
+    line-height: 1.55;
+    text-align: left;
+    animation: term-in var(--dur) var(--ease);
+  }
+  .term-pop[hidden] { display: none; }
+  .term-pop-title { display: block; font-weight: 700; font-size: var(--fs-body); margin-bottom: var(--space-1); }
+  .term-pop-def { display: block; color: var(--ink-soft); }
+  .term-pop-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+  }
+  .term-pop-actions a { display: inline-flex; align-items: center; min-height: 44px; }
+  .term-close {
+    min-height: 44px;
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border);
+    background: var(--surface-sage);
+    font-weight: 700;
+  }
+  @keyframes term-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: none; }
+  }
+</style>

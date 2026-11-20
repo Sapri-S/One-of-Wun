@@ -4,12 +4,12 @@
 
 ## Before you start
 - **Wait for the git tag `part1-foundation`.** Branch from it. Do not start from an earlier commit.
-- Run `npm install && npm run dev` and open the stub pages (`/learn`, `/practice`, `/your-path`, `/help`); you will replace them.
+- Run `npm ci && npm run dev` and open the stub pages (`/learn`, `/practice`, `/your-path`, `/help`); you will replace them.
 - Read `HANDOFF.md` for the component API. **Import the shared components; never copy, fork or restyle them.** If you need a change, add a "Prop request" note to `HANDOFF.md` under "Part 2 notes" and work around it in the meantime.
 
 ## You own (SHARED §9.1)
 - Pages: `src/pages/learn.astro`, `practice.astro`, `your-path.astro`, `help.astro`, and their `/es/` twins
-- Features: `src/features/explorer/`, `crash-sim/`, `life-stages/`, `resources/`
+- Features: `src/features/explorer/`, `crash-sim/`, `life-stages/`, `resources/`. Each already has a stub view (`LearnView.astro`, `PracticeView.astro`, `PathView.astro`, `HelpView.astro`) that the route files render. **Replace the stub's body; keep the file name and its `lang` prop.**
 - Content: `src/content/resources.json`, `src/content/faq.{en,es}.json`
 - i18n: only the `learn.*`, `practice.*`, `path.*` and `help.*` keys in `src/i18n/{en,es}.json`
 - Glossary: you may **add** new keys to `glossary.{en,es}.json`; never edit or remove existing ones

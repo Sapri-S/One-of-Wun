@@ -88,7 +88,7 @@ All routes have an English and Spanish version: `/…` and `/es/…`.
 
 ## 4. Tech stack (decided)
 
-- **Astro 4 (static output)** + **TypeScript** + **plain CSS with custom properties** (no Tailwind, no UI kit).
+- **Astro 7 (static output, pinned 7.4.13)** + **TypeScript** + **plain CSS with custom properties** (no Tailwind, no UI kit).
   - Why: ships zero JS by default → Lighthouse ≥ 95, LCP < 1.2s, perfect for a static multi-page site deployable to Vercel/Netlify.
 - Interactive pieces are **Astro islands written in vanilla TS** (`<script>` in `.astro` components). **No React/Vue/Svelte.** Keep each island < 10 KB gzipped.
 - **No runtime third-party requests.** Fonts self-hosted (`/public/fonts`). No external images.
@@ -119,7 +119,7 @@ A quiet, sunlit room. Soft paper background, sage-green primary, mist blue accen
 ```css
 :root {
   /* surfaces */
-  --bg:            #F7F5F0;  /* warm paper */
+  --bg:            #F3F6F2;  /* sage-tinted paper (changed from #F7F5F0 in Part 1 build — cream read as a generic template) */
   --surface:       #FFFFFF;
   --surface-sage:  #E6EEE8;  /* soft section band */
   --surface-mist:  #E5EDF3;  /* alternate band */
@@ -216,7 +216,7 @@ All live in `src/components/`. Part 2 **imports** these and **must not fork or r
 **F1 — Hero & 8-Milestone Roadmap (FR-01, US-01, P0)** — `/`
 - Headline idea: "Get to where you want to be — one calm step at a time." Sub: free, no sign-up, nothing saved.
 - Demo switcher (segmented control, 2 options, `aria-pressed`): **"Not ready yet"** (synthetic: $2,400 card debt at 24.9% APR, $300 saved) vs **"Ready"** (no high-interest debt, $1,000 buffer).
-- 8 milestones, horizontal path (vertical list on < 480px). **Default milestone list (confirm in §11 Q2):**
+- 8 milestones, horizontal path (horizontal scroll-snap with ‹ › buttons below 1100px; all 8 visible at ≥ 1100px). **Default milestone list (confirm in §11 Q2):**
   1. Cover the basics (rent, food, utilities, a simple budget)
   2. Open a fee-free FDIC-insured or NCUA-insured account
   3. Save a $1,000 starter buffer
@@ -225,7 +225,7 @@ All live in `src/components/`. Part 2 **imports** these and **must not fork or r
   6. Grow the buffer to 3–6 months of costs
   7. Invest for retirement (IRA / more 401(k))
   8. Invest in a regular (taxable) account
-- Switching profile animates (240ms) the "You are here" marker and updates the readiness light. "Not ready yet" → marker on step 5 area with Red light + Education badge + plain explanation: *"Debt over 15% grows faster than investments usually do. Paying it off first is like earning a guaranteed 24.9%."*
+- Switching profile animates (240ms) the "You are here" marker and updates the readiness light. **As built:** "Not ready yet" → steps 1–2 done, **You are here = step 3** ($300 of $1,000 saved), steps 7–8 shown as *Paused for now* (Jidoka gate, lock icon), Red light, explanation that debt over 15% APR comes before investing. "Ready" → steps 1–5 done, You are here = step 6, steps 7–8 *Open*, Green light. Data: `src/features/roadmap/profiles.ts`.
 - Each milestone is a button; clicking shows a 2–3 sentence explanation panel below (inline, no modal).
 
 **F2 — Readiness Check (FR-02, P0)** — `/` (section `#readiness`)
@@ -308,8 +308,10 @@ All live in `src/components/`. Part 2 **imports** these and **must not fork or r
 | `src/components/*` (shared, §6) | ✅ | ❌ import only; request props via HANDOFF.md |
 | `src/pages/index.astro`, `grow.astro`, `glossary.astro`, `about.astro`, `404.astro` (+ `/es/` twins) | ✅ | ❌ |
 | `src/features/roadmap/*`, `readiness/*`, `kaizen/*` | ✅ | ❌ |
-| `src/pages/learn.astro`, `practice.astro`, `your-path.astro`, `help.astro` (+ `/es/` twins) | stub only | ✅ |
-| `src/features/explorer/*`, `crash-sim/*`, `life-stages/*`, `resources/*` | ❌ | ✅ |
+| `src/pages/learn.astro`, `practice.astro`, `your-path.astro`, `help.astro` (+ `/es/` twins) — thin wrappers, usually no edits needed | ✅ created | ✅ may edit |
+| `src/features/explorer/*`, `crash-sim/*`, `life-stages/*`, `resources/*` (each has a stub `*View.astro` to replace) | stub only | ✅ |
+| `src/features/site/*` (Home, Grow, Glossary, About views), `src/components/ComingSoon.astro` | ✅ | ❌ (ComingSoon may be deleted once unused) |
+| `tests/e2e/*` | ✅ harness | ✅ may **add** new `*.spec.ts` files; don't edit Part 1's |
 | `src/content/resources.json`, `faq.{en,es}.json` | ❌ | ✅ |
 | `src/content/glossary.{en,es}.json` | ✅ seeds | ✅ **append-only** new keys |
 | `src/i18n/{en,es}.json` | ✅ `common.*`, `home.*`, `grow.*` | ✅ `learn.*`, `practice.*`, `path.*`, `help.*` namespaces only |
@@ -321,8 +323,8 @@ All live in `src/components/`. Part 2 **imports** these and **must not fork or r
 
 ### 9.3 Definition of done (both parts)
 - [ ] `npm run build` passes, `npm run check` (astro check / tsc) clean.
-- [ ] Lighthouse mobile: Performance ≥ 95, Accessibility ≥ 95 (run `npx lighthouse` or `unlighthouse`).
-- [ ] axe-core: 0 violations on every page you own (Playwright + `@axe-core/playwright` script in `tests/a11y.spec.ts`, Part 1 provides the harness).
+- [ ] Lighthouse mobile: Performance ≥ 95, Accessibility ≥ 95 (see HANDOFF.md for the exact command).
+- [ ] axe-core: 0 violations on every page you own (Playwright + `@axe-core/playwright` harness in `tests/e2e/a11y.spec.ts` already covers every route — just run `npm test`).
 - [ ] Keyboard-only walkthrough works; visible focus everywhere.
 - [ ] 320px wide: no horizontal page scroll.
 - [ ] `prefers-reduced-motion` respected.
@@ -378,6 +380,7 @@ Live broker integration or real trades · user accounts / login · storing any p
 │  │  └─ explorer/ crash-sim/ life-stages/ resources/   (Part 2)
 │  ├─ content/ glossary.en.json glossary.es.json resources.json faq.*.json
 │  ├─ i18n/ en.json es.json  + utils.ts (t(), getLang())
-│  └─ pages/ index grow learn practice your-path help glossary about 404  + es/…
-└─ tests/ a11y.spec.ts, no-network.spec.ts, calc.spec.ts
+│  ├─ features/site/  (Part 1 page views: Home, Grow, Glossary, About)
+│  └─ pages/ index grow learn practice your-path help glossary about 404  + es/…  (thin wrappers: <View lang="en"/>)
+└─ tests/ e2e/ (Playwright: a11y, no-network, home, calc) · unit/ (node --test)
 ```

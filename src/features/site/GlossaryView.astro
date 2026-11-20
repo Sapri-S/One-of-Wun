@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../../components/BaseLayout.astro';
+import Section from '../../components/Section.astro';
+import { t, glossary, LOCALE, type Lang } from '../../i18n/utils';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const entries = Object.entries(glossary(lang))
+  .map(([id, e]) => ({ id, ...e }))
+  .sort((a, b) => a.term.localeCompare(b.term, LOCALE[lang], { sensitivity: 'base', numeric: true }));
+const letterOf = (s: string) => {
+  const c = s.normalize('NFD').replace(/[̀-ͯ]/g, '').charAt(0).toUpperCase();
+  return /[A-Z]/.test(c) ? c : '#';
+};
+const groups = new Map<string, typeof entries>();
+for (const e of entries) {
+  const l = letterOf(e.term);
+  if (!groups.has(l)) groups.set(l, []);
+  groups.get(l)!.push(e);
+}
+---
+<BaseLayout title={t(lang, 'glossary.meta.title')} description={t(lang, 'glossary.meta.description')} lang={lang}>
+  <Section id="glossary" level={1} title={t(lang, 'glossary.title')} badge="education" intro={t(lang, 'glossary.lead')}>
+    <nav class="letters" aria-label={t(lang, 'glossary.jump')}>
+      <ul>
+        {[...groups.keys()].map((l) => <li><a href={`#letter-${l === '#' ? 'num' : l}`}>{l}</a></li>)}
+      </ul>
+    </nav>
+    {[...groups.entries()].map(([l, items]) => (
+      <div class="group">
+        <h2 id={`letter-${l === '#' ? 'num' : l}`} class="letter">{l}</h2>
+        <dl>
+          {items.map((e) => (
+            <div class="entry" id={e.id}>
+              <dt>{e.term}</dt>
+              <dd>{e.def}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    ))}
+  </Section>
+</BaseLayout>
+
+<style>
+  .letters ul { display: flex; flex-wrap: wrap; gap: var(--space-2); list-style: none; padding: 0; }
+  .letters a {
+    display: grid;
+    place-items: center;
+    width: var(--tap);
+    height: var(--tap);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .letters a:hover { border-color: var(--primary); color: var(--primary); }
+  .group { margin-top: var(--space-6); }
+  .letter { font-size: var(--fs-h3); color: var(--primary); padding-bottom: var(--space-2); border-bottom: 1px solid var(--border); }
+  dl { display: grid; gap: var(--space-3); margin-top: var(--space-4); }
+  .entry {
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    max-width: 760px;
+  }
+  .entry:target { border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent); }
+  dt { font-weight: 700; font-size: 1.1875rem; }
+  dd { margin: var(--space-1) 0 0; color: var(--ink-soft); }
+</style>

@@ -1,0 +1,11 @@
+---
+/**
+ * PART 2 OWNS THIS FILE. Stub from Part 1 — replace the ComingSoon with the real page.
+ * Spec: context/SHARED.md §7 and context/PART-2.md.
+ */
+import ComingSoon from '../../components/ComingSoon.astro';
+import type { Lang } from '../../i18n/utils';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+<ComingSoon lang={lang} pageKey="help" />

@@ -1,0 +1,36 @@
+---
+/**
+ * Standard safety badge (FR-08). Required on every Section.
+ * <SafetyBadge kind="education" />  kinds: 'education' | 'your-choice' | 'talk-to-pro'
+ */
+import Icon from './Icon.astro';
+import { getLang, t } from '../i18n/utils';
+
+export type BadgeKind = 'education' | 'your-choice' | 'talk-to-pro';
+interface Props { kind: BadgeKind }
+const { kind } = Astro.props;
+const lang = getLang(Astro.url);
+const icon = kind === 'education' ? 'book' : kind === 'your-choice' ? 'hand' : 'lifebuoy';
+---
+<span class:list={['badge', `badge--${kind}`]}>
+  <Icon name={icon} size={16} />
+  <span class="visually-hidden">{t(lang, 'common.badge.srPrefix')}</span>
+  {t(lang, `common.badge.${kind}`)}
+</span>
+
+<style>
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    font-size: var(--fs-small);
+    font-weight: 700;
+    line-height: 1.4;
+    border: 1px solid transparent;
+  }
+  .badge--education { background: var(--surface-mist); color: var(--accent); border-color: color-mix(in srgb, var(--accent) 25%, transparent); }
+  .badge--your-choice { background: var(--surface-sage); color: var(--primary); border-color: color-mix(in srgb, var(--primary) 25%, transparent); }
+  .badge--talk-to-pro { background: var(--wait-bg); color: var(--wait-ink); border-color: color-mix(in srgb, var(--wait-ink) 25%, transparent); }
+</style>

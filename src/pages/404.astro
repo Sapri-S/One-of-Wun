@@ -1,0 +1,56 @@
+---
+/** One 404 for both languages (static hosts serve a single 404.html). */
+import BaseLayout from '../components/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { t, localizePath, PAGES, type Lang } from '../i18n/utils';
+const langs: Lang[] = ['en', 'es'];
+---
+<BaseLayout title={t('en', 'notFound.title')} description={t('en', 'notFound.lead')} lang="en">
+  <section class="nf" aria-labelledby="nf-title">
+    <div class="container">
+      <h1 id="nf-title">{t('en', 'notFound.title')}</h1>
+      <div class="cols">
+        {langs.map((lang) => (
+          <div lang={lang}>
+            {lang === 'es' && <h2 class="es-title">{t('es', 'notFound.title')}</h2>}
+            <p class="lead">{t(lang, 'notFound.lead')}</p>
+            <ul>
+              {PAGES.map((p) => (
+                <li>
+                  <a href={localizePath(p.path, lang)}>
+                    <Icon name={p.icon} size={22} />
+                    {t(lang, `common.nav.${p.key}`)}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf { padding-block: var(--space-8); }
+  .cols { display: grid; gap: var(--space-6); margin-top: var(--space-5); }
+  .es-title { font-size: var(--fs-h3); }
+  .lead { color: var(--ink-soft); margin-block: var(--space-2) var(--space-3); }
+  ul { list-style: none; padding: 0; display: grid; gap: var(--space-2); }
+  a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: var(--tap);
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 700;
+  }
+  a:hover { border-color: var(--primary); }
+  a :global(svg) { color: var(--primary); }
+  @media (min-width: 768px) { .cols { grid-template-columns: 1fr 1fr; } }
+</style>

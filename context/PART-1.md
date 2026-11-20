@@ -1,3 +1,5 @@
+> **Status: ✅ shipped** — tag `part1-foundation`. See `/HANDOFF.md`.
+
 # PART 1 brief: Foundation, Home, and the Kaizen calculator
 
 > Read `SHARED.md` in full first. This brief only says what is **yours**, in what order, and how you know you're done.
@@ -13,7 +15,7 @@ Build the foundation that Part 2 depends on, **ship it first**, then build the H
 - `src/content/glossary.{en,es}.json` (you seed it; Part 2 only adds keys)
 - Pages: `index`, `grow`, `glossary`, `about`, `404`, and their `/es/` twins
 - Features: `src/features/roadmap/`, `readiness/`, `kaizen/`
-- `tests/` harness: `a11y.spec.ts`, `no-network.spec.ts`, `calc.spec.ts`
+- `tests/` harness: `tests/e2e/*.spec.ts` (Playwright) and `tests/unit/*.test.ts` (node --test)
 - `/HANDOFF.md`
 
 **Do not build** anything in `learn`, `practice`, `your-path` or `help` beyond a stub.
@@ -21,7 +23,7 @@ Build the foundation that Part 2 depends on, **ship it first**, then build the H
 ---
 
 ## Phase A: Foundation → tag `part1-foundation` (Part 2 waits for this)
-1. Scaffold Astro 4 + TypeScript (strict), static output. Scripts: `dev`, `build`, `preview`, `check`, `test`.
+1. Scaffold Astro 7 + TypeScript (strict), static output. Scripts: `dev`, `build`, `preview`, `check`, `test`.
 2. Self-host the Atkinson Hyperlegible font (400 and 700, woff2) in `public/fonts/`.
 3. `tokens.css` copied **exactly** from SHARED §5.3. `global.css` covers the reset, type scale (§5.4), focus ring, reduced-motion rule and `.visually-hidden`.
 4. i18n: `/` and `/es/` routing, `t(key)` helper, a language toggle that keeps the visitor on the same page in the other language. No storage; the URL is the state.
@@ -45,7 +47,7 @@ Build the foundation that Part 2 depends on, **ship it first**, then build the H
 - Two sliders with ± steppers: $5–$100/week (default 5) and 10–60 years (default 30).
 - `FV = weekly × 52 × ((1+r)^years − 1) / r` at 4%, 6% and 8%. Show "Total you put in".
 - Generations: kids = FV × (1+r)^25, grandkids = kids × (1+r)^25. Show 6% by default with a 4/6/8 toggle.
-- Inline SVG chart. "Example, not a promise." Unit tests in `calc.spec.ts` for at least 3 known values.
+- Inline SVG chart. "Example, not a promise." Unit tests in `tests/unit/calc.test.ts` for at least 3 known values.
 
 ## Phase D: `/glossary`, `/about`, `404`
 - Glossary: A–Z list built from the JSON, with anchor links.

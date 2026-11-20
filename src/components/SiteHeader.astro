@@ -1,0 +1,168 @@
+---
+/**
+ * Sticky header. Desktop: wordmark + 6 nav links + language switch.
+ * Mobile (<768px): wordmark + language switch on top; 5 pages in a bottom tab bar (Home = wordmark).
+ * Internal to BaseLayout — Part 2 does not use this directly.
+ */
+import Icon from './Icon.astro';
+import { t, localizePath, stripLang, alternatePath, PAGES, type Lang } from '../i18n/utils';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const current = stripLang(Astro.url.pathname).replace(/\/$/, '') || '/';
+const isCurrent = (p: string) => (p === '/' ? current === '/' : current === p || current.startsWith(p + '/'));
+const alt = alternatePath(Astro.url);
+---
+<header class="site-header">
+  <div class="container bar">
+    <a class="wordmark" href={localizePath('/', lang)} aria-current={current === '/' ? 'page' : undefined}>
+      <svg class="mark" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+        <path d="M5 25c6 0 6-8 11-8s5-9 11-9" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+        <circle cx="5" cy="25" r="3" fill="currentColor" />
+        <circle cx="27" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="2.5" />
+      </svg>
+      <span>{t(lang, 'common.siteName')}</span>
+    </a>
+
+    <nav class="top-nav" aria-label={t(lang, 'common.navLabel')}>
+      <ul>
+        {PAGES.map((p) => (
+          <li>
+            <a href={localizePath(p.path, lang)} aria-current={isCurrent(p.path) ? 'page' : undefined}>
+              {t(lang, `common.nav.${p.key}`)}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <a class="lang-switch" href={alt.href} hreflang={alt.lang} lang={alt.lang} aria-label={t(lang, 'common.lang.switchAria')}>
+      {t(lang, 'common.lang.switchTo')}
+    </a>
+  </div>
+</header>
+
+<nav class="tab-bar" aria-label={t(lang, 'common.navLabel')}>
+  <ul>
+    {PAGES.filter((p) => p.key !== 'home').map((p) => (
+      <li>
+        <a href={localizePath(p.path, lang)} aria-current={isCurrent(p.path) ? 'page' : undefined}>
+          <Icon name={p.icon} size={22} />
+          <span>{t(lang, `common.nav.${p.key}`)}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: saturate(1.2) blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    min-height: 64px;
+  }
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 1.125rem;
+    text-decoration: none;
+    min-height: var(--tap);
+    margin-right: auto;
+    line-height: 1.15;
+  }
+  .wordmark .mark { color: var(--primary); }
+
+  .top-nav { display: none; }
+  .top-nav ul {
+    display: flex;
+    gap: var(--space-1);
+    list-style: none;
+    padding: 0;
+  }
+  .top-nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap);
+    padding: 0 var(--space-3);
+    border-radius: var(--radius-pill);
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: var(--fs-small);
+    transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+  .top-nav a:hover { background: var(--surface-sage); color: var(--ink); }
+  .top-nav a[aria-current='page'] {
+    background: var(--surface-sage);
+    color: var(--primary);
+    font-weight: 700;
+  }
+
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap);
+    padding: 0 var(--space-4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: var(--fs-small);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .lang-switch:hover { border-color: var(--primary); }
+
+  /* Mobile bottom tab bar */
+  .tab-bar {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 50;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .tab-bar ul {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    list-style: none;
+    padding: 0;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .tab-bar li { max-width: none; }
+  .tab-bar a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-height: 64px;
+    padding: var(--space-1) 2px;
+    color: var(--ink-muted);
+    text-decoration: none;
+    font-size: 0.8125rem;
+    line-height: 1.15;
+    text-align: center;
+  }
+  .tab-bar a[aria-current='page'] { color: var(--primary); font-weight: 700; }
+  .tab-bar a[aria-current='page'] :global(.icon) { stroke-width: 2.25; }
+
+  @media (min-width: 768px) {
+    .top-nav { display: block; }
+    .tab-bar { display: none; }
+    .wordmark { margin-right: var(--space-4); }
+    .top-nav { margin-right: auto; }
+  }
+</style>

@@ -1,0 +1,25 @@
+{
+  "name": "where-you-want-to-be",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview --port 4321",
+    "check": "astro check",
+    "test": "playwright test --trace off",
+    "test:unit": "node --test tests/unit/*.test.ts"
+  },
+  "dependencies": {
+    "astro": "7.4.13"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.12",
+    "@axe-core/playwright": "4.14.0",
+    "@fontsource/atkinson-hyperlegible": "5.3.0",
+    "@playwright/test": "1.63.0",
+    "@types/node": "22.20.5",
+    "typescript": "6.0.3"
+  }
+}

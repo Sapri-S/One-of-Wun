@@ -1,0 +1,104 @@
+/* Design tokens — source of truth: context/SHARED.md §5.3. Part 2: read-only. */
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  src: url('/fonts/atkinson-hyperlegible-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  src: url('/fonts/atkinson-hyperlegible-latin-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: light dark;
+
+  /* surfaces */
+  --bg: #F3F6F2;            /* sage-tinted paper */
+  --surface: #FFFFFF;
+  --surface-sage: #E6EEE8;
+  --surface-mist: #E5EDF3;
+  --border: #DCE3DE;
+  --path: #9DB5A9;          /* roadmap trail line (decorative) */
+
+  /* text */
+  --ink: #22302B;
+  --ink-soft: #4A5A54;
+  --ink-muted: #5F6E68;
+
+  /* brand */
+  --primary: #2F6B5A;
+  --primary-hover: #245548;
+  --on-primary: #FFFFFF;
+  --accent: #35607E;
+  --focus: #3B7FB0;
+
+  /* status */
+  --stop-ink: #8A3B2E;  --stop-bg: #F6E4DF;
+  --wait-ink: #7A5410;  --wait-bg: #F7EDD6;
+  --go-ink: #2D6A45;    --go-bg: #E2F0E6;
+
+  /* type */
+  --font: 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --fs-small: 1rem;                                  /* 16px — never smaller for reading text */
+  --fs-body: 1.125rem;                               /* 18px */
+  --fs-h3: clamp(1.375rem, 1.3rem + 0.3vw, 1.5rem);  /* 22→24 */
+  --fs-h2: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);    /* 28→36 */
+  --fs-h1: clamp(2.125rem, 1.6rem + 2.4vw, 3.25rem); /* 34→52 */
+  --fs-num: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
+
+  /* shape */
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+  --shadow: 0 1px 2px rgb(34 48 43 / 0.06), 0 6px 24px rgb(34 48 43 / 0.06);
+
+  /* motion */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur: 240ms;
+
+  /* space (8pt rhythm) */
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+  --space-5: 24px; --space-6: 32px; --space-7: 48px; --space-8: 64px; --space-9: 96px;
+
+  /* layout */
+  --container: 1120px;
+  --gutter: 16px;
+  --measure: 65ch;
+  --tap: 48px;
+}
+
+@media (min-width: 768px) {
+  :root { --gutter: 24px; }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #141B19; --surface: #1C2522; --surface-sage: #1F2B27; --surface-mist: #1E2830;
+    --border: #2C3934; --path: #3F5A50;
+    --ink: #E8EEEA; --ink-soft: #C3CFC9; --ink-muted: #A9B8B1;
+    --primary: #7CC4A9; --primary-hover: #95D3BB; --on-primary: #0F1A16;
+    --accent: #8FB9D6; --focus: #8FB9D6;
+    --stop-ink: #F0B4A8; --stop-bg: #3A2420;
+    --wait-ink: #EBCB8B; --wait-bg: #3A3020;
+    --go-ink: #9BD3AE;   --go-bg: #1F3529;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 6px 24px rgb(0 0 0 / 0.25);
+  }
+}
+:root[data-theme='dark'] {
+  --bg: #141B19; --surface: #1C2522; --surface-sage: #1F2B27; --surface-mist: #1E2830;
+  --border: #2C3934; --path: #3F5A50;
+  --ink: #E8EEEA; --ink-soft: #C3CFC9; --ink-muted: #A9B8B1;
+  --primary: #7CC4A9; --primary-hover: #95D3BB; --on-primary: #0F1A16;
+  --accent: #8FB9D6; --focus: #8FB9D6;
+  --stop-ink: #F0B4A8; --stop-bg: #3A2420;
+  --wait-ink: #EBCB8B; --wait-bg: #3A3020;
+  --go-ink: #9BD3AE;   --go-bg: #1F3529;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 6px 24px rgb(0 0 0 / 0.25);
+}

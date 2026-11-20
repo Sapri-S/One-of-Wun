@@ -1,0 +1,30 @@
+---
+/**
+ * Link to a trusted outside resource. Same tab, ↗ icon, screen-reader note, no referrer.
+ * <ExternalLink href="https://www.consumerfinance.gov/" org="CFPB">Consumer guides</ExternalLink>
+ */
+import Icon from './Icon.astro';
+import { getLang, t } from '../i18n/utils';
+interface Props {
+  href: string;
+  org: string;
+  class?: string;
+}
+const { href, org, class: cls } = Astro.props;
+const lang = getLang(Astro.url);
+---
+<a href={href} class:list={['ext', cls]} rel="noopener noreferrer" data-external-org={org}>
+  <slot />
+  <Icon name="external" size={18} />
+  <span class="visually-hidden">({t(lang, 'common.external', { org })})</span>
+</a>
+
+<style>
+  .ext {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: var(--tap);
+    font-weight: 700;
+  }
+</style>
