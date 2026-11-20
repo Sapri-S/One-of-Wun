@@ -65,15 +65,36 @@ export function toHits(r: { result?: { symbol?: string; description?: string; ty
     .map((x) => ({ symbol: x.symbol!, name: x.description ?? x.symbol!, type: x.type === 'ETP' ? 'ETF' : 'Stock' }));
 }
 
+/** Seconds a price stays fresh, in the CDN and in the per-instance memory cache. */
+export const FRESH_SECONDS = 15;
+
 export function json(body: unknown, status = 200, cache = true): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: {
-      'content-type': 'application/json; charset=utf-8',
-      'cache-control': cache && status === 200 ? 'public, s-maxage=15, stale-while-revalidate=60' : 'no-store',
-      'x-content-type-options': 'nosniff',
-    },
-  });
+  const cacheable = cache && status === 200;
+  const headers: Record<string, string> = {
+    'content-type': 'application/json; charset=utf-8',
+    'x-content-type-options': 'nosniff',
+    // Browsers always ask again (prices change); Vercel's CDN shares one answer across all visitors.
+    'cache-control': cacheable ? 'public, max-age=0, must-revalidate' : 'no-store',
+  };
+  if (cacheable) {
+    headers['vercel-cdn-cache-control'] = `max-age=${FRESH_SECONDS}, stale-while-revalidate=60`;
+    headers['cdn-cache-control'] = `max-age=${FRESH_SECONDS}, stale-while-revalidate=60`;
+  }
+  return new Response(JSON.stringify(body), { status, headers });
+}
+
+/**
+ * Tiny per-instance cache (Vercel reuses warm function instances), so watchlists that differ by one
+ * symbol still share the other symbols' quotes instead of each costing a Finnhub call.
+ */
+const memo = new Map<string, { at: number; value: unknown }>();
+export async function cached<T>(key: string, load: () => Promise<T>, now = Date.now()): Promise<T> {
+  const hit = memo.get(key);
+  if (hit && now - hit.at < FRESH_SECONDS * 1000) return hit.value as T;
+  const value = await load();
+  memo.set(key, { at: now, value });
+  if (memo.size > 500) memo.delete(memo.keys().next().value!);
+  return value;
 }
 
 export const unavailable = () => json({ error: 'prices_unavailable' }, 503, false);

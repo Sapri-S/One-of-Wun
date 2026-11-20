@@ -33,7 +33,9 @@ async function getJson<T>(url: string): Promise<T> {
 
 export function fetchQuotes(symbols: string[]): Promise<Quote[]> {
   if (symbols.length === 0) return Promise.resolve([]);
-  return getJson<Quote[]>(`/api/quote?symbols=${encodeURIComponent(symbols.slice(0, 20).join(','))}`);
+  // Sorted so the same set of symbols always makes the same URL, which the CDN can share between visitors.
+  const list = [...new Set(symbols)].sort().slice(0, 20);
+  return getJson<Quote[]>(`/api/quote?symbols=${encodeURIComponent(list.join(','))}`);
 }
 
 export function searchSymbols(q: string): Promise<SearchHit[]> {

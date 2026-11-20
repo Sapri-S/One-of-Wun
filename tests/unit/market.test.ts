@@ -108,3 +108,14 @@ test('API input checks', () => {
     [{ symbol: 'KO', name: 'COCA-COLA CO', type: 'Stock' }, { symbol: 'KO.MX', name: 'x', type: 'Stock' }],
   );
 });
+
+test('price memory cache: reuses a quote for 15s, refetches after, never caches failures', async () => {
+  const { cached } = await import('../../api/_lib.ts');
+  let calls = 0;
+  const load = async () => ++calls;
+  assert.equal(await cached('t:A', load, 1_000), 1);
+  assert.equal(await cached('t:A', load, 15_999), 1);
+  assert.equal(await cached('t:A', load, 16_000), 2);
+  await assert.rejects(cached('t:B', async () => { throw new Error('down'); }, 1_000));
+  assert.equal(await cached('t:B', async () => 'ok', 1_001), 'ok');
+});
