@@ -1,4 +1,4 @@
-# CONTEXT.md — "Where You Want to Be" website
+# SHARED.md — "Where You Want to Be" website (master spec)
 
 > **Read this whole file before writing any code.** It is the single source of truth for both builders.
 > Source: *Catch Up Sprint Milestone Path PRD v1* (SymStudio, Nov 20 2026).
@@ -365,7 +365,7 @@ Live broker integration or real trades · user accounts / login · storing any p
 
 ```
 /
-├─ CONTEXT.md            ← this file
+├─ context/             ← this folder (README, SHARED, PART-1, PART-2, SKILLS)
 ├─ HANDOFF.md            ← Part 1 → Part 2 notes
 ├─ astro.config.mjs
 ├─ netlify.toml / vercel.json
