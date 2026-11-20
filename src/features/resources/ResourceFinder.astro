@@ -1,0 +1,200 @@
+---
+/**
+ * F9 — Trusted Resources directory (FR-07). Category chips + a search box, both client-side only:
+ * no network, nothing stored. Without JS every resource is simply listed.
+ */
+import Card from '../../components/Card.astro';
+import ExternalLink from '../../components/ExternalLink.astro';
+import Icon from '../../components/Icon.astro';
+import { t, type Lang } from '../../i18n/utils';
+import resources from '../../content/resources.json';
+import { CATEGORIES, normalize } from './filter';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const total = resources.length;
+const i18n = { count: t(lang, 'help.count') };
+---
+<div class="finder" data-finder data-i18n={JSON.stringify(i18n)} data-total={total}>
+  <div class="controls">
+    <div class="search">
+      <label for="res-search" class="search-label">{t(lang, 'help.searchLabel')}</label>
+      <input
+        id="res-search"
+        type="search"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder={t(lang, 'help.searchPlaceholder')}
+        aria-describedby="res-count"
+        data-search
+      />
+    </div>
+    <div class="filter">
+      <p class="filter-label" id="res-filter-label">{t(lang, 'help.filterLabel')}</p>
+      <div class="chips" role="group" aria-labelledby="res-filter-label">
+        <button type="button" class="chip" data-cat="all" aria-pressed="true">{t(lang, 'help.all')}</button>
+        {CATEGORIES.map((c) => (
+          <button type="button" class="chip" data-cat={c} aria-pressed="false">{t(lang, `help.categories.${c}`)}</button>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <p class="count" id="res-count" aria-live="polite" data-count>{t(lang, 'help.count', { n: total, total })}</p>
+
+  <ul class="list" data-list>
+    {resources.map((r) => {
+      const name = r.name[lang];
+      const desc = r.desc[lang];
+      const cat = t(lang, `help.categories.${r.category}`);
+      return (
+        <li data-item data-cat={r.category} data-text={normalize(`${name} ${r.org} ${desc} ${cat}`)}>
+          <Card title={name}>
+            <p slot="top" class="tags">
+              <span class="tag tag--cat">{cat}</span>
+              <span class="tag tag--free"><Icon name="check" size={16} />{t(lang, 'help.free')}</span>
+            </p>
+            <p>{desc}</p>
+            <ExternalLink href={r.url} org={r.org}>{t(lang, 'help.visit', { org: r.org })}</ExternalLink>
+          </Card>
+        </li>
+      );
+    })}
+  </ul>
+
+  <div class="empty" data-empty hidden>
+    <h3>{t(lang, 'help.noMatchTitle')}</h3>
+    <p>{t(lang, 'help.noMatchBody')}</p>
+    <button type="button" class="clear" data-clear>
+      <Icon name="reset" size={20} />
+      {t(lang, 'help.clear')}
+    </button>
+  </div>
+</div>
+
+<script>
+  import { matches, normalize } from './filter';
+
+  document.querySelectorAll<HTMLElement>('[data-finder]').forEach((root) => {
+    const i18n = JSON.parse(root.dataset.i18n || '{}');
+    const total = Number(root.dataset.total);
+    const input = root.querySelector<HTMLInputElement>('[data-search]')!;
+    const chips = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-cat].chip'));
+    const items = Array.from(root.querySelectorAll<HTMLElement>('[data-item]'));
+    const count = root.querySelector<HTMLElement>('[data-count]')!;
+    const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+    let category = 'all';
+
+    function render() {
+      const q = normalize(input.value);
+      let shown = 0;
+      for (const item of items) {
+        const ok = matches({ cat: item.dataset.cat!, text: item.dataset.text! }, category, q);
+        item.hidden = !ok;
+        if (ok) shown++;
+      }
+      count.textContent = i18n.count.replace('{n}', String(shown)).replace('{total}', String(total));
+      empty.hidden = shown > 0;
+    }
+
+    function setCategory(cat: string) {
+      category = cat;
+      for (const c of chips) c.setAttribute('aria-pressed', String(c.dataset.cat === cat));
+      render();
+    }
+
+    input.addEventListener('input', render);
+    for (const chip of chips) chip.addEventListener('click', () => setCategory(chip.dataset.cat!));
+    root.querySelector('[data-clear]')!.addEventListener('click', () => {
+      input.value = '';
+      setCategory('all');
+      input.focus();
+    });
+    render();
+  });
+</script>
+
+<style>
+  .controls {
+    display: grid;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .search-label, .filter-label { display: block; font-weight: 700; margin-bottom: var(--space-2); }
+  .search input {
+    width: 100%;
+    max-width: 480px;
+    min-height: var(--tap);
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--border);
+    background: var(--bg);
+  }
+  .search input:focus-visible { border-color: var(--focus); }
+  .search input::placeholder { color: var(--ink-muted); opacity: 1; }
+  .chips { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .chip {
+    min-height: var(--tap);
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--border);
+    background: var(--surface);
+    font-weight: 700;
+    font-size: var(--fs-small);
+    transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+  .chip:hover { border-color: var(--primary); }
+  .chip[aria-pressed='true'] { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+
+  .count { margin-block: var(--space-5) var(--space-3); color: var(--ink-soft); font-weight: 700; }
+
+  .list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--space-4);
+  }
+  @media (min-width: 768px) { .list { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1100px) { .list { grid-template-columns: 1fr 1fr 1fr; } }
+  .list > li { display: grid; max-width: none; }
+  .list > li[hidden] { display: none; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    border-radius: var(--radius-pill);
+    font-size: var(--fs-small);
+    font-weight: 700;
+  }
+  .tag--cat { background: var(--surface-mist); color: var(--accent); }
+  .tag--free { background: var(--go-bg); color: var(--go-ink); }
+
+  .empty {
+    margin-top: var(--space-3);
+    padding: var(--space-6) var(--space-5);
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 2px dashed var(--border);
+    text-align: center;
+  }
+  .empty[hidden] { display: none; }
+  .empty p { margin: var(--space-2) auto var(--space-4); color: var(--ink-soft); }
+  .clear {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--tap);
+    padding: 0 var(--space-5);
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--primary);
+    background: var(--primary);
+    color: var(--on-primary);
+    font-weight: 700;
+  }
+</style>

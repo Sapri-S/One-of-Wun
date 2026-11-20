@@ -1,11 +1,80 @@
 ---
-/**
- * PART 2 OWNS THIS FILE. Stub from Part 1 — replace the ComingSoon with the real page.
- * Spec: context/SHARED.md §7 and context/PART-2.md.
- */
-import ComingSoon from '../../components/ComingSoon.astro';
-import type { Lang } from '../../i18n/utils';
+/** /learn — Plain-Language Investment Explorer (F6). Part 2. */
+import BaseLayout from '../../components/BaseLayout.astro';
+import Section from '../../components/Section.astro';
+import OnThisPage from '../../components/OnThisPage.astro';
+import Button from '../../components/Button.astro';
+import ExternalLink from '../../components/ExternalLink.astro';
+import InvestmentExplorer from './InvestmentExplorer.astro';
+import { t, tv, localizePath, type Lang } from '../../i18n/utils';
+
 interface Props { lang: Lang }
 const { lang } = Astro.props;
+const ask = tv<string[]>(lang, 'learn.ask');
 ---
-<ComingSoon lang={lang} pageKey="learn" />
+<BaseLayout title={t(lang, 'learn.meta.title')} description={t(lang, 'learn.meta.description')} lang={lang}>
+  <Section id="compare" level={1} title={t(lang, 'learn.title')} badge="education" intro={t(lang, 'learn.lead')}>
+    <div class="otp-wrap">
+      <OnThisPage items={[
+        { id: 'ask', label: t(lang, 'learn.otp.ask') },
+        { id: 'check', label: t(lang, 'learn.otp.check') },
+      ]} />
+    </div>
+    <InvestmentExplorer lang={lang} />
+  </Section>
+
+  <Section id="ask" tone="sage" title={t(lang, 'learn.askTitle')} badge="your-choice" intro={t(lang, 'learn.askIntro')}>
+    <ol class="ask">
+      {ask.map((q) => <li>{q}</li>)}
+    </ol>
+    <div class="actions">
+      <Button href={localizePath('/#readiness', lang)}>{t(lang, 'learn.askReady')}</Button>
+      <Button href={localizePath('/practice', lang)} variant="quiet">{t(lang, 'learn.askPractice')}</Button>
+    </div>
+  </Section>
+
+  <Section id="check" title={t(lang, 'learn.checkTitle')} badge="talk-to-pro" intro={t(lang, 'learn.checkIntro')}>
+    <ul class="checks">
+      <li>
+        <h3>{t(lang, 'learn.checkBroker')}</h3>
+        <p>{t(lang, 'learn.checkBrokerBody')}</p>
+        <ExternalLink href="https://brokercheck.finra.org/" org={t(lang, 'learn.checkBrokerOrg')}>{t(lang, 'learn.checkBrokerOrg')}</ExternalLink>
+      </li>
+      <li>
+        <h3>{t(lang, 'learn.checkBasics')}</h3>
+        <p>{t(lang, 'learn.checkBasicsBody')}</p>
+        <ExternalLink href="https://www.investor.gov/introduction-investing" org={t(lang, 'learn.checkBasicsOrg')}>{t(lang, 'learn.checkBasicsOrg')}</ExternalLink>
+      </li>
+    </ul>
+    <p class="pro">{t(lang, 'learn.checkPro')}</p>
+  </Section>
+</BaseLayout>
+
+<style>
+  .otp-wrap { margin-bottom: var(--space-6); }
+  .ask {
+    display: grid;
+    gap: var(--space-3);
+    padding-left: 1.5em;
+  }
+  .ask li::marker { color: var(--primary); font-weight: 700; }
+  .actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-6); }
+  .checks {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--space-4);
+  }
+  .checks > li {
+    max-width: none;
+    padding: var(--space-5);
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .checks p { color: var(--ink-soft); margin-block: var(--space-2) var(--space-1); }
+  @media (min-width: 768px) {
+    .checks { grid-template-columns: 1fr 1fr; }
+  }
+  .pro { margin-top: var(--space-5); color: var(--ink-soft); }
+</style>

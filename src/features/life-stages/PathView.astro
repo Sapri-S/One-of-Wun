@@ -1,11 +1,52 @@
 ---
-/**
- * PART 2 OWNS THIS FILE. Stub from Part 1 — replace the ComingSoon with the real page.
- * Spec: context/SHARED.md §7 and context/PART-2.md.
- */
-import ComingSoon from '../../components/ComingSoon.astro';
-import type { Lang } from '../../i18n/utils';
+/** /your-path — Life Stages & Persona Explorer (F8). Part 2. Each tab is deep-linkable: /your-path#gig */
+import BaseLayout from '../../components/BaseLayout.astro';
+import Section from '../../components/Section.astro';
+import Tabs from '../../components/Tabs.astro';
+import Button from '../../components/Button.astro';
+import Icon from '../../components/Icon.astro';
+import StagePanel from './StagePanel.astro';
+import { STAGES } from './stages';
+import { t, localizePath, type Lang } from '../../i18n/utils';
+
 interface Props { lang: Lang }
 const { lang } = Astro.props;
+const tabs = STAGES.map((s) => ({ id: s.id, label: t(lang, `path.tabs.${s.key}`) }));
 ---
-<ComingSoon lang={lang} pageKey="path" />
+<BaseLayout title={t(lang, 'path.meta.title')} description={t(lang, 'path.meta.description')} lang={lang}>
+  <Section id="stages" level={1} title={t(lang, 'path.title')} badge="education" intro={t(lang, 'path.lead')}>
+    <Tabs idPrefix="path" label={t(lang, 'path.tabsLabel')} tabs={tabs}>
+      <div slot="catch-up"><StagePanel lang={lang} stage={STAGES[0]} /></div>
+      <div slot="gig"><StagePanel lang={lang} stage={STAGES[1]} /></div>
+      <div slot="first-gen"><StagePanel lang={lang} stage={STAGES[2]} /></div>
+      <div slot="banked"><StagePanel lang={lang} stage={STAGES[3]} /></div>
+    </Tabs>
+  </Section>
+
+  <Section id="pause" tone="sage" title={t(lang, 'path.pauseTitle')} badge="education">
+    <div class="pause">
+      <span class="pause-icon"><Icon name="pause" size={28} /></span>
+      <div>
+        <p>{t(lang, 'path.pause')}</p>
+        <div class="pause-action">
+          <Button href={localizePath('/#readiness', lang)} variant="quiet">{t(lang, 'path.pauseLink')}</Button>
+        </div>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .pause { display: flex; gap: var(--space-4); align-items: flex-start; }
+  .pause-icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--primary);
+  }
+  .pause-action { margin-top: var(--space-4); }
+</style>

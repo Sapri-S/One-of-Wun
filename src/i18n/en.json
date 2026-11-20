@@ -243,5 +243,278 @@
   "notFound": {
     "title": "This page moved or doesn't exist",
     "lead": "No problem. Here are all the pages:"
+  },
+  "learn": {
+    "meta": {
+      "title": "Investing in plain words",
+      "description": "Index funds, single stocks and bond funds, explained simply: how risky each one is and what it costs each year."
+    },
+    "title": "Three ways to invest, in plain words",
+    "lead": "Most investing comes down to three building blocks. Here is what each one is, how bumpy it can be, and what it costs each year.",
+    "otp": {
+      "ask": "Questions to ask",
+      "check": "Check before you start"
+    },
+    "costPicker": {
+      "label": "Show the yearly cost if you put in",
+      "note": "Costs are typical examples. Real costs depend on the fund you pick."
+    },
+    "riskLabel": "Risk: {n} of 5",
+    "riskLow": "Steadier",
+    "riskHigh": "Bumpier",
+    "costLabel": "Typical yearly cost",
+    "costValue": "{cost} a year on {amount}",
+    "goodToKnow": "Good to know",
+    "cards": {
+      "index": {
+        "title": "Index funds",
+        "plain": "One fund that holds small pieces of hundreds of companies at once.",
+        "costNote": "About 0.05% a year, a common cost for a broad index fund.",
+        "points": [
+          "If one company does badly, it's only a tiny part of the fund.",
+          "Prices still go up and down with the whole market.",
+          "Low yearly costs are a big reason many people start here."
+        ]
+      },
+      "stock": {
+        "title": "Single stocks",
+        "plain": "A small piece of one company. Your money rides on how that one company does.",
+        "costNote": "No yearly fund fee. The cost is risk: all your money is tied to one company.",
+        "points": [
+          "One piece of bad news can drop the price a lot in a day.",
+          "There's no spreading out, unless you buy many different stocks.",
+          "Many people keep single stocks to a small share of their money, if any."
+        ]
+      },
+      "bond": {
+        "title": "Bond funds",
+        "plain": "A fund that lends money to governments or companies, who pay it back with interest.",
+        "costNote": "About 0.10% a year, a common cost for a broad bond fund.",
+        "points": [
+          "Usually moves up and down less than stocks.",
+          "Usually grows more slowly than stocks over long periods.",
+          "Bond prices can dip when interest rates rise."
+        ]
+      }
+    },
+    "askTitle": "Questions to ask before you choose",
+    "askIntro": "There's no single right answer. These questions help you decide what fits you.",
+    "ask": [
+      "Is my base safe first? No debt over 15% APR, bills covered, and a $1,000 cushion.",
+      "When will I need this money? Money for the next 5 years usually shouldn't be invested.",
+      "How would I feel if it dropped 30% for a while? Try it with pretend money first.",
+      "What does it cost each year? Small yearly costs add up over decades.",
+      "Am I spreading my money out, or betting on one thing?"
+    ],
+    "askReady": "Check your readiness",
+    "askPractice": "Try a pretend market drop",
+    "checkTitle": "Check before you start",
+    "checkIntro": "Before you trust anyone with your money, look them up. These checks are free.",
+    "checkBroker": "Look up a broker or adviser",
+    "checkBrokerOrg": "FINRA BrokerCheck",
+    "checkBrokerBody": "See if a person or firm is registered and whether they have a record of problems.",
+    "checkBasics": "Read the basics of investing",
+    "checkBasicsOrg": "Investor.gov",
+    "checkBasicsBody": "Free, plain guides from the U.S. Securities and Exchange Commission (SEC).",
+    "checkPro": "A licensed, fee-only adviser can help with your full picture. Ask how they are paid before you start."
+  },
+  "practice": {
+    "meta": {
+      "title": "Practice a market drop",
+      "description": "Watch a pretend $1,000 drop 30%, then learn calm steps for when it happens for real. No real money."
+    },
+    "title": "Practice a market drop, with pretend money",
+    "lead": "Markets go down sometimes. Seeing it happen with pretend money first makes a real drop less scary.",
+    "otp": {
+      "what": "What is practice investing?",
+      "before": "Before real money"
+    },
+    "cardTitle": "Your practice portfolio",
+    "pretend": "Pretend money",
+    "valueLabel": "Value",
+    "startValue": "Starting value: {amount}",
+    "chartLabel": "Line chart of the practice portfolio's value over time.",
+    "simulate": "Simulate a 30% market drop",
+    "recovery": "Show a recovery",
+    "reset": "Reset practice portfolio",
+    "status": {
+      "ready": "Your pretend portfolio is worth $1,000. Press the button to see a 30% drop.",
+      "dropping": "Prices are falling…",
+      "dropped": "Your pretend portfolio is now worth $700. That's a 30% drop. This is pretend money.",
+      "recovering": "Prices are rising again…",
+      "recovered": "In this example, the portfolio climbed back to about $1,050 over time. Example, not a promise."
+    },
+    "stepperTitle": "What to know when it drops",
+    "stepOf": "Step {n} of {total}",
+    "next": "Next",
+    "back": "Back",
+    "steps": [
+      {
+        "title": "This has happened before",
+        "body": "Drops like this have happened many times. Markets have recovered over time, though not always quickly. Some recoveries took years.",
+            "term": {"id":"market-drop","label":"Market drop"}
+      },
+      {
+        "title": "Selling now locks in the drop",
+        "body": "While you hold, the drop is only on paper. If you sell now, the drop becomes real. Many people regret selling in a panic."
+      },
+      {
+        "title": "Spreading out softens the bumps",
+        "body": "Owning many different things, like an index fund plus some bonds, means one bad day hurts less.",
+            "term": {"id":"diversification","label":"Diversification"}
+      },
+      {
+        "title": "Only invest money you won't need for 5+ years",
+        "body": "Rent, bills and your emergency cushion should never be invested. Then a drop can't force you to sell."
+      }
+    ],
+    "doneNote": "You've seen all four steps. You can watch an example recovery, or reset and try again.",
+    "wordToKnow": "Word to know:",
+    "whatTerm": "paper trading",
+    "whatTitle": "What is practice investing?",
+    "what": [
+      "Practice investing, or paper trading, means buying and selling with pretend money. Nothing real is bought or sold.",
+      "Many investing apps offer a free practice account. It's a safe way to learn how prices move and how you feel when they do.",
+      "Watch out: a practice account is still run by a company that may want you to open a real account. You never have to."
+    ],
+    "beforeTitle": "Before using real money",
+    "before": [
+      "Your bills are covered each month.",
+      "You have no debt over 15% APR.",
+      "You have at least $1,000 saved for emergencies.",
+      "The money you invest won't be needed for 5 years or more.",
+      "You know what it costs each year."
+    ],
+    "beforeReady": "Check your readiness",
+    "beforeLearn": "Compare ways to invest"
+  },
+  "path": {
+    "meta": {
+      "title": "Your path: steps for your stage of life",
+      "description": "Money steps for people 50 and older, gig workers, first-generation earners, and anyone moving from cash to a bank account."
+    },
+    "title": "Your path",
+    "lead": "Everyone starts from a different place. Pick the story closest to yours to see the steps that matter most.",
+    "tabsLabel": "Pick a life stage",
+    "tabs": {
+      "catchUp": "50+ Catch-Up",
+      "gig": "Gig work",
+      "firstGen": "First-gen",
+      "banked": "Getting banked"
+    },
+    "storyLabel": "Example story",
+    "stepsLabel": "Steps to try",
+    "stepsNote": "Tick steps as you read. Nothing is saved.",
+    "wordsToKnow": "Words to know:",
+    "tryTool": "Try this tool",
+    "catchUp": {
+      "name": "Sunita, 58",
+      "role": "Office manager at a community services agency",
+      "story": "Sunita worried that saving after 50 wouldn't matter. Then she learned the rules give people her age extra room to save. She started from Day 1: this year.",
+      "factsTitle": "Extra room to save at 50+ (2026)",
+      "facts": [
+        "Up to {k401} more a year in a 401(k), on top of the normal limit.",
+        "Up to {ira} more a year in an IRA, on top of the normal limit."
+      ],
+      "superCatchUp": "If you're 60 to 63, a newer rule may let you save even more in a 401(k). Ask a licensed pro or your plan.",
+      "leversTitle": "Saving isn't the only lever",
+      "steps": [
+        "Find out if your job offers a 401(k) and a match.",
+        "Use the extra 50+ room in a 401(k) or IRA, even a little at first.",
+        "Pay down debt over 15% APR. Each payment is a sure win.",
+        "Keep an emergency cushion, so you never need to pull from retirement savings early.",
+        "Look at Social Security timing. Starting later usually means a bigger monthly check."
+      ],
+      "toolLabel": "See how steady saving grows",
+      "proNote": "Retirement accounts and taxes have many rules. A licensed pro or free tax help (IRS VITA) can check your plan."
+    },
+    "gig": {
+      "name": "Tariq, 31",
+      "role": "Rideshare driver and caterer",
+      "story": "Tariq's pay changes every week. Big plans never stuck. A small rule did: $5 in slow weeks, more in good weeks.",
+      "steps": [
+        "Pick a tiny weekly amount you can do even in a slow week, like $5.",
+        "In good weeks, add more to your cushion first.",
+        "Set aside a share of every payment for taxes. Gig pay has no tax taken out.",
+        "Keep tax money in a separate account so it's not spent by mistake.",
+        "Aim for a bigger cushion than most, because your pay goes up and down."
+      ],
+      "taxTip": "Gig income is reported on a 1099 form. Free tax help is available.",
+      "toolLabel": "See what $5 a week can grow to"
+    },
+    "firstGen": {
+      "name": "Ayanna, 24",
+      "role": "First-generation college grad, clinical data coordinator",
+      "story": "Ayanna has a 24.9% credit card and a job that matches 401(k) savings. She wasn't sure which came first. Now she has a clear order.",
+      "steps": [
+        "Save a $1,000 cushion so surprises don't go on the card.",
+        "Save enough in your 401(k) to get the full match. It's extra pay.",
+        "Then put every extra dollar toward debt over 15% APR.",
+        "Once that debt is gone, grow your cushion to 3–6 months.",
+        "Then start learning about investing more for retirement."
+      ],
+      "rule": "The simple rule: get the match, then pay off debt over 15% APR before investing more.",
+      "roadmap": "See the 8-step path",
+      "toolLabel": "Check your readiness"
+    },
+    "banked": {
+      "name": "Guadalupe, 38",
+      "role": "Home health aide and family caregiver",
+      "story": "Guadalupe paid a check casher every payday. That fee added up to hundreds of dollars a year. A free, insured account changed that.",
+      "steps": [
+        "Find a bank or credit union with no monthly fee and no minimum balance.",
+        "Check that it's FDIC-insured (banks) or NCUA-insured (credit unions).",
+        "Bring a photo ID. Many places accept a passport, consular ID or ITIN.",
+        "Set up direct deposit so your pay goes straight in, for free.",
+        "Start your $1,000 cushion in the same account, a little each payday."
+      ],
+      "fdicTitle": "What insured means",
+      "fdic": "If an insured bank or credit union closes, the government protects your money, up to $250,000 per person.",
+      "feesTitle": "Hidden fees to ask about",
+      "fees": [
+        "Monthly service fees",
+        "Overdraft fees",
+        "Minimum balance fees",
+        "ATM fees outside the network"
+      ],
+      "findBank": "Find an insured bank",
+      "findBankOrg": "FDIC BankFind",
+      "findCu": "Find a credit union",
+      "findCuOrg": "NCUA",
+      "toolLabel": "See all free help"
+    },
+    "pauseTitle": "Every path has a pause button",
+    "pause": "Lost hours, a medical bill, a family need: life happens. Pausing your plan is part of the plan. Keep your cushion, stop adding for a while, and pick up again when you can.",
+    "pauseLink": "Check where you are now"
+  },
+  "help": {
+    "meta": {
+      "title": "Free, trusted help",
+      "description": "Free public resources for credit, banking, taxes, safe investing and retirement, plus answers to common questions."
+    },
+    "title": "Free, trusted help",
+    "lead": "These are free public or nonprofit services. We don't get paid for listing them.",
+    "otp": {
+      "faq": "Questions"
+    },
+    "filterLabel": "Filter by topic",
+    "all": "All",
+    "categories": {
+      "credit": "Credit & debt",
+      "banking": "Banking",
+      "taxes": "Taxes",
+      "investing": "Investing safely",
+      "retirement": "Retirement"
+    },
+    "searchLabel": "Search resources",
+    "searchPlaceholder": "Try \"taxes\" or \"credit union\"",
+    "count": "Showing {n} of {total}",
+    "free": "Free",
+    "visit": "Visit {org}",
+    "noMatchTitle": "No matches",
+    "noMatchBody": "Try a different word, or clear the search to see everything.",
+    "clear": "Clear search",
+    "faqTitle": "Common questions",
+    "faqIntro": "Short, honest answers."
   }
 }

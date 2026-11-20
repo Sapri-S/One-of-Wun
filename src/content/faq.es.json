@@ -1,0 +1,42 @@
+[
+  {
+    "q": "¿Esto es asesoría financiera?",
+    "a": "No. Este sitio es solo educativo. Explica ideas comunes en palabras sencillas. Para un consejo sobre tu situación, habla con un profesional con licencia o con un asesor gratis sin fines de lucro."
+  },
+  {
+    "q": "¿Guardan mis números?",
+    "a": "No. Todo lo que escribes o eliges se queda en la página, en tu navegador. No se nos envía nada a nosotros ni a nadie, y se borra cuando sales de la página. No usamos cookies ni rastreo."
+  },
+  {
+    "q": "¿Es gratis?",
+    "a": "Sí. No hay registro, ni versión de pago, ni anuncios. No vendemos ni recomendamos ningún producto, y nadie nos paga por aparecer en esta página."
+  },
+  {
+    "q": "Tengo más de 50 años. ¿Todavía puedo empezar?",
+    "a": "Sí. Empieza desde el Día 1: hoy. Las personas de 50 años o más pueden ahorrar más cada año en un 401(k) y en una IRA. Pagar tus deudas y elegir bien cuándo empezar el Seguro Social también hacen una gran diferencia. Mira la pestaña 50+ en Tu camino."
+  },
+  {
+    "q": "Lo que gano cambia cada semana. ¿Puedo ahorrar?",
+    "a": "Sí. Elige una cantidad pequeña que puedas ahorrar hasta en una semana floja, como $5, y añade más en semanas buenas. Crea tu colchón primero y aparta dinero para impuestos de cada pago."
+  },
+  {
+    "q": "¿Pago mis deudas o invierto primero?",
+    "a": "Las deudas de más de 15% APR, como la mayoría de las tarjetas de crédito, por lo general crecen más rápido que las inversiones. Pagarlas primero es como recibir una ganancia segura. Si tu trabajo iguala tus ahorros en el 401(k), por lo general vale la pena recibir ese aporte."
+  },
+  {
+    "q": "¿Qué significa que esté asegurado por la FDIC?",
+    "a": "Si un banco asegurado por la FDIC cierra, el gobierno de EE. UU. protege tu dinero, hasta $250,000 por persona. Las cooperativas de crédito tienen la misma protección de la NCUA."
+  },
+  {
+    "q": "No tengo cuenta de banco. ¿Por dónde empiezo?",
+    "a": "Busca un banco o cooperativa de crédito sin cuota mensual y sin saldo mínimo. Muchos aceptan pasaporte, matrícula consular o ITIN. La pestaña Abrir una cuenta en Tu camino te explica los pasos."
+  },
+  {
+    "q": "¿Cómo sé si un corredor o asesor es seguro?",
+    "a": "Búscalo gratis en FINRA BrokerCheck antes de darle dinero. Pregunta cómo le pagan. Ten cuidado con quien te prometa ganancias grandes y seguras."
+  },
+  {
+    "q": "¿Y si necesito pausar mi plan?",
+    "a": "Es normal. La vida pasa. Guarda tu colchón de emergencia, deja de añadir por un tiempo y sigue cuando puedas. Pausar es parte del plan."
+  }
+]

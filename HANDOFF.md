@@ -167,4 +167,38 @@ Motion: use `var(--dur)` and `var(--ease)`. `prefers-reduced-motion` is already 
 ---
 
 ## Part 2 notes
-_(Part 2: append what you shipped, defaults you used, and any prop requests here.)_
+
+Branch `part2/pages`, built on `d0d4bc9`. Touches only Part 2 files, plus two allowed changes: appended `learn.* practice.* path.* help.*` namespaces in `src/i18n/{en,es}.json`, and deleted the now-unused `src/components/ComingSoon.astro`. Part 1's `common.comingSoon` keys are untouched and can be removed by Part 1.
+
+### What shipped
+| Route | Feature | Files |
+|---|---|---|
+| `/learn` | F6 explorer: 3 cards, risk bar 1–5 (with text), yearly cost per $100 / $1,000 / $10,000 chips, "Good to know", questions to ask, BrokerCheck + Investor.gov checks | `features/explorer/{LearnView,InvestmentExplorer}.astro`, `funds.ts` |
+| `/practice` | F7 crash simulator: $1,000 → $700 over 1.5s with an SVG dip (instant with reduced motion), 4-step coaching stepper (Next/Back, focus moves to each step), optional example recovery with "Example, not a promise.", always-visible reset | `features/crash-sim/{PracticeView,CrashSimulator}.astro`, `series.ts` |
+| `/your-path` | F8 tabs `#catch-up #gig #first-gen #banked`: story, tick-as-you-read checklist (not saved), words to know, "Try this tool" link per tab | `features/life-stages/{PathView,StagePanel}.astro`, `stages.ts` |
+| `/help` | F9 11 resources, 5 category chips, accent-insensitive search, "No matches" state with "Clear search", 10-question FAQ (`<details>`) | `features/resources/{HelpView,ResourceFinder}.astro`, `filter.ts`, `content/resources.json`, `content/faq.{en,es}.json` |
+
+All four have `/es/` versions through the existing route files.
+
+### Tests added
+- `tests/e2e/part2.spec.ts`: 11 interaction tests × desktop + mobile (cost chips, full simulator run plus reduced motion and Spanish, tab deep links and arrow keys, search, chips, empty state and clear, external link attributes, no storage after using every tool).
+- `tests/unit/part2.test.ts`: cost math and formatting, the 30% series, chart bounds, search normalising and matching.
+- Results: `npm test` **70/70**, `npm run test:unit` **20/20**, `npm run check` 0 errors.
+
+### Defaults and decisions
+- **Typical yearly costs** (illustrative): index fund 0.05%, bond fund 0.10%, single stock $0 fund fee. **Risk**: bond 2, index 3, stock 5. Costs show cents only when needed (`$0.50`, `$5`).
+- **Recovery** is scripted to $1,050 and only appears after the drop. No paper-trading provider is named (Q6); the copy says "a practice account".
+- **Catch-up figures**: $8,000 for a 401(k) and $1,100 for an IRA (2026, from SHARED §7 F8), in `life-stages/stages.ts`. The 60–63 super catch-up gets one line with a "Talk to a licensed pro" badge and no number (Q10).
+- **First-gen order** matches the Home roadmap: $1,000 cushion → full 401(k) match → debt over 15% APR → 3–6 month cushion → invest more.
+- **`resources.json`** adds a `name: {en, es}` field to the spec shape `{ id, org, url, category, desc }`. Each resource has one category.
+- **URLs checked on 2026-11-20:** all resolve (200). `ssa.gov` returns 403 to scripts, so it was confirmed in a real browser. `mycreditunion.gov`'s locator redirects, so the final `https://mapping.ncua.gov/` is used.
+- **FAQ** says "I'm over 50. Can I still start?" rather than "too late", which is a banned word.
+- **Coaching steps** may carry a glossary term (`practice.steps[i].term`) shown under the step. No new glossary keys were needed.
+- **Spanish** is an AI draft, like the rest of `es.json` (`reviewed: false`).
+
+### Not verified
+- **Lighthouse was not run** on the Part 2 pages: the run was blocked in this environment. Run the command in §1 on `/learn`, `/practice`, `/your-path` and `/help` before launch.
+- Spanish needs native-speaker review. Recheck the catch-up limits each year.
+
+### Prop requests
+- **`Button` and `hidden`:** `Button` sets `display: inline-flex` globally, which overrides the `hidden` attribute. Suggest adding `.btn[hidden] { display: none; }` to `Button.astro`. Workaround in place: `CrashSimulator.astro` has a scoped `[hidden] { display: none !important; }`.

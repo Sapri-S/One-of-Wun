@@ -1,0 +1,204 @@
+---
+/**
+ * One life-stage tab panel: example story, a tick-as-you-read checklist (never saved),
+ * stage-specific facts, words to know, and a "Try this tool" link (keeps the 3-click rule).
+ */
+import SafetyBadge from '../../components/SafetyBadge.astro';
+import Button from '../../components/Button.astro';
+import ExternalLink from '../../components/ExternalLink.astro';
+import Term from '../../components/Term.astro';
+import Icon from '../../components/Icon.astro';
+import { t, tv, formatMoney, glossaryEntry, localizePath, type Lang } from '../../i18n/utils';
+import { CATCH_UP_2026, LINKS, type Stage } from './stages';
+
+interface Props { lang: Lang; stage: Stage }
+const { lang, stage } = Astro.props;
+const k = `path.${stage.key}`;
+const steps = tv<string[]>(lang, `${k}.steps`);
+const stepsTitle = stage.id === 'catch-up' ? t(lang, `${k}.leversTitle`) : t(lang, 'path.stepsLabel');
+---
+<div class="stage">
+  <SafetyBadge kind={stage.badge} />
+
+  <div class="grid">
+    <div class="story">
+      <p class="story-label">{t(lang, 'path.storyLabel')}</p>
+      <h2 class="name">{t(lang, `${k}.name`)}</h2>
+      <p class="role">{t(lang, `${k}.role`)}</p>
+      <p class="story-body">{t(lang, `${k}.story`)}</p>
+
+      {stage.id === 'catch-up' && (
+        <div class="fact-box">
+          <h3>{t(lang, `${k}.factsTitle`)}</h3>
+          <ul>
+            {tv<string[]>(lang, `${k}.facts`).map((f) => (
+              <li class="num">{f.replace('{k401}', formatMoney(CATCH_UP_2026.k401, lang)).replace('{ira}', formatMoney(CATCH_UP_2026.ira, lang))}</li>
+            ))}
+          </ul>
+          <p class="aside"><SafetyBadge kind="talk-to-pro" /> {t(lang, `${k}.superCatchUp`)}</p>
+        </div>
+      )}
+
+      {stage.id === 'first-gen' && (
+        <p class="rule"><Icon name="steps" size={22} /><span>{t(lang, `${k}.rule`)}</span></p>
+      )}
+
+      {stage.id === 'banked' && (
+        <div class="fact-box">
+          <h3>{t(lang, `${k}.fdicTitle`)}</h3>
+          <p>{t(lang, `${k}.fdic`)}</p>
+        </div>
+      )}
+    </div>
+
+    <div class="steps">
+      <h3>{stepsTitle}</h3>
+      <p class="note">{t(lang, 'path.stepsNote')}</p>
+      <ul class="checks">
+        {steps.map((s, i) => (
+          <li>
+            <input type="checkbox" id={`${stage.id}-step-${i}`} />
+            <label for={`${stage.id}-step-${i}`}>{s}</label>
+          </li>
+        ))}
+      </ul>
+
+      {stage.id === 'banked' && (
+        <div class="fees">
+          <h3>{t(lang, `${k}.feesTitle`)}</h3>
+          <ul>{tv<string[]>(lang, `${k}.fees`).map((f) => <li>{f}</li>)}</ul>
+        </div>
+      )}
+    </div>
+  </div>
+
+  <div class="extras">
+    {stage.id === 'catch-up' && (
+      <p>{t(lang, `${k}.proNote`)} <ExternalLink href={LINKS.vita} org="IRS">IRS VITA</ExternalLink></p>
+    )}
+    {stage.id === 'gig' && (
+      <Fragment>
+        <p>{t(lang, `${k}.taxTip`)}</p>
+        <ul class="links">
+          <li><ExternalLink href={LINKS.vita} org="IRS">IRS VITA</ExternalLink></li>
+          <li><ExternalLink href={LINKS.gigTax} org="IRS">IRS Gig Economy Tax Center</ExternalLink></li>
+        </ul>
+      </Fragment>
+    )}
+    {stage.id === 'banked' && (
+      <ul class="links">
+        <li><ExternalLink href={LINKS.bankFind} org={t(lang, `${k}.findBankOrg`)}>{t(lang, `${k}.findBank`)}</ExternalLink></li>
+        <li><ExternalLink href={LINKS.ncua} org={t(lang, `${k}.findCuOrg`)}>{t(lang, `${k}.findCu`)}</ExternalLink></li>
+      </ul>
+    )}
+
+    <p class="words">
+      <span class="words-label">{t(lang, 'path.wordsToKnow')}</span>
+      {stage.terms.map((id, i) => (
+        <Fragment><Term id={id}>{glossaryEntry(lang, id).term}</Term>{i < stage.terms.length - 1 ? ', ' : ''}</Fragment>
+      ))}
+    </p>
+  </div>
+
+  <div class="tool">
+    <p class="tool-label">{t(lang, 'path.tryTool')}</p>
+    <div class="tool-actions">
+      <Button href={localizePath(stage.tool, lang)}>{t(lang, `${k}.toolLabel`)}</Button>
+      {stage.id === 'first-gen' && (
+        <Button href={localizePath('/#roadmap', lang)} variant="quiet">{t(lang, `${k}.roadmap`)}</Button>
+      )}
+    </div>
+  </div>
+</div>
+
+<style>
+  .stage {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    box-shadow: var(--shadow);
+  }
+  @media (min-width: 768px) {
+    .stage { padding: var(--space-6); }
+  }
+  .grid {
+    display: grid;
+    gap: var(--space-6);
+    margin-top: var(--space-4);
+  }
+  @media (min-width: 900px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+  }
+  .story-label { color: var(--ink-muted); font-size: var(--fs-small); font-weight: 700; }
+  .name { font-size: var(--fs-h2); margin-top: var(--space-1); }
+  .role { color: var(--ink-soft); font-weight: 700; }
+  .story-body { margin-top: var(--space-3); }
+
+  .fact-box {
+    margin-top: var(--space-5);
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius);
+    background: var(--surface-mist);
+  }
+  .fact-box h3 { font-size: var(--fs-body); }
+  .fact-box ul { margin-top: var(--space-2); padding-left: 1.2em; display: grid; gap: var(--space-2); font-weight: 700; }
+  .fact-box p { margin-top: var(--space-2); }
+  .aside { color: var(--ink-soft); }
+
+  .rule {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    margin-top: var(--space-5);
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius);
+    background: var(--go-bg);
+    color: var(--go-ink);
+    font-weight: 700;
+  }
+  .rule :global(svg) { margin-top: 3px; }
+
+  .steps h3 { font-size: var(--fs-h3); }
+  .note { color: var(--ink-muted); font-size: var(--fs-small); margin-top: var(--space-1); }
+  .checks { list-style: none; padding: 0; margin-top: var(--space-4); display: grid; gap: var(--space-2); }
+  .checks li {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-sm);
+    background: var(--surface-sage);
+    max-width: none;
+  }
+  .checks input {
+    flex: none;
+    width: 24px;
+    height: 24px;
+    margin-top: 2px;
+    accent-color: var(--primary);
+    cursor: pointer;
+  }
+  .checks label { cursor: pointer; }
+  .checks input:checked + label { color: var(--ink-soft); text-decoration: line-through; text-decoration-color: var(--path); }
+
+  .fees { margin-top: var(--space-5); }
+  .fees h3 { font-size: var(--fs-body); }
+  .fees ul { margin-top: var(--space-2); padding-left: 1.2em; }
+
+  .extras { margin-top: var(--space-6); display: grid; gap: var(--space-3); }
+  .links { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0 var(--space-5); }
+  .words-label { font-weight: 700; margin-right: var(--space-1); }
+
+  .tool {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-4);
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border);
+  }
+  .tool-label { font-weight: 700; }
+  .tool-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+</style>

@@ -1,0 +1,123 @@
+[
+  {
+    "id": "cfpb",
+    "org": "CFPB",
+    "name": { "en": "Consumer Financial Protection Bureau", "es": "Oficina para la Protección Financiera del Consumidor" },
+    "url": "https://www.consumerfinance.gov/",
+    "category": "credit",
+    "desc": {
+      "en": "Plain guides on credit cards, debt collectors and loans. You can also send a complaint about a company.",
+      "es": "Guías sencillas sobre tarjetas de crédito, cobradores de deudas y préstamos. También puedes enviar una queja sobre una empresa."
+    }
+  },
+  {
+    "id": "nfcc",
+    "org": "NFCC",
+    "name": { "en": "National Foundation for Credit Counseling", "es": "Fundación Nacional para la Asesoría de Crédito (NFCC)" },
+    "url": "https://www.nfcc.org/",
+    "category": "credit",
+    "desc": {
+      "en": "Find a nonprofit credit counselor who can help you make a plan to pay down debt.",
+      "es": "Encuentra un asesor de crédito sin fines de lucro que te ayude a hacer un plan para pagar tus deudas."
+    }
+  },
+  {
+    "id": "annual-credit-report",
+    "org": "AnnualCreditReport.com",
+    "name": { "en": "AnnualCreditReport.com", "es": "AnnualCreditReport.com" },
+    "url": "https://www.annualcreditreport.com/",
+    "category": "credit",
+    "desc": {
+      "en": "The official place to get your free credit reports. Check them for mistakes.",
+      "es": "El sitio oficial para pedir tus reportes de crédito gratis. Revísalos para buscar errores."
+    }
+  },
+  {
+    "id": "cfpb-banking",
+    "org": "CFPB",
+    "name": { "en": "CFPB: bank accounts", "es": "CFPB: cuentas de banco" },
+    "url": "https://www.consumerfinance.gov/consumer-tools/bank-accounts/",
+    "category": "banking",
+    "desc": {
+      "en": "How to open a bank account, avoid fees, and what to do if a bank won't open one for you.",
+      "es": "Cómo abrir una cuenta de banco, evitar cuotas y qué hacer si un banco no te deja abrir una."
+    }
+  },
+  {
+    "id": "fdic-bankfind",
+    "org": "FDIC",
+    "name": { "en": "FDIC BankFind", "es": "FDIC BankFind" },
+    "url": "https://banks.data.fdic.gov/bankfind-suite/bankfind",
+    "category": "banking",
+    "desc": {
+      "en": "Check that a bank is FDIC-insured before you put your money there.",
+      "es": "Revisa que un banco esté asegurado por la FDIC antes de poner tu dinero ahí."
+    }
+  },
+  {
+    "id": "ncua-locator",
+    "org": "NCUA",
+    "name": { "en": "NCUA credit union locator", "es": "Buscador de cooperativas de crédito de la NCUA" },
+    "url": "https://mapping.ncua.gov/",
+    "category": "banking",
+    "desc": {
+      "en": "Find a federally insured credit union near you. Many have low fees.",
+      "es": "Encuentra una cooperativa de crédito asegurada cerca de ti. Muchas cobran cuotas bajas."
+    }
+  },
+  {
+    "id": "irs-vita",
+    "org": "IRS",
+    "name": { "en": "IRS VITA free tax help", "es": "Ayuda gratis con impuestos IRS VITA" },
+    "url": "https://www.irs.gov/vita",
+    "category": "taxes",
+    "desc": {
+      "en": "Free tax return help from trained volunteers, for people with low to moderate income.",
+      "es": "Ayuda gratis para preparar tu declaración de impuestos con voluntarios capacitados, para personas con ingresos bajos o moderados."
+    }
+  },
+  {
+    "id": "irs-gig",
+    "org": "IRS",
+    "name": { "en": "IRS Gig Economy Tax Center", "es": "Centro de impuestos de la economía por encargo del IRS" },
+    "url": "https://www.irs.gov/businesses/gig-economy-tax-center",
+    "category": "taxes",
+    "desc": {
+      "en": "What gig and app-based workers need to know about taxes, 1099 forms and setting money aside.",
+      "es": "Lo que necesitan saber los trabajadores por encargo y de aplicaciones sobre impuestos, formularios 1099 y cómo apartar dinero."
+    }
+  },
+  {
+    "id": "brokercheck",
+    "org": "FINRA",
+    "name": { "en": "FINRA BrokerCheck", "es": "FINRA BrokerCheck" },
+    "url": "https://brokercheck.finra.org/",
+    "category": "investing",
+    "desc": {
+      "en": "Look up a broker or adviser before you trust them. See if they are registered and have a record of problems.",
+      "es": "Busca a un corredor o asesor antes de confiar en él. Mira si está registrado y si tiene un historial de problemas."
+    }
+  },
+  {
+    "id": "investor-gov",
+    "org": "SEC",
+    "name": { "en": "Investor.gov", "es": "Investor.gov" },
+    "url": "https://www.investor.gov/",
+    "category": "investing",
+    "desc": {
+      "en": "Free, plain guides to investing and spotting fraud, from the U.S. Securities and Exchange Commission.",
+      "es": "Guías gratis y sencillas sobre cómo invertir y reconocer fraudes, de la Comisión de Bolsa y Valores de EE. UU."
+    }
+  },
+  {
+    "id": "ssa-estimator",
+    "org": "SSA",
+    "name": { "en": "Social Security retirement estimator", "es": "Calculadora de beneficios de jubilación del Seguro Social" },
+    "url": "https://www.ssa.gov/benefits/retirement/estimator.html",
+    "category": "retirement",
+    "desc": {
+      "en": "See how much Social Security you may get, and how waiting to start changes your monthly check.",
+      "es": "Mira cuánto podrías recibir del Seguro Social y cómo cambia tu cheque mensual si esperas para empezar."
+    }
+  }
+]

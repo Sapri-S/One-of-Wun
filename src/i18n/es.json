@@ -243,5 +243,278 @@
   "notFound": {
     "title": "Esta página se movió o no existe",
     "lead": "No hay problema. Aquí están todas las páginas:"
+  },
+  "learn": {
+    "meta": {
+      "title": "Invertir en palabras sencillas",
+      "description": "Fondos indexados, acciones individuales y fondos de bonos, explicados de forma simple: qué tan riesgoso es cada uno y cuánto cuesta al año."
+    },
+    "title": "Tres formas de invertir, en palabras sencillas",
+    "lead": "Casi toda inversión se basa en tres piezas. Aquí ves qué es cada una, cuánto puede subir y bajar, y cuánto cuesta al año.",
+    "otp": {
+      "ask": "Preguntas que hacerte",
+      "check": "Revisa antes de empezar"
+    },
+    "costPicker": {
+      "label": "Muestra el costo anual si pones",
+      "note": "Los costos son ejemplos comunes. El costo real depende del fondo que elijas."
+    },
+    "riskLabel": "Riesgo: {n} de 5",
+    "riskLow": "Más estable",
+    "riskHigh": "Más altibajos",
+    "costLabel": "Costo anual común",
+    "costValue": "{cost} al año por {amount}",
+    "goodToKnow": "Bueno saber",
+    "cards": {
+      "index": {
+        "title": "Fondos indexados",
+        "plain": "Un fondo que tiene pedacitos de cientos de empresas a la vez.",
+        "costNote": "Más o menos 0.05% al año, un costo común para un fondo indexado amplio.",
+        "points": [
+          "Si a una empresa le va mal, es solo una parte muy pequeña del fondo.",
+          "Los precios igual suben y bajan con todo el mercado.",
+          "Los costos anuales bajos son una gran razón por la que mucha gente empieza aquí."
+        ]
+      },
+      "stock": {
+        "title": "Acciones individuales",
+        "plain": "Un pedacito de una sola empresa. Tu dinero depende de cómo le vaya a esa empresa.",
+        "costNote": "No hay cuota anual de fondo. El costo es el riesgo: todo tu dinero depende de una sola empresa.",
+        "points": [
+          "Una mala noticia puede bajar mucho el precio en un solo día.",
+          "No hay reparto del riesgo, a menos que compres muchas acciones distintas.",
+          "Mucha gente deja las acciones individuales en una parte pequeña de su dinero, o en nada."
+        ]
+      },
+      "bond": {
+        "title": "Fondos de bonos",
+        "plain": "Un fondo que le presta dinero a gobiernos o empresas, que lo devuelven con interés.",
+        "costNote": "Más o menos 0.10% al año, un costo común para un fondo de bonos amplio.",
+        "points": [
+          "Por lo general sube y baja menos que las acciones.",
+          "Por lo general crece más despacio que las acciones a largo plazo.",
+          "El precio de los bonos puede bajar cuando suben las tasas de interés."
+        ]
+      }
+    },
+    "askTitle": "Preguntas que hacerte antes de elegir",
+    "askIntro": "No hay una sola respuesta correcta. Estas preguntas te ayudan a decidir qué te conviene.",
+    "ask": [
+      "¿Mi base está segura primero? Sin deudas de más de 15% APR, las cuentas cubiertas y un colchón de $1,000.",
+      "¿Cuándo voy a necesitar este dinero? El dinero para los próximos 5 años por lo general no se debe invertir.",
+      "¿Cómo me sentiría si bajara 30% por un tiempo? Pruébalo primero con dinero de práctica.",
+      "¿Cuánto cuesta al año? Los costos anuales pequeños suman mucho en décadas.",
+      "¿Estoy repartiendo mi dinero, o apostando todo a una sola cosa?"
+    ],
+    "askReady": "Revisa si estás listo",
+    "askPractice": "Prueba una caída de práctica",
+    "checkTitle": "Revisa antes de empezar",
+    "checkIntro": "Antes de confiarle tu dinero a alguien, búscalo. Estas revisiones son gratis.",
+    "checkBroker": "Busca a un corredor o asesor",
+    "checkBrokerOrg": "FINRA BrokerCheck",
+    "checkBrokerBody": "Mira si una persona o empresa está registrada y si tiene un historial de problemas.",
+    "checkBasics": "Lee lo básico de invertir",
+    "checkBasicsOrg": "Investor.gov",
+    "checkBasicsBody": "Guías gratis y sencillas de la Comisión de Bolsa y Valores de EE. UU. (SEC). Algunas están en español.",
+    "checkPro": "Un asesor con licencia que cobra solo por su asesoría puede ayudarte a ver todo tu panorama. Pregunta cómo le pagan antes de empezar."
+  },
+  "practice": {
+    "meta": {
+      "title": "Practica una caída del mercado",
+      "description": "Mira cómo $1,000 de práctica bajan 30% y aprende pasos tranquilos para cuando pase de verdad. Sin dinero real."
+    },
+    "title": "Practica una caída del mercado, con dinero de práctica",
+    "lead": "A veces el mercado baja. Verlo primero con dinero de práctica hace que una caída real dé menos miedo.",
+    "otp": {
+      "what": "¿Qué es invertir de práctica?",
+      "before": "Antes de usar dinero real"
+    },
+    "cardTitle": "Tu cartera de práctica",
+    "pretend": "Dinero de práctica",
+    "valueLabel": "Valor",
+    "startValue": "Valor inicial: {amount}",
+    "chartLabel": "Gráfica de línea del valor de la cartera de práctica con el tiempo.",
+    "simulate": "Simula una caída del 30%",
+    "recovery": "Muestra una recuperación",
+    "reset": "Reinicia la cartera de práctica",
+    "status": {
+      "ready": "Tu cartera de práctica vale $1,000. Toca el botón para ver una caída del 30%.",
+      "dropping": "Los precios están bajando…",
+      "dropped": "Tu cartera de práctica ahora vale $700. Es una caída del 30%. Es dinero de práctica.",
+      "recovering": "Los precios están subiendo otra vez…",
+      "recovered": "En este ejemplo, la cartera subió de nuevo a unos $1,050 con el tiempo. Es un ejemplo, no una promesa."
+    },
+    "stepperTitle": "Qué saber cuando baja",
+    "stepOf": "Paso {n} de {total}",
+    "next": "Siguiente",
+    "back": "Atrás",
+    "steps": [
+      {
+        "title": "Esto ya ha pasado antes",
+        "body": "Caídas así han pasado muchas veces. Con el tiempo los mercados se han recuperado, aunque no siempre rápido. Algunas recuperaciones tomaron años.",
+            "term": {"id":"market-drop","label":"Caída del mercado"}
+      },
+      {
+        "title": "Vender ahora vuelve real la caída",
+        "body": "Mientras no vendas, la caída es solo en papel. Si vendes ahora, la caída se vuelve real. Mucha gente se arrepiente de vender por pánico."
+      },
+      {
+        "title": "Repartir el dinero suaviza los golpes",
+        "body": "Tener muchas cosas distintas, como un fondo indexado y algunos bonos, hace que un mal día duela menos.",
+            "term": {"id":"diversification","label":"Diversificación"}
+      },
+      {
+        "title": "Invierte solo dinero que no necesitarás en 5 años o más",
+        "body": "La renta, las cuentas y tu colchón de emergencia nunca se deben invertir. Así, una caída no te obliga a vender."
+      }
+    ],
+    "doneNote": "Ya viste los cuatro pasos. Puedes ver un ejemplo de recuperación, o reiniciar y probar otra vez.",
+    "wordToKnow": "Palabra clave:",
+    "whatTerm": "inversión de práctica",
+    "whatTitle": "¿Qué es invertir de práctica?",
+    "what": [
+      "Invertir de práctica significa comprar y vender con dinero de mentira. No se compra ni se vende nada real.",
+      "Muchas aplicaciones de inversión ofrecen una cuenta de práctica gratis. Es una forma segura de aprender cómo se mueven los precios y cómo te sientes cuando pasa.",
+      "Cuidado: una cuenta de práctica la maneja una empresa que tal vez quiera que abras una cuenta real. Nunca estás obligado a hacerlo."
+    ],
+    "beforeTitle": "Antes de usar dinero real",
+    "before": [
+      "Tus cuentas básicas están cubiertas cada mes.",
+      "No tienes deudas de más de 15% APR.",
+      "Tienes al menos $1,000 ahorrados para emergencias.",
+      "No vas a necesitar el dinero que inviertas en 5 años o más.",
+      "Sabes cuánto cuesta al año."
+    ],
+    "beforeReady": "Revisa si estás listo",
+    "beforeLearn": "Compara formas de invertir"
+  },
+  "path": {
+    "meta": {
+      "title": "Tu camino: pasos para tu etapa de vida",
+      "description": "Pasos de dinero para personas de 50 años o más, trabajadores por encargo, primera generación y quien pasa del efectivo a una cuenta de banco."
+    },
+    "title": "Tu camino",
+    "lead": "Cada persona empieza desde un lugar distinto. Elige la historia más parecida a la tuya para ver los pasos que más importan.",
+    "tabsLabel": "Elige una etapa de vida",
+    "tabs": {
+      "catchUp": "50+ Recuperación",
+      "gig": "Trabajo por encargo",
+      "firstGen": "Primera generación",
+      "banked": "Abrir una cuenta"
+    },
+    "storyLabel": "Historia de ejemplo",
+    "stepsLabel": "Pasos para probar",
+    "stepsNote": "Marca los pasos mientras lees. No se guarda nada.",
+    "wordsToKnow": "Palabras clave:",
+    "tryTool": "Prueba esta herramienta",
+    "catchUp": {
+      "name": "Sunita, 58 años",
+      "role": "Gerente de oficina en una agencia de servicios comunitarios",
+      "story": "Sunita pensaba que ahorrar después de los 50 no valía la pena. Luego supo que las reglas le dan a la gente de su edad más espacio para ahorrar. Empezó desde el Día 1: este año.",
+      "factsTitle": "Espacio extra para ahorrar a los 50+ (2026)",
+      "facts": [
+        "Hasta {k401} más al año en un 401(k), además del límite normal.",
+        "Hasta {ira} más al año en una IRA, además del límite normal."
+      ],
+      "superCatchUp": "Si tienes de 60 a 63 años, una regla más nueva podría dejarte ahorrar aún más en un 401(k). Pregúntale a un profesional con licencia o a tu plan.",
+      "leversTitle": "Ahorrar no es la única palanca",
+      "steps": [
+        "Averigua si tu trabajo ofrece un 401(k) y un aporte del empleador.",
+        "Usa el espacio extra de 50+ en un 401(k) o una IRA, aunque sea poco al principio.",
+        "Paga las deudas de más de 15% APR. Cada pago es una ganancia segura.",
+        "Mantén un colchón de emergencia para no tener que sacar dinero del retiro antes de tiempo.",
+        "Revisa cuándo empezar el Seguro Social. Empezar más tarde por lo general da un cheque mensual más grande."
+      ],
+      "toolLabel": "Mira cómo crece ahorrar con constancia",
+      "proNote": "Las cuentas de retiro y los impuestos tienen muchas reglas. Un profesional con licencia o la ayuda gratis con impuestos (IRS VITA) pueden revisar tu plan."
+    },
+    "gig": {
+      "name": "Tariq, 31 años",
+      "role": "Conductor de viajes compartidos y cocinero de eventos",
+      "story": "Lo que gana Tariq cambia cada semana. Los planes grandes nunca le funcionaron. Una regla pequeña sí: $5 en semanas flojas, más en semanas buenas.",
+      "steps": [
+        "Elige una cantidad semanal pequeña que puedas apartar hasta en una semana floja, como $5.",
+        "En semanas buenas, pon más en tu colchón primero.",
+        "Aparta una parte de cada pago para impuestos. Al pago por encargo no le quitan impuestos.",
+        "Guarda el dinero de impuestos en otra cuenta para no gastarlo por error.",
+        "Busca un colchón más grande que la mayoría, porque tus ingresos suben y bajan."
+      ],
+      "taxTip": "Los ingresos por encargo se reportan en un formulario 1099. Hay ayuda gratis con impuestos.",
+      "toolLabel": "Mira cuánto pueden crecer $5 a la semana"
+    },
+    "firstGen": {
+      "name": "Ayanna, 24 años",
+      "role": "Primera en su familia en graduarse de la universidad, coordinadora de datos clínicos",
+      "story": "Ayanna tiene una tarjeta de crédito al 24.9% y un trabajo que iguala sus ahorros en el 401(k). No sabía qué iba primero. Ahora tiene un orden claro.",
+      "steps": [
+        "Ahorra un colchón de $1,000 para que las sorpresas no vayan a la tarjeta.",
+        "Ahorra lo suficiente en tu 401(k) para recibir todo el aporte del empleador. Es pago extra.",
+        "Luego pon cada dólar extra en las deudas de más de 15% APR.",
+        "Cuando esa deuda se acabe, haz crecer tu colchón a 3–6 meses.",
+        "Después empieza a aprender cómo invertir más para el retiro."
+      ],
+      "rule": "La regla simple: recibe el aporte del empleador y luego paga las deudas de más de 15% APR antes de invertir más.",
+      "roadmap": "Mira el camino de 8 pasos",
+      "toolLabel": "Revisa si estás listo"
+    },
+    "banked": {
+      "name": "Guadalupe, 38 años",
+      "role": "Asistente de salud en el hogar y cuidadora de su familia",
+      "story": "Guadalupe le pagaba a una casa de cambio de cheques cada día de pago. Esa cuota sumaba cientos de dólares al año. Una cuenta gratis y asegurada cambió eso.",
+      "steps": [
+        "Busca un banco o cooperativa de crédito sin cuota mensual y sin saldo mínimo.",
+        "Revisa que esté asegurado por la FDIC (bancos) o la NCUA (cooperativas de crédito).",
+        "Lleva una identificación con foto. Muchos lugares aceptan pasaporte, matrícula consular o ITIN.",
+        "Pide el depósito directo para que tu pago llegue directo a la cuenta, gratis.",
+        "Empieza tu colchón de $1,000 en la misma cuenta, un poco cada día de pago."
+      ],
+      "fdicTitle": "Qué significa asegurado",
+      "fdic": "Si un banco o cooperativa de crédito asegurado cierra, el gobierno protege tu dinero, hasta $250,000 por persona.",
+      "feesTitle": "Cuotas escondidas que debes preguntar",
+      "fees": [
+        "Cuotas mensuales de servicio",
+        "Cuotas por sobregiro",
+        "Cuotas por saldo mínimo",
+        "Cuotas de cajeros fuera de la red"
+      ],
+      "findBank": "Busca un banco asegurado",
+      "findBankOrg": "FDIC BankFind",
+      "findCu": "Busca una cooperativa de crédito",
+      "findCuOrg": "NCUA",
+      "toolLabel": "Mira toda la ayuda gratis"
+    },
+    "pauseTitle": "Todo camino tiene un botón de pausa",
+    "pause": "Menos horas, una cuenta médica, una necesidad de la familia: la vida pasa. Pausar tu plan es parte del plan. Guarda tu colchón, deja de añadir por un tiempo y sigue cuando puedas.",
+    "pauseLink": "Revisa dónde estás ahora"
+  },
+  "help": {
+    "meta": {
+      "title": "Ayuda gratis y confiable",
+      "description": "Recursos públicos gratis sobre crédito, bancos, impuestos, invertir con seguridad y retiro, más respuestas a preguntas comunes."
+    },
+    "title": "Ayuda gratis y confiable",
+    "lead": "Estos son servicios públicos o sin fines de lucro y gratis. No nos pagan por ponerlos aquí.",
+    "otp": {
+      "faq": "Preguntas"
+    },
+    "filterLabel": "Filtra por tema",
+    "all": "Todos",
+    "categories": {
+      "credit": "Crédito y deudas",
+      "banking": "Bancos",
+      "taxes": "Impuestos",
+      "investing": "Invertir con seguridad",
+      "retirement": "Retiro"
+    },
+    "searchLabel": "Busca recursos",
+    "searchPlaceholder": "Prueba \"impuestos\" o \"cooperativa\"",
+    "count": "Mostrando {n} de {total}",
+    "free": "Gratis",
+    "visit": "Visita {org}",
+    "noMatchTitle": "No hay resultados",
+    "noMatchBody": "Prueba otra palabra o borra la búsqueda para ver todo.",
+    "clear": "Borra la búsqueda",
+    "faqTitle": "Preguntas comunes",
+    "faqIntro": "Respuestas cortas y honestas."
   }
 }

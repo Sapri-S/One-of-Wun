@@ -1,0 +1,42 @@
+[
+  {
+    "q": "Is this financial advice?",
+    "a": "No. This site is for education only. It explains common ideas in plain words. For advice about your own situation, talk to a licensed professional or a free nonprofit counselor."
+  },
+  {
+    "q": "Do you save my numbers?",
+    "a": "No. Everything you type or pick stays on the page in your browser. Nothing is sent to us or anyone else, and it's gone when you leave the page. We don't use cookies or tracking."
+  },
+  {
+    "q": "Is it free?",
+    "a": "Yes. There's no sign-up, no paid version and no ads. We don't sell or recommend any product, and nobody pays us to be listed on this page."
+  },
+  {
+    "q": "I'm over 50. Can I still start?",
+    "a": "Yes. Start from Day 1: today. People 50 and older can save extra in 401(k)s and IRAs each year. Paying off debt and timing Social Security also make a real difference. See the 50+ tab on Your path."
+  },
+  {
+    "q": "My pay changes every week. Can I still save?",
+    "a": "Yes. Pick a tiny amount you can save even in a slow week, like $5, and add more in good weeks. Build your cushion first, and set aside money for taxes from each payment."
+  },
+  {
+    "q": "Should I pay off debt or invest first?",
+    "a": "Debt over 15% APR, like most credit cards, usually grows faster than investments do. Paying it off first is like earning a sure return. If your job matches 401(k) savings, getting that match usually still makes sense."
+  },
+  {
+    "q": "What does FDIC-insured mean?",
+    "a": "If an FDIC-insured bank closes, the U.S. government protects your money, up to $250,000 per person. Credit unions have the same kind of protection from the NCUA."
+  },
+  {
+    "q": "I don't have a bank account. Where do I start?",
+    "a": "Look for a bank or credit union with no monthly fee and no minimum balance. Many accept a passport, consular ID or ITIN. The Getting banked tab on Your path walks through the steps."
+  },
+  {
+    "q": "How do I know if a broker or adviser is safe?",
+    "a": "Look them up for free on FINRA BrokerCheck before you give them any money. Ask how they are paid. Be careful with anyone who promises big, sure returns."
+  },
+  {
+    "q": "What if I need to pause my plan?",
+    "a": "That's normal. Life happens. Keep your emergency cushion, stop adding for a while, and pick up again when you can. Pausing is part of the plan."
+  }
+]

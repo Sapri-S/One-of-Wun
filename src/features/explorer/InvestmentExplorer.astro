@@ -1,0 +1,161 @@
+---
+/**
+ * F6 — Plain-Language Investment Explorer (FR-03, US-03).
+ * Three cards with a 1–5 risk bar (also in text) and a yearly cost in dollars.
+ * The amount chips swap pre-computed cost strings; nothing is calculated or stored on the client.
+ */
+import Card from '../../components/Card.astro';
+import SafetyBadge from '../../components/SafetyBadge.astro';
+import Term from '../../components/Term.astro';
+import { t, tv, formatMoney, LOCALE, type Lang } from '../../i18n/utils';
+import { AMOUNTS, DEFAULT_AMOUNT, FUNDS, formatCost, yearlyCost } from './funds';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+
+type CardCopy = { title: string; plain: string; costNote: string; points: string[] };
+const copy = tv<Record<string, CardCopy>>(lang, 'learn.cards');
+
+const costText = (amount: number, ratio: number) =>
+  t(lang, 'learn.costValue', { cost: formatCost(yearlyCost(amount, ratio), LOCALE[lang]), amount: formatMoney(amount, lang) });
+
+// Every string the chips can show, keyed by amount then fund id.
+const costs = Object.fromEntries(
+  AMOUNTS.map((a) => [a, Object.fromEntries(FUNDS.map((f) => [f.id, costText(a, f.ratio)]))]),
+);
+---
+<div class="explorer" data-explorer data-costs={JSON.stringify(costs)}>
+  <div class="picker">
+    <p class="picker-label" id="cost-picker-label">{t(lang, 'learn.costPicker.label')}</p>
+    <div class="chips" role="group" aria-labelledby="cost-picker-label">
+      {AMOUNTS.map((a) => (
+        <button type="button" class="chip num" data-amount={a} aria-pressed={a === DEFAULT_AMOUNT ? 'true' : 'false'}>
+          {formatMoney(a, lang)}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <ul class="cards">
+    {FUNDS.map((f) => {
+      const c = copy[f.id];
+      return (
+        <li>
+          <Card title={c.title} id={`fund-${f.id}`}>
+            <SafetyBadge slot="top" kind="education" />
+            <p class="plain"><Term id={f.term}>{c.title}</Term>: {c.plain}</p>
+
+            <div class="risk">
+              <p class="risk-text">{t(lang, 'learn.riskLabel', { n: f.risk })}</p>
+              <div class="risk-bar" aria-hidden="true">
+                {[1, 2, 3, 4, 5].map((n) => <span class:list={['seg', { on: n <= f.risk }]} />)}
+              </div>
+              <p class="risk-ends" aria-hidden="true"><span>{t(lang, 'learn.riskLow')}</span><span>{t(lang, 'learn.riskHigh')}</span></p>
+            </div>
+
+            <div class="cost">
+              <p class="cost-label"><Term id="expense-ratio">{t(lang, 'learn.costLabel')}</Term></p>
+              <p class="cost-value num" data-cost={f.id}>{costs[DEFAULT_AMOUNT][f.id]}</p>
+              <p class="cost-note">{c.costNote}</p>
+            </div>
+
+            <div class="gtk">
+              <h4>{t(lang, 'learn.goodToKnow')}</h4>
+              <ul>{c.points.map((p) => <li>{p}</li>)}</ul>
+            </div>
+          </Card>
+        </li>
+      );
+    })}
+  </ul>
+  <p class="note">{t(lang, 'learn.costPicker.note')}</p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-explorer]').forEach((root) => {
+    const costs: Record<string, Record<string, string>> = JSON.parse(root.dataset.costs || '{}');
+    const chips = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-amount]'));
+    const outs = Array.from(root.querySelectorAll<HTMLElement>('[data-cost]'));
+    for (const chip of chips) {
+      chip.addEventListener('click', () => {
+        const amount = chip.dataset.amount!;
+        for (const c of chips) c.setAttribute('aria-pressed', String(c === chip));
+        for (const o of outs) o.textContent = costs[amount]?.[o.dataset.cost!] ?? o.textContent;
+      });
+    }
+  });
+</script>
+
+<style>
+  .picker {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+  .picker-label { font-weight: 700; }
+  .chips { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .chip {
+    min-height: var(--tap);
+    min-width: 88px;
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--border);
+    background: var(--surface);
+    font-weight: 700;
+    transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+  .chip:hover { border-color: var(--primary); }
+  .chip[aria-pressed='true'] { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+
+  .cards {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--space-5);
+  }
+  .cards > li { display: grid; max-width: none; }
+  @media (min-width: 900px) {
+    .cards { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .plain { color: var(--ink); }
+
+  .risk-text { font-weight: 700; color: var(--ink); }
+  .risk-bar {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    margin-top: var(--space-2);
+  }
+  .seg {
+    height: 10px;
+    border-radius: 5px;
+    background: var(--surface-sage);
+    border: 1px solid var(--border);
+  }
+  .seg.on { background: var(--accent); border-color: var(--accent); }
+  .risk-ends {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-1);
+    font-size: var(--fs-small);
+    color: var(--ink-muted);
+  }
+
+  .cost {
+    padding: var(--space-4);
+    border-radius: var(--radius-sm);
+    background: var(--surface-mist);
+  }
+  .cost-label { font-size: var(--fs-small); color: var(--ink-soft); }
+  .cost-value { font-size: var(--fs-h3); font-weight: 700; color: var(--ink); line-height: 1.3; }
+  .cost-note { font-size: var(--fs-small); margin-top: var(--space-2); }
+
+  .gtk h4 { font-size: var(--fs-body); color: var(--ink); }
+  .gtk ul { padding-left: 1.2em; margin-top: var(--space-2); display: grid; gap: var(--space-2); }
+  .gtk li::marker { color: var(--primary); }
+
+  .note { margin-top: var(--space-4); color: var(--ink-muted); font-size: var(--fs-small); }
+</style>

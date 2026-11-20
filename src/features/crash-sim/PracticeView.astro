@@ -1,11 +1,66 @@
 ---
-/**
- * PART 2 OWNS THIS FILE. Stub from Part 1 — replace the ComingSoon with the real page.
- * Spec: context/SHARED.md §7 and context/PART-2.md.
- */
-import ComingSoon from '../../components/ComingSoon.astro';
-import type { Lang } from '../../i18n/utils';
+/** /practice — Paper Trading preview & 30% Crash Simulator (F7). Part 2. */
+import BaseLayout from '../../components/BaseLayout.astro';
+import Section from '../../components/Section.astro';
+import OnThisPage from '../../components/OnThisPage.astro';
+import Button from '../../components/Button.astro';
+import Icon from '../../components/Icon.astro';
+import Term from '../../components/Term.astro';
+import CrashSimulator from './CrashSimulator.astro';
+import { t, tv, localizePath, type Lang } from '../../i18n/utils';
+
 interface Props { lang: Lang }
 const { lang } = Astro.props;
+const what = tv<string[]>(lang, 'practice.what');
+const before = tv<string[]>(lang, 'practice.before');
 ---
-<ComingSoon lang={lang} pageKey="practice" />
+<BaseLayout title={t(lang, 'practice.meta.title')} description={t(lang, 'practice.meta.description')} lang={lang}>
+  <Section id="simulator" level={1} title={t(lang, 'practice.title')} badge="education" intro={t(lang, 'practice.lead')}>
+    <div class="otp-wrap">
+      <OnThisPage items={[
+        { id: 'what', label: t(lang, 'practice.otp.what') },
+        { id: 'before', label: t(lang, 'practice.otp.before') },
+      ]} />
+    </div>
+    <CrashSimulator lang={lang} />
+  </Section>
+
+  <Section id="what" tone="sage" title={t(lang, 'practice.whatTitle')} badge="education">
+    <div class="prose">
+      {what.map((p) => <p>{p}</p>)}
+      <p class="word">{t(lang, 'practice.wordToKnow')} <Term id="paper-trading">{t(lang, 'practice.whatTerm')}</Term></p>
+    </div>
+  </Section>
+
+  <Section id="before" title={t(lang, 'practice.beforeTitle')} badge="your-choice">
+    <ul class="checklist">
+      {before.map((b) => (
+        <li><span class="tick"><Icon name="check" size={18} /></span>{b}</li>
+      ))}
+    </ul>
+    <div class="actions">
+      <Button href={localizePath('/#readiness', lang)}>{t(lang, 'practice.beforeReady')}</Button>
+      <Button href={localizePath('/learn', lang)} variant="quiet">{t(lang, 'practice.beforeLearn')}</Button>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .otp-wrap { margin-bottom: var(--space-6); }
+  .prose > * + * { margin-top: var(--space-4); }
+  .word { font-weight: 700; }
+  .checklist { list-style: none; padding: 0; display: grid; gap: var(--space-3); }
+  .checklist li { display: flex; gap: var(--space-3); align-items: flex-start; }
+  .tick {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 28px;
+    height: 28px;
+    margin-top: 1px;
+    border-radius: 50%;
+    background: var(--go-bg);
+    color: var(--go-ink);
+  }
+  .actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-6); }
+</style>
