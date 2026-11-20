@@ -1,4 +1,4 @@
-> **Status: ✅ shipped** — tag `part1-foundation`. See `/HANDOFF.md`.
+> **Status: ✅ shipped** in commit `b35c7aa` on branch `claude/pensive-newton-q7dfkn` (the git tag `part1-foundation` exists locally only — the hosting proxy refuses tag pushes). See `/HANDOFF.md`.
 
 # PART 1 brief: Foundation, Home, and the Kaizen calculator
 

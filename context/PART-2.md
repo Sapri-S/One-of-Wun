@@ -3,7 +3,7 @@
 > Read `SHARED.md` in full first, then `/HANDOFF.md` (written by Part 1). This brief only says what is **yours**.
 
 ## Before you start
-- **Wait for the git tag `part1-foundation`.** Branch from it. Do not start from an earlier commit.
+- **Start from branch `claude/pensive-newton-q7dfkn` at commit `b35c7aa` or later** (Part 1 foundation). Create your own branch from it. Do not start from an earlier commit.
 - Run `npm ci && npm run dev` and open the stub pages (`/learn`, `/practice`, `/your-path`, `/help`); you will replace them.
 - Read `HANDOFF.md` for the component API. **Import the shared components; never copy, fork or restyle them.** If you need a change, add a "Prop request" note to `HANDOFF.md` under "Part 2 notes" and work around it in the meantime.
 
@@ -46,7 +46,7 @@ Every box in SHARED §9.3 is checked for your pages, the a11y and no-network tes
 ## Kickoff prompt (paste into the Part 2 agent)
 ```
 You are the Part 2 builder for the "Where You Want to Be" website.
-Check out the git tag `part1-foundation` and create your own branch from it.
+Check out branch claude/pensive-newton-q7dfkn (commit b35c7aa or later) and create your own branch from it.
 Read context/README.md, then context/SHARED.md in full, then context/PART-2.md, then /HANDOFF.md, then context/SKILLS.md.
 Install or enable the skills listed for Part 2 in SKILLS.md.
 Build /learn, /practice, /your-path and /help (+ /es/ twins) using ONLY the shared components from Part 1.

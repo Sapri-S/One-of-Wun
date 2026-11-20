@@ -318,7 +318,7 @@ All live in `src/components/`. Part 2 **imports** these and **must not fork or r
 
 ### 9.2 Order of work
 1. **Part 1 ships first** the foundation (scaffold + tokens + shared components + layout + stub pages for Part 2 routes with `TODO: Part 2` placeholders) and tags the commit `part1-foundation`.
-2. Part 2 starts from `part1-foundation` on its own branch. Part 1 continues on F1–F4 in parallel — no file overlap per §9.1.
+2. Part 2 starts from the Part 1 foundation commit (`b35c7aa` on `claude/pensive-newton-q7dfkn`) on its own branch. Part 1 continues on F1–F4 in parallel — no file overlap per §9.1.
 3. Merge: Part 2 PR touches only its owned files. Conflicts only possible in `glossary` and `i18n` JSON (append-only, separate namespaces).
 
 ### 9.3 Definition of done (both parts)

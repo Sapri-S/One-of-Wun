@@ -1,6 +1,6 @@
 # HANDOFF.md: Part 1 → Part 2
 
-Part 1 is done and tagged **`part1-foundation`**. Branch from that tag.
+Part 1 is done: commit **`b35c7aa`** on branch `claude/pensive-newton-q7dfkn`. Create your branch from that branch (that commit or later).
 Read `context/SHARED.md` and `context/PART-2.md` first. This file covers **how to use what Part 1 built**.
 
 ---
